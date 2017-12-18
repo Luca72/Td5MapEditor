@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="td5mapeditor" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Win32 Debug">
+				<Option output="win32/debug/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="win32/debug/obj" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-pipe" />
+					<Add option="-mthreads" />
+					<Add option='[[if (PLATFORM == PLATFORM_MSW &amp;&amp; (GetCompilerFactory().GetCompilerVersionString(_T(&quot;gcc&quot;)) &gt;= _T(&quot;4.0.0&quot;))) print(_T(&quot;-Wno-attributes&quot;));]]' />
+					<Add option="-D__WXDEBUG__" />
+					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-D__WINDOWS__" />
+					<Add option="-D__WIN32__" />
+					<Add directory="C:/wxWidgets/lib/gcc_lib/mswd" />
+					<Add directory="C:/wxWidgets/include" />
+					<Add directory="C:/wxWidgets/contrib/include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:/wxWidgets/lib/gcc_lib/mswd" />
+					<Add directory="C:/wxWidgets/include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="libwxmsw28d_core.a" />
+					<Add library="libwxbase28d.a" />
+					<Add library="libwxpngd.a" />
+					<Add library="libwxzlibd.a" />
+					<Add library="libkernel32.a" />
+					<Add library="libuser32.a" />
+					<Add library="libgdi32.a" />
+					<Add library="libwinspool.a" />
+					<Add library="libcomdlg32.a" />
+					<Add library="libadvapi32.a" />
+					<Add library="libshell32.a" />
+					<Add library="libole32.a" />
+					<Add library="liboleaut32.a" />
+					<Add library="libuuid.a" />
+					<Add library="libcomctl32.a" />
+					<Add library="libwsock32.a" />
+					<Add library="libodbc32.a" />
+					<Add library="libwxmsw28d_dbgrid.a" />
+					<Add library="libwxbase28d_odbc.a" />
+					<Add library="libwxmsw28d_adv.a" />
+					<Add directory="C:/wxWidgets/lib/gcc_lib" />
+				</Linker>
+			</Target>
+			<Target title="Win32 Release">
+				<Option output="win32/release/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="win32/release/obj" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-pipe" />
+					<Add option="-mthreads" />
+					<Add option='[[if (PLATFORM == PLATFORM_MSW &amp;&amp; (GetCompilerFactory().GetCompilerVersionString(_T(&quot;gcc&quot;)) &gt;= _T(&quot;4.0.0&quot;))) print(_T(&quot;-Wno-attributes&quot;));]]' />
+					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-D__WINDOWS__" />
+					<Add option="-D__WIN32__" />
+					<Add directory="C:/wxWidgets/lib/gcc_lib/msw" />
+					<Add directory="C:/wxWidgets/include" />
+					<Add directory="C:/wxWidgets/contrib/include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:/wxWidgets/lib/gcc_lib/msw" />
+					<Add directory="C:/wxWidgets/include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libwxmsw28_core.a" />
+					<Add library="libwxbase28.a" />
+					<Add library="libwxpng.a" />
+					<Add library="libwxzlib.a" />
+					<Add library="libkernel32.a" />
+					<Add library="libuser32.a" />
+					<Add library="libgdi32.a" />
+					<Add library="libwinspool.a" />
+					<Add library="libcomdlg32.a" />
+					<Add library="libadvapi32.a" />
+					<Add library="libshell32.a" />
+					<Add library="libole32.a" />
+					<Add library="liboleaut32.a" />
+					<Add library="libuuid.a" />
+					<Add library="libcomctl32.a" />
+					<Add library="libwsock32.a" />
+					<Add library="libodbc32.a" />
+					<Add library="libwxbase28_odbc.a" />
+					<Add library="libwxmsw28_dbgrid.a" />
+					<Add library="libwxmsw28_adv.a" />
+					<Add directory="C:/wxWidgets/lib/gcc_lib" />
+				</Linker>
+			</Target>
+			<Target title="Linux x64 Debug">
+				<Option output="linux_x64/debug/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="linux_x64/debug/obj" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-g" />
+					<Add option="`wx-config --cflags`" />
+					<Add option="-D__LINUX_X86_64__" />
+				</Compiler>
+				<Linker>
+					<Add option="`wx-config --libs`" />
+				</Linker>
+			</Target>
+			<Target title="Linux x64 Release">
+				<Option output="linux_x64/release/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="linux_x64/release/obj" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-w" />
+					<Add option="`wx-config --cflags`" />
+					<Add option="-D__LINUX_X86_64__" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="`wx-config --libs`" />
+				</Linker>
+			</Target>
+			<Target title="Linux i386 Debug">
+				<Option output="linux_i386/debug/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="linux_i386/debug/obj" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-m32" />
+					<Add option="`wx-config --cflags`" />
+					<Add option="`pkg-config --cflags gtk+-3.0`" />
+					<Add option="-D__LINUX_I386__" />
+				</Compiler>
+				<Linker>
+					<Add option="-m32" />
+					<Add option="`wx-config --libs`" />
+					<Add option="`pkg-config --libs gtk+-3.0 `" />
+				</Linker>
+			</Target>
+			<Target title="Linux i386 Release">
+				<Option output="linux_i386/release/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="linux_i386/release/obj" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLibDirsRelation="1" />
+				<Compiler>
+					<Add option="-march=i586" />
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-m32" />
+					<Add option="`wx-config --cflags`" />
+					<Add option="`pkg-config --cflags gtk+-3.0`" />
+					<Add option="-D__LINUX_I386__" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m32" />
+					<Add option="`wx-config --libs`" />
+					<Add option="`pkg-config --libs gtk+-3.0 `" />
+					<Add directory="/usr/lib/i386-linux-gnu" />
+					<Add directory="/usr/lib32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="src/baseMaps.cpp" />
+		<Unit filename="src/baseMaps.h" />
+		<Unit filename="src/dc3d.cpp" />
+		<Unit filename="src/dc3d.h" />
+		<Unit filename="src/dlgEditRangeOfValues.cpp" />
+		<Unit filename="src/dlgEditRangeOfValues.h" />
+		<Unit filename="src/dlgEditTag.cpp" />
+		<Unit filename="src/dlgEditTag.h" />
+		<Unit filename="src/ewxDynArray.cpp" />
+		<Unit filename="src/ewxDynArray.h" />
+		<Unit filename="src/ewxGrid.cpp" />
+		<Unit filename="src/ewxGrid.h" />
+		<Unit filename="src/ewxRange.cpp" />
+		<Unit filename="src/ewxRange.h" />
+		<Unit filename="src/functions.cpp" />
+		<Unit filename="src/functions.h" />
+		<Unit filename="src/graphDC.cpp" />
+		<Unit filename="src/graphDC.h" />
+		<Unit filename="src/resource.h" />
+		<Unit filename="src/resource.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="Win32 Debug" />
+			<Option target="Win32 Release" />
+		</Unit>
+		<Unit filename="src/td5mapGraph.cpp" />
+		<Unit filename="src/td5mapGraph.h" />
+		<Unit filename="src/td5mapTable.cpp" />
+		<Unit filename="src/td5mapTable.h" />
+		<Unit filename="src/td5mapTableInfo.cpp" />
+		<Unit filename="src/td5mapTableInfo.h" />
+		<Unit filename="src/td5mapTuner.cpp" />
+		<Unit filename="src/td5mapTuner.h" />
+		<Unit filename="src/td5mapVariants.cpp" />
+		<Unit filename="src/td5mapVariants.h" />
+		<Unit filename="src/td5mapeditorApp.cpp" />
+		<Unit filename="src/td5mapeditorApp.h" />
+		<Unit filename="src/td5mapeditorCanvas.cpp" />
+		<Unit filename="src/td5mapeditorCanvas.h" />
+		<Unit filename="src/td5mapeditorChildFrame.cpp" />
+		<Unit filename="src/td5mapeditorChildFrame.h" />
+		<Unit filename="src/td5mapeditorDoc.cpp" />
+		<Unit filename="src/td5mapeditorDoc.h" />
+		<Unit filename="src/td5mapeditorGridPanel.cpp" />
+		<Unit filename="src/td5mapeditorGridPanel.h" />
+		<Unit filename="src/td5mapeditorInfoPanel.cpp" />
+		<Unit filename="src/td5mapeditorInfoPanel.h" />
+		<Unit filename="src/td5mapeditorMainFrame.cpp" />
+		<Unit filename="src/td5mapeditorMainFrame.h" />
+		<Unit filename="src/td5mapeditorPrint.cpp" />
+		<Unit filename="src/td5mapeditorPrint.h" />
+		<Unit filename="src/td5mapeditorView.cpp" />
+		<Unit filename="src/td5mapeditorView.h" />
+		<Unit filename="src/version.h" />
+		<Unit filename="src/wizNewMap.cpp" />
+		<Unit filename="src/wizNewMap.h" />
+		<Unit filename="src/wizNewMapPage1.cpp" />
+		<Unit filename="src/wizNewMapPage1.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+			<AutoVersioning>
+				<Scheme minor_max="99" build_max="9999" rev_max="99" rev_rand_max="1" build_times_to_increment_minor="9999" />
+				<Settings autoincrement="1" date_declarations="1" use_define="0" update_manifest="1" do_auto_increment="0" ask_to_increment="1" language="C++" svn="0" svn_directory="" header_path="src\version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
