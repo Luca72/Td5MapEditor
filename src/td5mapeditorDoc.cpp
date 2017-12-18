@@ -921,25 +921,91 @@ bool td5mapeditorDoc::LoadXDF(const wxString& ifileName)
 
         while( constant )
         {
+            recognizedtable = false;
+            datamult = 1.0;
+            dataoff = 0;
+
+            title = "";
+            description = "";
+            address = "";
+            d_units = "";
+            d_equation = "";
+
             TiXmlElement* constant_title = constant->FirstChildElement( "title" );
             if(constant_title)
             {
                 title = constant_title->GetText();
+                recognizedtable = true;
             }
 
             TiXmlElement* constant_address = constant->FirstChildElement( "EMBEDDEDDATA" );
             if(constant_address)
             {
                 address = constant_address->Attribute("mmedaddress");
+                    wxString straddress(address);
+                    unsigned long ulongaddress;
+                    straddress.ToULong(&ulongaddress, 16);
+                    tableAddress = (wxWord)ulongaddress;
             }
 
+            TiXmlElement* constant_math = constant->FirstChildElement( "MATH" );
+            if(constant_math)
+            {
+                d_equation = constant_math->Attribute("equation");
+                wxString strmath(d_equation);
+                if(strmath.IsSameAs(_T("X")))
+                {
+                    datamult = 1.0;
+                    dataoff = 0;
+                }
+                if(strmath.IsSameAs(_T("(X-2732)/10")))
+                {
+                    datamult = 0.1;
+                    dataoff = -2732;
+                }
+                if(strmath.IsSameAs(_T("X/10")))
+                {
+                    datamult = 0.1;
+                    dataoff = 0;
+                }
+                if(strmath.IsSameAs(_T("X/100")))
+                {
+                    datamult = 0.01;
+                    dataoff = 0;
+                }
+            }
 
+           for(int s = m_scalarIdBegin; s <= m_scalarIdEnd; s++)
+            {
+                if(m_mapTable[s].m_address == tableAddress)
+                {
+                    if(recognizedtable)
+                    {
+                        m_mapTable[s].m_recognized = true;
+                        m_mapTable[s].m_type = XDF_SCALAR;
+                        m_mapTable[s].m_name = title;
+                        m_mapTable[s].m_comment = description;
+                        m_mapTable[s].m_xunit = _T("");
+                        m_mapTable[s].m_yunit = _T("");
+                        m_mapTable[s].m_zunit = d_units;
+                        m_mapTable[s].m_collabelmult = 1.0;
+                        m_mapTable[s].m_collabeloff = 0;
+                        m_mapTable[s].m_rowlabelmult = 1.0;
+                        m_mapTable[s].m_rowlabeloff = 0;
+                        m_mapTable[s].m_datamult = datamult;
+                        m_mapTable[s].m_dataoff = dataoff;
+                        m_mapTable[s].m_collabelsized = false;
+                        m_mapTable[s].m_rowlabelsized = false;
 
+                        if ((datamult != 1.0) || (dataoff != 0))
+                            m_mapTable[s].m_datasized = true;
+                        else
+                            m_mapTable[s].m_datasized = false;
 
-
-
-
-
+                        break;
+                    }
+                }
+            }
 
             constant = constant->NextSiblingElement( "XDFCONSTANT" );
             counter++;

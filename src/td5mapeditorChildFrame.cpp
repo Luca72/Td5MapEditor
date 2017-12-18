@@ -121,8 +121,8 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
     tools_menu->Append(ID_TOOLS_ADD_ONE, _T("Value(s) +1\tCtrl-+"));
     tools_menu->Append(ID_TOOLS_SUBTRACT_ONE, _T("Value(s) -1\tCtrl-+"));
     tools_menu->Append(ID_TOOLS_EDIT_RANGE_OF_VALUES, _T("&Edit Range of Values\tCtrl-E"));
-    tools_menu->AppendSeparator();
-    tools_menu->Append(ID_TOOLS_EDIT_TAG, _T("&Edit Tag\tCtrl-T"));
+    //tools_menu->AppendSeparator();
+    //tools_menu->Append(ID_TOOLS_EDIT_TAG, _T("&Edit Tag\tCtrl-T"));
 
 
     wxMenu *help_menu = new wxMenu;
