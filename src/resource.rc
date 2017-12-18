@@ -1,0 +1,4 @@
+td5mapeditor        ICON    "res/win32/td5mapeditor.ico"
+td5mapeditordoc     ICON    "res/win32/td5mapeditordoc.ico"
+
+#include "wx/msw/wx.rc"
