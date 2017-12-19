@@ -1025,7 +1025,6 @@ bool td5mapeditorDoc::LoadXDF(const wxString& ifileName)
 
         td5mapeditorView *view = (td5mapeditorView *) GetFirstView();
         view->SetInfoPanelFlags(true, false);
-        Modify(true);
         SetUpdateFlag(GRID_PANEL | INFO_PANEL |GRAPH_PANEL);
         Update();
     }
