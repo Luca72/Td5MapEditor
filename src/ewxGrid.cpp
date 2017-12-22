@@ -290,6 +290,10 @@ void ewxGrid::SetRowLabelStringValue(int row, wxString strvalue)
     SetRowLabelValue(row, strvalue);
 }
 
+void ewxGrid::SetCellStringValue(int row, int col, wxString strvalue)
+{
+    SetCellValue( row, col, strvalue);
+}
 
 int ewxGrid::GetColLabelIntValue(int col)
 {

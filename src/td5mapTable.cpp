@@ -47,6 +47,9 @@ td5mapTable::td5mapTable()
     m_rowlabeloff = 0;
     m_datamult = 1.0;
     m_dataoff = 0;
+
+   	m_begin_global_address = 0x00000000;
+   	m_end_global_address = 0x00000000;
 }
 
 td5mapTable::~td5mapTable()
@@ -67,6 +70,8 @@ short td5mapTable::restore_raw(double sized, double mult, int offset)
 bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMapFileData)
 {
     wxWord wIndex = (FUEL_MAP_BEGIN_ADDRESS + m_address) / sizeof(wxWord);
+    m_begin_global_address = FUEL_MAP_BEGIN_ADDRESS + m_address;
+    m_end_global_address = m_begin_global_address;
 
     if(!m_singlevalue)
     {
@@ -75,7 +80,7 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
             pwBaseMapFileData += wIndex;
         m_cols = LoHi2HiLo(*pwMapFileData);
 
-        pwMapFileData += 1;
+        pwMapFileData += 1; m_end_global_address += 2;
         if(pwBaseMapFileData != NULL)
             pwBaseMapFileData += 1;
         m_rows = LoHi2HiLo(*pwMapFileData);
@@ -103,7 +108,7 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
     if (m_cols > 1)
         for(int c= 0; c < m_cols; c++)
         {
-            pwMapFileData += 1;
+            pwMapFileData += 1; m_end_global_address += 2;
             if(pwBaseMapFileData != NULL)
                 pwBaseMapFileData += 1;
             m_headerCol[c].current = LoHi2HiLo(*pwMapFileData);
@@ -116,7 +121,7 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
     if (m_rows > 1)
         for(int r= 0; r < m_rows; r++)
         {
-            pwMapFileData += 1;
+            pwMapFileData += 1; m_end_global_address += 2;
             if(pwBaseMapFileData != NULL)
                 pwBaseMapFileData += 1;
             m_headerRow[r].current = LoHi2HiLo(*pwMapFileData);
@@ -130,7 +135,7 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
         for(int r = 0; r < m_rows; r++)
             for(int c = 0; c < m_cols; c++)
         {
-            pwMapFileData += 1;
+            pwMapFileData += 1; m_end_global_address += 2;
             if(pwBaseMapFileData != NULL)
                 pwBaseMapFileData += 1;
             m_tableData[c][r].current = LoHi2HiLo(*pwMapFileData);
@@ -386,4 +391,12 @@ bool td5mapTable::IsDifferentFromOriginal()
     }
 
     return diff;
+}
+
+bool td5mapTable::IsGlobalAddressInTableArea(wxUint32 gladdress)
+{
+    if ((gladdress >= m_begin_global_address) && (gladdress <= m_end_global_address))
+        return true;
+    else
+        return false;
 }

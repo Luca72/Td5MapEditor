@@ -16,6 +16,8 @@
 #define TABLES_ADDRESS_AREA_BEGIN_DEF_EU2   112882
 #define MAPNAME_ADDRESS_BEGIN               102418
 #define TAG_ADDRESS_BEGIN                   118448
+#define FUEL_PART_ADDRESS_BEGIN             102416
+#define CHEKSUM_ADDRESS_BEGIN               (MAP_FILE_LENGTH - 2)
 
 #define MAX_NUM_OF_TABLES                   /*128*/ 2024
 #define MAP_FILE_LENGTH_WORD                (MAP_FILE_LENGTH / sizeof(wxWord))
@@ -108,6 +110,9 @@ class td5mapeditorDoc: public wxDocument
 
         int GetNumberOfTables(){return m_numberOfTables;}
 
+        wxWord GetCurrentRawValue(int address);
+        wxWord GetBaseRawValue(int address);
+
         void SetSelectionRange(ewxRange range) {m_selectionRange = range;};
         ewxRange GetSelectionRange() {return m_selectionRange;};
 
@@ -116,6 +121,10 @@ class td5mapeditorDoc: public wxDocument
         int GetMapID(){return m_mapID;};
         wxWord GetMapAddressFromIndex(int index){ return m_mapAddresses[index]; };
         wxWord GetScalarAddressFromIndex(int index){ return m_scalarAddresses[index]; };
+        short GetMapIdBegin(){return m_mapIdBegin;};
+        short GetMapIdEnd(){return m_mapIdEnd;};
+        short GetScalarIdBegin(){return m_scalarIdBegin;};
+        short GetScalarIdEnd(){return m_scalarIdEnd;};
 
 
     protected:

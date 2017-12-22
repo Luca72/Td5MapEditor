@@ -24,6 +24,9 @@
 #include "td5mapeditorInfoPanel.h"
 #include "td5mapeditorGridPanel.h"
 
+#include "ewxGrid.h"
+#include "ewxDynArray.h"
+
 #define SPLITTER_MAIN     100
 #define SPLITTER_GRID     101
 #define SPLITTER_GRAPH    102
@@ -58,6 +61,7 @@ class td5mapeditorChildFrame : public wxDocMDIChildFrame
     void OnExportTuning(wxCommandEvent& event);
     void OnImportTuning(wxCommandEvent& event);
     void OnLoadXDF(wxCommandEvent& event);
+    void OnHexCompare(wxCommandEvent& event);
     void OnEditTag(wxCommandEvent& WXUNUSED(event));
 
     td5mapeditorMainFrame *GetMainFrame() {return (td5mapeditorMainFrame*) m_parentFrame;}
@@ -91,5 +95,26 @@ public:
 #define SHOW_BASE                 10
 #define SHOW_CURRENT              11
 #define SHOW_DIFF                 12
+
+// HEX compare modal dialog
+class HexCompareDialog : public wxDialog
+{
+    DECLARE_CLASS(HexCompareDialog)
+public:
+    HexCompareDialog(wxWindow *parent);
+
+    ewxGrid *m_grid;
+
+	struct DIFF_STRUCT {
+		wxWord base;
+		wxWord current;
+		wxUint32 address;
+	};
+
+	ewxDynArray<DIFF_STRUCT> m_diffList;
+
+    wxDECLARE_EVENT_TABLE();
+};
+
 
 #endif // TD5MAPEDITORCHILDFRAME_H

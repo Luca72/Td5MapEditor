@@ -614,6 +614,15 @@ bool td5mapeditorDoc::GetUpdateFlag(long panel)
     return false;
 }
 
+wxWord td5mapeditorDoc::GetCurrentRawValue(int address)
+{
+    return LoHi2HiLo(m_mapFileData[address]);
+}
+
+wxWord td5mapeditorDoc::GetBaseRawValue(int address)
+{
+    return LoHi2HiLo(m_mapBaseData[address]);
+}
 
 bool td5mapeditorDoc::SelectTable(int index)
 {

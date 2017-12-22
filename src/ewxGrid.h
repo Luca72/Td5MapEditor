@@ -44,10 +44,13 @@ class ewxGrid : public wxGrid
         void SetCellIntValue(int row, int col, int value);
         void SetColLabelIntValue(int col, int value);
         void SetRowLabelIntValue(int row, int value);
+
         void SetCellFloatValue(int row, int col, float value);
         void SetColLabelFloatValue(int col, float value);
         void SetRowLabelFloatValue(int row, float value);
-        void SetColLabelStringValue(int col, wxString value);
+
+        void SetCellStringValue(int row, int col, wxString strvalue);
+        void SetColLabelStringValue(int col, wxString strvalue);
         void SetRowLabelStringValue(int row, wxString strvalue);
 
         void OnRangeSelect(wxGridRangeSelectEvent& event);

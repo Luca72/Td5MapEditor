@@ -80,13 +80,13 @@ BEGIN_EVENT_TABLE(td5mapeditorMainFrame, wxDocMDIParentFrame)
     EVT_MENU(ID_TOOLS_EDIT_RANGE_OF_VALUES,td5mapeditorMainFrame::OnEditRangeOfValues)
 #endif
     EVT_MENU(TD5MAPEDITOR_ABOUT, td5mapeditorMainFrame::OnAbout)
-    EVT_TIMER(wxID_ANY, td5mapeditorMainFrame::OnCyclicTimerEvent)
+    //EVT_TIMER(wxID_ANY, td5mapeditorMainFrame::OnCyclicTimerEvent)
 END_EVENT_TABLE()
 
 td5mapeditorMainFrame::td5mapeditorMainFrame()
 {
-    m_cyclicTimer.SetOwner( this, wxID_ANY );
-    m_cyclicTimer.Start( 200, wxTIMER_CONTINUOUS );
+    //m_cyclicTimer.SetOwner( this, wxID_ANY );
+    //m_cyclicTimer.Start( 200, wxTIMER_CONTINUOUS );
 }
 
 td5mapeditorMainFrame::td5mapeditorMainFrame(wxDocManager *manager, wxFrame *frame, const wxString& title,
@@ -94,8 +94,8 @@ td5mapeditorMainFrame::td5mapeditorMainFrame(wxDocManager *manager, wxFrame *fra
   wxDocMDIParentFrame(manager, frame, wxID_ANY, title, pos, size, type, _T("td5mapeditorMainFrame"))
 {
     CreateLayout();
-    m_cyclicTimer.SetOwner( this, wxID_ANY );
-    m_cyclicTimer.Start( 200, wxTIMER_CONTINUOUS );
+    //m_cyclicTimer.SetOwner( this, wxID_ANY );
+    //m_cyclicTimer.Start( 200, wxTIMER_CONTINUOUS );
 }
 
 bool td5mapeditorMainFrame::Create(wxDocManager *manager, wxFrame *frame, const wxString& title,
@@ -327,7 +327,8 @@ void td5mapeditorMainFrame::OnEditRangeOfValues(wxCommandEvent& WXUNUSED(event))
     activeChild->OnEditRangeOfValues(event);
 }
 
+/*
 void td5mapeditorMainFrame::OnCyclicTimerEvent( wxTimerEvent& WXUNUSED(event) )
 {
 }
-
+*/
