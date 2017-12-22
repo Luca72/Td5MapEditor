@@ -689,6 +689,8 @@ void td5mapeditorChildFrame::OnHexCompare (wxCommandEvent &WXUNUSED(event))
         else if (address == CHEKSUM_ADDRESS_BEGIN)
         {
             dlg.m_grid->SetCellStringValue(index, 3, _T("Checksum"));
+            dlg.m_grid->SetCellStringValue(index, 1, wxString::Format(_T("0x%04X"), dlg.m_diffList[index].base));
+            dlg.m_grid->SetCellStringValue(index, 2, wxString::Format(_T("0x%04X"), dlg.m_diffList[index].current));
             dlg.m_grid->SetCellTextColour(index, 0, wxColour( 200, 200, 200 ));
             dlg.m_grid->SetCellTextColour(index, 1, wxColour( 200, 200, 200 ));
             dlg.m_grid->SetCellTextColour(index, 2, wxColour( 200, 200, 200 ));
