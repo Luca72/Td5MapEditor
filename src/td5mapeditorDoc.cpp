@@ -331,7 +331,7 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
     // read tables
     bool recognized = false;
     int firstRecognized = 0;
-	for(int m = 0; m < m_numberOfTables; m++)
+    for(int m = 0; m < m_numberOfTables; m++)
 	{
 		m_mapTable[m].m_mapID = m_mapID;
 		m_mapTable[m].ReadTable(m_mapFileData, m, m_mapBaseData);
