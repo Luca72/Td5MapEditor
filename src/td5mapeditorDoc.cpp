@@ -188,7 +188,7 @@ bool td5mapeditorDoc::OnNewDocument()
 	int indexStartAddress = ExtractTablesIndexAddress();
 
     m_mapIdBegin = i;
-    while(tableAddress < 65535)
+    while(tableAddress < 32767/*65535*/)
     {
         address = (indexStartAddress / sizeof(wxWord)) + i;
         tableAddress = LoHi2HiLo(m_mapFileData[address]);
@@ -198,7 +198,8 @@ bool td5mapeditorDoc::OnNewDocument()
         m_mapTable[i].m_singlevalue = false;
         i++;
     }
-	i = i - 3; // To be verified why "- 3" ????
+	//i = i - 3; // To be verified why "- 3" ????
+    i = i - 1;
     m_mapIdEnd = i;
 
 	// Build scalar structures
@@ -287,7 +288,7 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
 	int indexStartAddress = ExtractTablesIndexAddress();
 
     m_mapIdBegin = i;
-    while(tableAddress < 65535)
+    while(tableAddress < 32767/*65535*/)
     {
         address = (indexStartAddress / sizeof(wxWord)) + i;
         tableAddress = LoHi2HiLo(m_mapFileData[address]);
@@ -298,7 +299,8 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
         i++;
     }
 
-    i = i - 3; // To be verified why "- 3" ????
+    //i = i - 3; // To be verified why "- 3" ????
+    i = i - 1;
     m_mapIdEnd = i;
 
 

@@ -56,7 +56,7 @@ bool td5mapeditorApp::OnInit()
     title += wxString::Format(wxT("%ld"), AutoVersion::BUILD);
     title += _T(".");
     title += wxString::Format(wxT("%ld"), AutoVersion::REVISION);
-    title += _T("b-");
+    title += _T(" - ");
     title += _T("unstable");
 
     //// Create the main frame window

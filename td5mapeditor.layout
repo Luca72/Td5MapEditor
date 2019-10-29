@@ -2,54 +2,64 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Linux x64 Release" />
-	<File name="src/td5mapTable.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4050" topLine="84" />
-		</Cursor>
-	</File>
-	<File name="src/wizNewMap.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1117" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorView.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3725" topLine="115" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorMainFrame.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1642" topLine="8" />
-		</Cursor>
-	</File>
 	<File name="src/graphDC.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="2629" topLine="33" />
 		</Cursor>
 	</File>
-	<File name="src/ewxRange.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/td5mapeditorCanvas.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="610" topLine="8" />
+			<Cursor1 position="1238" topLine="31" />
 		</Cursor>
 	</File>
-	<File name="src/ewxGrid.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/wizNewMapPage1.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2055" topLine="47" />
+			<Cursor1 position="502" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src/baseMaps.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/td5mapTable.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="117" topLine="0" />
+			<Cursor1 position="2843" topLine="87" />
 		</Cursor>
 	</File>
-	<File name="src/baseMaps.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/tinyxml/tinyxmlerror.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="330" topLine="0" />
+			<Cursor1 position="39" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/version.h" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="809" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorInfoPanel.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7941" topLine="182" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapTuner.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="325" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapGraph.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2239" topLine="84" />
 		</Cursor>
 	</File>
 	<File name="src/td5mapeditorView.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="954" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorInfoPanel.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1176" topLine="12" />
+		</Cursor>
+	</File>
+	<File name="src/functions.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src/td5mapGraph.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -62,9 +72,9 @@
 			<Cursor1 position="1869" topLine="27" />
 		</Cursor>
 	</File>
-	<File name="src/dc3d.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/ewxRange.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1105" topLine="31" />
+			<Cursor1 position="610" topLine="8" />
 		</Cursor>
 	</File>
 	<File name="src/td5mapVariants.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -72,139 +82,9 @@
 			<Cursor1 position="1464" topLine="19" />
 		</Cursor>
 	</File>
-	<File name="src/td5mapTableInfo.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2031" topLine="656" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapTableInfo.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2696" topLine="34" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapGraph.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2239" topLine="84" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorGridPanel.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1988" topLine="24" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorDoc.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="25837" topLine="889" />
-		</Cursor>
-	</File>
-	<File name="src/wizNewMapPage1.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="502" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="src/wizNewMap.h" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="488" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/ewxDynArray.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1935" topLine="36" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorCanvas.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1238" topLine="31" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapVariants.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="987" topLine="295" />
-		</Cursor>
-	</File>
-	<File name="src/dlgEditRangeOfValues.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapTable.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5102" topLine="155" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorChildFrame.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2089" topLine="29" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapTuner.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="325" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorApp.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorGridPanel.cpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="21976" topLine="635" />
-		</Cursor>
-	</File>
-	<File name="src/dc3d.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4756" topLine="233" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorPrint.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="827" topLine="16" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorInfoPanel.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1176" topLine="12" />
-		</Cursor>
-	</File>
-	<File name="src/graphDC.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="10284" topLine="330" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorChildFrame.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="21404" topLine="559" />
-		</Cursor>
-	</File>
-	<File name="src/td5mapeditorMainFrame.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="9162" topLine="192" />
-		</Cursor>
-	</File>
-	<File name="src/version.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="523" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/ewxRange.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="950" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/ewxGrid.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6317" topLine="218" />
-		</Cursor>
-	</File>
-	<File name="src/dlgEditRangeOfValues.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/resource.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4604" topLine="67" />
 		</Cursor>
 	</File>
 	<File name="src/td5mapTuner.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -212,9 +92,24 @@
 			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src/tinyxml/tinyxml.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/baseMaps.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="15908" topLine="521" />
+			<Cursor1 position="250" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorChildFrame.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="25085" topLine="666" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorDoc.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="761" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapTable.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="961" topLine="18" />
 		</Cursor>
 	</File>
 	<File name="src/td5mapeditorPrint.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -222,24 +117,44 @@
 			<Cursor1 position="648" topLine="2" />
 		</Cursor>
 	</File>
-	<File name="src/functions.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/td5mapeditorApp.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="0" topLine="16" />
+			<Cursor1 position="516" topLine="24" />
 		</Cursor>
 	</File>
-	<File name="src/functions.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/resource.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="0" topLine="0" />
+			<Cursor1 position="4709" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src/td5mapeditorApp.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/wizNewMap.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1016" topLine="33" />
+			<Cursor1 position="1117" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src/td5mapeditorDoc.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/graphDC.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="7670" topLine="67" />
+			<Cursor1 position="8850" topLine="298" />
+		</Cursor>
+	</File>
+	<File name="src/dc3d.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4756" topLine="233" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapTableInfo.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3171" topLine="64" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorGridPanel.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4414" topLine="107" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorMainFrame.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2227" topLine="31" />
 		</Cursor>
 	</File>
 	<File name="src/td5mapeditorCanvas.h" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -247,9 +162,109 @@
 			<Cursor1 position="1571" topLine="17" />
 		</Cursor>
 	</File>
-	<File name="src/td5mapeditorInfoPanel.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/baseMaps.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8006" topLine="31" />
+			<Cursor1 position="279" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorChildFrame.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3265" topLine="19" />
+		</Cursor>
+	</File>
+	<File name="src/tinyxml/tinystr.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="43" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorGridPanel.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1040" topLine="21" />
+		</Cursor>
+	</File>
+	<File name="src/dlgEditRangeOfValues.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/dlgEditRangeOfValues.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/ewxGrid.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8592" topLine="341" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapVariants.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="987" topLine="295" />
+		</Cursor>
+	</File>
+	<File name="src/ewxRange.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="950" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/dlgEditTag.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1010" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorView.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3725" topLine="115" />
+		</Cursor>
+	</File>
+	<File name="src/tinyxml/tinyxml.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="15908" topLine="521" />
+		</Cursor>
+	</File>
+	<File name="src/dc3d.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1105" topLine="31" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorMainFrame.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3339" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorDoc.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7662" topLine="271" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorPrint.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1243" topLine="16" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapeditorApp.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src/td5mapTableInfo.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2031" topLine="656" />
+		</Cursor>
+	</File>
+	<File name="src/ewxGrid.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1649" topLine="20" />
+		</Cursor>
+	</File>
+	<File name="src/ewxDynArray.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1302" topLine="31" />
+		</Cursor>
+	</File>
+	<File name="src/functions.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="306" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
