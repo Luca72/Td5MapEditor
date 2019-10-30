@@ -586,8 +586,8 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 			mtiSmokeLimHighRangeB.m_index = 255; // fake
 			mtiDriverDemandHighRange.m_index = 52;
 			mtiDriverDemandLowRange.m_index = 53;
-            mtiFuelDensityCompLower.m_index = 62;
-            mtiFuelDensityCompUpper.m_index = 63;
+            mtiFuelDensityCompLower.m_index = 61;
+            mtiFuelDensityCompUpper.m_index = 62;
 			mtiFuelMap1.m_index = 63;
 			mtiFuelMap2.m_index = 64;
 			mtiFuelMap3.m_index = 65;
