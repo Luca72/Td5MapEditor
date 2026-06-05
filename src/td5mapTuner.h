@@ -58,6 +58,7 @@ class tuneData : public wxObject
             rbValue = 0;
             lbValue = 0;
         };
+
         tuneData(int constant, int lefttop = 0, int righttop = 0, int leftbottom = 0, int rightbottom = 0)
         {
             constValue = constant;
@@ -66,7 +67,10 @@ class tuneData : public wxObject
             rbValue = rightbottom;
             lbValue = leftbottom;
         };
+
         virtual ~tuneData(){};
+
+/*
         tuneData(const tuneData& other)
         {
             constValue = other.constValue;
@@ -75,6 +79,18 @@ class tuneData : public wxObject
             rbValue = other.rbValue;
             lbValue = other.lbValue;
         };
+*/        
+        tuneData(const tuneData& other)
+            :wxObject(other),
+            ltValue(other.ltValue),
+            rtValue(other.rtValue),
+            lbValue(other.lbValue),
+            rbValue(other.rbValue),
+            constValue(other.constValue)
+        {
+
+        };
+
         tuneData& operator=(const tuneData& other)
         {
             if (this == &other) return *this; // handle self assignment

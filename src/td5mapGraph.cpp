@@ -94,7 +94,7 @@ bool td5mapGraph::Prepare(wxDC& dc, wxRect canvasrect, td5mapTable *maptable, in
 
     if (m_table->IsBidimensional())
     {
-        m_type = GDC_TYPE_2D;
+        m_graphtype = GDC_TYPE_2D;
 
 		m_yaxisTagsNum = 10;
 		m_xaxisTagsNum = m_table->GetCols();
@@ -125,7 +125,7 @@ bool td5mapGraph::Prepare(wxDC& dc, wxRect canvasrect, td5mapTable *maptable, in
 
     if (m_table->IsTridimensional())
     {
-        m_type = GDC_TYPE_3D;
+        m_graphtype = GDC_TYPE_3D;
 
         m_xaxisTagsNum = m_table->GetRows() - 1;
         m_yaxisTagsNum = 10;
@@ -386,17 +386,21 @@ point3D::point3D(double cx, double cy, double cz)
 }
 
 point3D::point3D(point3D& pt3d)
+    :wxObject(pt3d),
+	x(pt3d.x),
+	y(pt3d.y),
+	z(pt3d.z)
 {
-	x = pt3d.x;
-	y = pt3d.y;
-	z = pt3d.z;
+
 }
 
 point3D::point3D(const point3D& pt3d)
+    :wxObject(pt3d),
+	x(pt3d.x),
+	y(pt3d.y),
+	z(pt3d.z)
 {
-	x = pt3d.x;
-	y = pt3d.y;
-	z = pt3d.z;
+
 }
 
 point3D::~point3D()

@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Td5MapEditor",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../linux_x64/debug/td5mapeditor",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "Build Td5MapEditor Debug"
+        }
+    ]
+}

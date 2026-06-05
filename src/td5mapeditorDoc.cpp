@@ -38,56 +38,10 @@
 #include "baseMaps.h"
 #include "ewxRange.h"
 #include "td5mapTuner.h"
+#include "tinyxml/tinyxml.h"
 
 
 IMPLEMENT_DYNAMIC_CLASS(td5mapeditorDoc, wxDocument)
-
-
-wxWord scalarIndexAddress[] =
-{
-    0x06DC, // tb_intgl_deriv_rate      116
-    0x06DE, // tb_error_filt_const      117
-    0x06E0, // tb_intgl_enbl            118
-    0x06E2, // tb_clamp_intgl_hi        119
-    0x06E4, // tb_clamp_intgl_lo        120
-    0x06E6, // tb_deriv_enbi            121
-    0x06E8, // tb_clamp_deriv_hi        122
-    0x06EA, // tb_clamp_deriv_lo        123
-    0x06EC, // tb_gain_deriv_hi         124
-    0x06EE, // tb_gain_deriv_lo         125
-    0x06F0, // tb_max_err_intgl         126
-    0x06F2, // tb_max_duty_ratio        127
-    0x06F4, // tb_min_duty_ratio        128
-    0x06F6, // tb_turbo_pwm_freq        129
-    0x0746, // tb_under_rev_enbl        130
-    0x0748, // tb_under_pres_disbl      131
-    0x074A, // tb_under_pres_enbl       132
-    0x074C, // tb_over_pres_enbl        133
-    0x074E, // tb_over_pres_disbl       134
-    0x0750, // tb_over_rev_enbl         135
-    0x0752, // tb_engine_speed_disbl    136
-    0x0754, // tb_fuel_mass_disbl       137
-    0x0756, // tb_engine_speed_enbl     138
-    0x0758, // tb_fuel_mass_enbl        139
-    0x075A, // tb_pwm_default           140
-    0x077C, // ai_limit_min_aap         141
-    0x0786, // ai_limit_min_map         142
-    0x078A, // ai_limit_min_maf         143
-    0x079C, // ai_limit_max_aap         144
-    0x07A6, // ai_limit_max_map         145
-    0x07AA, // ai_limit_max_maf         146
-    0x07BC, // ai_anlg_multip_aap       147
-    0x07C6, // ai_anlg_multip_map       148
-    0x07CA, // ai_anlg_multip_maf       149
-    0x07DC, // ai_anlg_divisor_aap      150
-    0x07E6, // ai_anlg_divisor_map      151
-    0x07EA, // ai_anlg_divisor_maf      152
-    0x07FC, // ai_anlg_offset_aap       153
-    0x0806, // ai_anlg_offset_map       154
-    0x080A, // ai_anlg_offset_maf       155
-
-    0xFFFF  // END MARKER
-};
 
 td5mapeditorDoc::td5mapeditorDoc(void)
 {
@@ -96,6 +50,7 @@ td5mapeditorDoc::td5mapeditorDoc(void)
     m_fileName = _T("");
 	m_mapBaseData = NULL;
 	m_mapExternalData = NULL;
+	m_scalarAddresses = NULL;
 	m_fileName = _T("");
 
 	m_mapName = _T("");
@@ -110,6 +65,11 @@ td5mapeditorDoc::td5mapeditorDoc(void)
     m_updateGridPanel = false;
     m_updateInfoPanel = false;
     m_updateGraphCanvas = false;
+
+    m_mapIdBegin = 0;
+    m_mapIdEnd = 0;
+    m_scalarIdBegin = 0;
+    m_scalarIdEnd = 0;
 }
 
 td5mapeditorDoc::~td5mapeditorDoc(void)
@@ -227,23 +187,34 @@ bool td5mapeditorDoc::OnNewDocument()
 	wxWord address = 0;
 	int indexStartAddress = ExtractTablesIndexAddress();
 
-    while(tableAddress < 65535)
+    m_mapIdBegin = i;
+    while(tableAddress < 32767/*65535*/)
     {
         address = (indexStartAddress / sizeof(wxWord)) + i;
         tableAddress = LoHi2HiLo(m_mapFileData[address]);
         m_mapTable[i].m_index = i;
         m_mapTable[i].m_address = tableAddress;
+        m_mapAddresses[i] = tableAddress;
+        m_mapTable[i].m_singlevalue = false;
         i++;
     }
-	i = i - 3; // To be verified why "- 3" ????
+	//i = i - 3; // To be verified why "- 3" ????
+	//i = i - 1;
+	if (i <= 117)
+        i = i - 1;
+	else
+        i = i - 2;
+    m_mapIdEnd = i;
 
 	// Build scalar structures
 	wxWord scalarAddress = 0;
 	int scalar_index = 0;
+	m_scalarAddresses = ExtractScalarsIndexAddress();
 
+    m_scalarIdBegin = i;
     while(scalarAddress < 65535)
     {
-        scalarAddress = scalarIndexAddress[scalar_index];
+        scalarAddress = m_scalarAddresses[scalar_index];
         m_mapTable[i].m_index = i;
         m_mapTable[i].m_address = scalarAddress;
         m_mapTable[i].m_singlevalue = true;
@@ -251,6 +222,7 @@ bool td5mapeditorDoc::OnNewDocument()
         i++;
     }
     i = i - 1;
+    m_scalarIdEnd = i;
 
     m_numberOfTables = i;
 
@@ -319,26 +291,36 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
 	wxWord address = 0;
 	int indexStartAddress = ExtractTablesIndexAddress();
 
-    while(tableAddress < 65535)
+    m_mapIdBegin = i;
+    while(tableAddress < 32767/*65535*/)
     {
         address = (indexStartAddress / sizeof(wxWord)) + i;
         tableAddress = LoHi2HiLo(m_mapFileData[address]);
         m_mapTable[i].m_index = i;
         m_mapTable[i].m_address = tableAddress;
+        m_mapAddresses[i] = tableAddress;
         m_mapTable[i].m_singlevalue = false;
         i++;
     }
 
-    i = i - 3; // To be verified why "- 3" ????
+    //i = i - 3; // To be verified why "- 3" ????
+    //i = i - 1;
+	if (i <= 117)
+        i = i - 1;
+	else
+        i = i - 2;
+    m_mapIdEnd = i;
 
 
 	// Build scalar structures
 	wxWord scalarAddress = 0;
 	int scalar_index = 0;
+	m_scalarAddresses = ExtractScalarsIndexAddress();
 
+    m_scalarIdBegin = i;
     while(scalarAddress < 65535)
     {
-        scalarAddress = scalarIndexAddress[scalar_index];
+        scalarAddress = m_scalarAddresses[scalar_index];
         m_mapTable[i].m_index = i;
         m_mapTable[i].m_address = scalarAddress;
         m_mapTable[i].m_singlevalue = true;
@@ -346,6 +328,7 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
         i++;
     }
     i = i - 1;
+    m_scalarIdEnd = i;
 
     m_numberOfTables = i;
 
@@ -358,7 +341,7 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
     // read tables
     bool recognized = false;
     int firstRecognized = 0;
-	for(int m = 0; m < m_numberOfTables; m++)
+    for(int m = 0; m < m_numberOfTables; m++)
 	{
 		m_mapTable[m].m_mapID = m_mapID;
 		m_mapTable[m].ReadTable(m_mapFileData, m, m_mapBaseData);
@@ -551,6 +534,19 @@ void td5mapeditorDoc::Update(wxView* sender)
     UpdateAllViews(sender);
 }
 
+void td5mapeditorDoc::ResetTableToBaseMap()
+{
+    for (int c = 0; c < m_mapTable[m_selectedTable].GetCols(); c++)
+        for (int r = 0; r < m_mapTable[m_selectedTable].GetRows(); r++)
+        {
+            m_mapTable[m_selectedTable].SetCurrentValue(m_mapTable[m_selectedTable].GetBaseValue(c, r), c, r);
+        }
+
+    Modify(true);
+    SetUpdateFlag(GRID_PANEL | INFO_PANEL |GRAPH_PANEL);
+    Update();
+}
+
 wxWord *td5mapeditorDoc::ExtractMapResource(int nResourceId, bool& bOk)
 {
 	wxWord *baseMap; // pointer to resource data
@@ -628,6 +624,15 @@ bool td5mapeditorDoc::GetUpdateFlag(long panel)
     return false;
 }
 
+wxWord td5mapeditorDoc::GetCurrentRawValue(int address)
+{
+    return LoHi2HiLo(m_mapFileData[address]);
+}
+
+wxWord td5mapeditorDoc::GetBaseRawValue(int address)
+{
+    return LoHi2HiLo(m_mapBaseData[address]);
+}
 
 bool td5mapeditorDoc::SelectTable(int index)
 {
@@ -693,6 +698,359 @@ wxString td5mapeditorDoc::ExtractMapNameFromFile()
 
 	return appstr;
 }
+
+bool td5mapeditorDoc::LoadXDF(const wxString& ifileName)
+{
+    const char* title;
+    const char* description;
+    const char* address;
+    const char* x_equation;
+    const char* x_units;
+    const char* y_units;
+    const char* y_equation;
+    const char* d_units;
+    const char* d_equation;
+
+    bool recognizedtable;
+    wxWord tableAddress = 0x0000;
+    double collabelmult;
+    int collabeloff;
+    double rowlabelmult;
+    int rowlabeloff;
+    double datamult;
+    int dataoff;
+
+    int counter = 0;
+
+	TiXmlDocument document( ifileName );
+	document.LoadFile();
+
+	TiXmlElement* root = document.FirstChildElement( "XDFFORMAT" );
+    if ( root )
+    {
+     	TiXmlElement* table = root->FirstChildElement( "XDFTABLE" );
+
+        while( table )
+        {
+            recognizedtable = false;
+            collabelmult = 1.0;
+            collabeloff = 0;
+            rowlabelmult = 1.0;
+            rowlabeloff = 0;
+            datamult = 1.0;
+            dataoff = 0;
+
+            title = "";
+            description = "";
+            address = "";
+            x_equation = "";
+            x_units = "";
+            y_units = "";
+            y_equation = "";
+            d_units = "";
+            d_equation = "";
+
+            TiXmlElement* table_title = table->FirstChildElement( "title" );
+            if(table_title)
+            {
+                title = table_title->GetText();
+                wxString strtitle(title);
+                if(strtitle.StartsWith(_T("Map")))
+                    recognizedtable = false;
+                else
+                    recognizedtable = true;
+            }
+
+            TiXmlElement* table_desc = table->FirstChildElement( "description" );
+            if(table_desc)
+            {
+                description = table_desc->GetText();
+            }
+
+            TiXmlElement* xaxis = table->FirstChildElement( "XDFAXIS" );
+            if(xaxis)
+            {
+                TiXmlElement* xaxis_address = xaxis->FirstChildElement( "EMBEDDEDDATA" );
+                if(xaxis_address)
+                {
+                    address = xaxis_address->Attribute("mmedaddress");
+                    wxString straddress(address);
+                    unsigned long ulongaddress;
+                    straddress.ToULong(&ulongaddress, 16);
+                    tableAddress = (wxWord)ulongaddress - 4;
+                }
+
+                TiXmlElement* xaxis_units = xaxis->FirstChildElement( "units" );
+                if(xaxis_units)
+                {
+                    x_units = xaxis_units->GetText();
+                }
+
+                TiXmlElement* xaxis_math = xaxis->FirstChildElement( "MATH" );
+                if(xaxis_math)
+                {
+                    x_equation = xaxis_math->Attribute("equation");
+                    wxString strmath(x_equation);
+                    if(strmath.IsSameAs(_T("X")))
+                    {
+                        collabelmult = 1.0;
+                        collabeloff = 0;
+                    }
+                    if(strmath.IsSameAs(_T("(X-2732)/10")))
+                    {
+                        collabelmult = 0.1;
+                        collabeloff = -2732;
+                    }
+                    if(strmath.IsSameAs(_T("X/10")))
+                    {
+                        collabelmult = 0.1;
+                        collabeloff = 0;
+                    }
+                    if(strmath.IsSameAs(_T("X/100")))
+                    {
+                        collabelmult = 0.01;
+                        collabeloff = 0;
+                    }
+                }
+            }
+
+            TiXmlElement* yaxis = xaxis->NextSiblingElement( "XDFAXIS" );
+            if(yaxis)
+            {
+                TiXmlElement* yaxis_units = yaxis->FirstChildElement( "units" );
+                if(yaxis_units)
+                {
+                    y_units = yaxis_units->GetText();
+                }
+
+                TiXmlElement* yaxis_math = yaxis->FirstChildElement( "MATH" );
+                if(yaxis_math)
+                {
+                    y_equation = yaxis_math->Attribute("equation");
+                    wxString strmath(y_equation);
+                    if(strmath.IsSameAs(_T("X")))
+                    {
+                        rowlabelmult = 1.0;
+                        rowlabeloff = 0;
+                    }
+                    if(strmath.IsSameAs(_T("(X-2732)/10")))
+                    {
+                        rowlabelmult = 0.1;
+                        rowlabeloff = -2732;
+                    }
+                    if(strmath.IsSameAs(_T("X/10")))
+                    {
+                        rowlabelmult = 0.1;
+                        rowlabeloff = 0;
+                    }
+                    if(strmath.IsSameAs(_T("X/100")))
+                    {
+                        rowlabelmult = 0.01;
+                        rowlabeloff = 0;
+                    }
+                }
+            }
+
+            TiXmlElement* data = yaxis->NextSiblingElement( "XDFAXIS" );
+            if(data)
+            {
+                TiXmlElement* data_units = data->FirstChildElement( "units" );
+                if(data_units)
+                {
+                    d_units = data_units->GetText();
+                }
+
+                TiXmlElement* data_math = data->FirstChildElement( "MATH" );
+                if(data_math)
+                {
+                    d_equation = data_math->Attribute("equation");
+                    wxString strmath(d_equation);
+                    if(strmath.IsSameAs(_T("X")))
+                    {
+                        datamult = 1.0;
+                        dataoff = 0;
+                    }
+                    if(strmath.IsSameAs(_T("(X-2732)/10")))
+                    {
+                        datamult = 0.1;
+                        dataoff = -2732;
+                    }
+                    if(strmath.IsSameAs(_T("X/10")))
+                    {
+                        datamult = 0.1;
+                        dataoff = 0;
+                    }
+                    if(strmath.IsSameAs(_T("X/100")))
+                    {
+                        datamult = 0.01;
+                        dataoff = 0;
+                    }
+                }
+            }
+
+            for(int m = m_mapIdBegin; m <= m_mapIdEnd; m++)
+            {
+                if(m_mapTable[m].m_address == tableAddress)
+                {
+                    if(recognizedtable)
+                    {
+                        m_mapTable[m].m_recognized = true;
+                        m_mapTable[m].m_type = XDF_MAP;
+                        m_mapTable[m].m_name = title;
+                        m_mapTable[m].m_comment = description;
+                        m_mapTable[m].m_xunit = x_units;
+                        m_mapTable[m].m_yunit = y_units;
+                        m_mapTable[m].m_zunit = d_units;
+                        m_mapTable[m].m_collabelmult = collabelmult;
+                        m_mapTable[m].m_collabeloff = collabeloff;
+                        m_mapTable[m].m_rowlabelmult = rowlabelmult;
+                        m_mapTable[m].m_rowlabeloff = rowlabeloff;
+                        m_mapTable[m].m_datamult = datamult;
+                        m_mapTable[m].m_dataoff = dataoff;
+
+                        if ((collabelmult != 1.0) || (collabeloff != 0))
+                            m_mapTable[m].m_collabelsized = true;
+                        else
+                            m_mapTable[m].m_collabelsized = false;
+
+                        if ((rowlabelmult != 1.0) || (rowlabeloff != 0))
+                            m_mapTable[m].m_rowlabelsized = true;
+                        else
+                            m_mapTable[m].m_rowlabelsized = false;
+
+                        if ((datamult != 1.0) || (dataoff != 0))
+                            m_mapTable[m].m_datasized = true;
+                        else
+                            m_mapTable[m].m_datasized = false;
+                    }
+                    else
+                    {
+                        m_mapTable[m].m_recognized = false;
+                    }
+
+                    break;
+                }
+            }
+
+            table = table->NextSiblingElement( "XDFTABLE" );
+            counter++;
+        }
+
+     	TiXmlElement* constant = root->FirstChildElement( "XDFCONSTANT" );
+
+        while( constant )
+        {
+            recognizedtable = false;
+            datamult = 1.0;
+            dataoff = 0;
+
+            title = "";
+            description = "";
+            address = "";
+            d_units = "";
+            d_equation = "";
+
+            TiXmlElement* constant_title = constant->FirstChildElement( "title" );
+            if(constant_title)
+            {
+                title = constant_title->GetText();
+                recognizedtable = true;
+            }
+
+            TiXmlElement* constant_address = constant->FirstChildElement( "EMBEDDEDDATA" );
+            if(constant_address)
+            {
+                address = constant_address->Attribute("mmedaddress");
+                    wxString straddress(address);
+                    unsigned long ulongaddress;
+                    straddress.ToULong(&ulongaddress, 16);
+                    tableAddress = (wxWord)ulongaddress;
+            }
+
+            TiXmlElement* constant_math = constant->FirstChildElement( "MATH" );
+            if(constant_math)
+            {
+                d_equation = constant_math->Attribute("equation");
+                wxString strmath(d_equation);
+                if(strmath.IsSameAs(_T("X")))
+                {
+                    datamult = 1.0;
+                    dataoff = 0;
+                }
+                if(strmath.IsSameAs(_T("(X-2732)/10")))
+                {
+                    datamult = 0.1;
+                    dataoff = -2732;
+                }
+                if(strmath.IsSameAs(_T("X/10")))
+                {
+                    datamult = 0.1;
+                    dataoff = 0;
+                }
+                if(strmath.IsSameAs(_T("X/100")))
+                {
+                    datamult = 0.01;
+                    dataoff = 0;
+                }
+            }
+
+           for(int s = m_scalarIdBegin; s <= m_scalarIdEnd; s++)
+            {
+                if(m_mapTable[s].m_address == tableAddress)
+                {
+                    if(recognizedtable)
+                    {
+                        m_mapTable[s].m_recognized = true;
+                        m_mapTable[s].m_type = XDF_SCALAR;
+                        m_mapTable[s].m_name = title;
+                        m_mapTable[s].m_comment = description;
+                        m_mapTable[s].m_xunit = _T("");
+                        m_mapTable[s].m_yunit = _T("");
+                        m_mapTable[s].m_zunit = d_units;
+                        m_mapTable[s].m_collabelmult = 1.0;
+                        m_mapTable[s].m_collabeloff = 0;
+                        m_mapTable[s].m_rowlabelmult = 1.0;
+                        m_mapTable[s].m_rowlabeloff = 0;
+                        m_mapTable[s].m_datamult = datamult;
+                        m_mapTable[s].m_dataoff = dataoff;
+                        m_mapTable[s].m_collabelsized = false;
+                        m_mapTable[s].m_rowlabelsized = false;
+
+                        if ((datamult != 1.0) || (dataoff != 0))
+                            m_mapTable[s].m_datasized = true;
+                        else
+                            m_mapTable[s].m_datasized = false;
+
+                        break;
+                    }
+                }
+            }
+
+            constant = constant->NextSiblingElement( "XDFCONSTANT" );
+            counter++;
+        }
+
+        int firstRecognized = 0;
+        for(int m = 0; m < m_numberOfTables; m++)
+        {
+            if (m_mapTable[m].m_recognized)
+            {
+                if (firstRecognized == 0)
+                    firstRecognized = m;
+            }
+        }
+
+        SelectTable(firstRecognized);
+
+        td5mapeditorView *view = (td5mapeditorView *) GetFirstView();
+        view->SetInfoPanelFlags(true, false);
+        SetUpdateFlag(GRID_PANEL | INFO_PANEL |GRAPH_PANEL);
+        Update();
+    }
+
+    return true;
+}
+
 
 int td5mapeditorDoc::ExtractMapIDFromFile()
 {
@@ -832,3 +1190,207 @@ int td5mapeditorDoc::ExtractTablesIndexAddress()
 
     return 0;
 }
+
+
+wxWord* td5mapeditorDoc::ExtractScalarsIndexAddress()
+{
+	if (m_mapType == IDR_MAP_TYPE_DISCO_EU2)
+    {
+        return scalarIndexAddressDiscoEU2;
+    }
+    else
+    if (m_mapType == IDR_MAP_TYPE_DEF_EU2)
+    {
+        return scalarIndexAddressDefEU2;
+    }
+    else
+    if (m_mapType == IDR_MAP_TYPE_EU3)
+    {
+        return scalarIndexAddressEU3;
+    }
+
+    return NULL;
+}
+
+
+// Scalars Addresses for all Models EU3
+wxWord td5mapeditorDoc::scalarIndexAddressEU3[] =
+{
+    0x06DC, // tb_intgl_deriv_rate      116
+    0x06DE, // tb_error_filt_const      117
+    0x06E0, // tb_intgl_enbl            118
+    0x06E2, // tb_clamp_intgl_hi        119
+    0x06E4, // tb_clamp_intgl_lo        120
+    0x06E6, // tb_deriv_enbi            121
+    0x06E8, // tb_clamp_deriv_hi        122
+    0x06EA, // tb_clamp_deriv_lo        123
+    0x06EC, // tb_gain_deriv_hi         124
+    0x06EE, // tb_gain_deriv_lo         125
+    0x06F0, // tb_max_err_intgl         126
+    0x06F2, // tb_max_duty_ratio        127
+    0x06F4, // tb_min_duty_ratio        128
+    0x06F6, // tb_turbo_pwm_freq        129
+    0x0746, // tb_under_rev_enbl        130
+    0x0748, // tb_under_pres_disbl      131
+    0x074A, // tb_under_pres_enbl       132
+    0x074C, // tb_over_pres_enbl        133
+    0x074E, // tb_over_pres_disbl       134
+    0x0750, // tb_over_rev_enbl         135
+    0x0752, // tb_engine_speed_disbl    136
+    0x0754, // tb_fuel_mass_disbl       137
+    0x0756, // tb_engine_speed_enbl     138
+    0x0758, // tb_fuel_mass_enbl        139
+    0x075A, // tb_pwm_default           140
+    0x077C, // ai_limit_min_aap         141
+    0x0786, // ai_limit_min_map         142
+    0x078A, // ai_limit_min_maf         143
+    0x079C, // ai_limit_max_aap         144
+    0x07A6, // ai_limit_max_map         145
+    0x07AA, // ai_limit_max_maf         146
+    0x07BC, // ai_anlg_multip_aap       147
+    0x07C6, // ai_anlg_multip_map       148
+    0x07CA, // ai_anlg_multip_maf       149
+    0x07DC, // ai_anlg_divisor_aap      150
+    0x07E6, // ai_anlg_divisor_map      151
+    0x07EA, // ai_anlg_divisor_maf      152
+    0x07FC, // ai_anlg_offset_aap       153
+    0x0806, // ai_anlg_offset_map       154
+    0x080A, // ai_anlg_offset_maf       155
+	0x0330, // ? (	cc_resume_sw_time )	156
+	0x0332, // ? (	cc_set_sw_time )	157
+	0x0334, // ? (	cc_sw_stuck_time )	158
+	0x0336, // ? (	cc_spd_chk_period )	159
+	0x0338, // cc_eng_spd_disi			160
+	0x033A, // cc_eng_spd_disd			161
+	0x033C, // cc_veh_spd_rate_disi		162
+	0x033E, // cc_veh_spd_ctrl_disd		163
+	0x0340, // ? (	cc_pedal_max_time )	164
+	0x0342, // ? (	cc_pedal_enbi )	    165
+	0x0344, // ? (	cc_veh_accel_filt )	166
+	0x0346, // ? (	cc_tap_up_interval )167
+	0x0348, // cc_vehicle_spd_disd		168
+	0x034A, // cc_vehicle_spd_disi		169
+	0x034C, // cc_vehicle_spd_inc		170
+	0x034E, // cc_vehicle_spd_dec		171
+	0x0350, // cc_max_accel_rate		172
+	0x0352, // cc_max_decel_rate		173
+	0x0354, // cc_tap_up_limit			174
+	0x0356, // ? (	cc_error_filt_rate )175
+	0x0358, // ? (	cc_int_der_lock_rt )176
+	0x035A, // ? (	cc_int_der_open_rt )177
+	0x035C, // ? (	cc_error_filt_const 178
+	0x035E, // ? (	cc_intgl_deadband )	179
+	0x0360, // ? (	cc_max_err_intgl )	180
+	0x0362, // cc_clamp_intgl_hi		181
+	0x0364, // cc_clamp_intgl_lo		182
+	0x0366, // ? (	cc_deriv_enbd )	    183
+	0x0368, // cc_clamp_deriv_hi		184
+	0x036A, // cc_clamp_deriv_lo		185
+	0x036C, // ? (	cc_gain_deriv_hi )	186
+	0x036E, // ? (	cc_gain_deriv_lo )	187
+	0x0370, // cc_dr_holding			188
+	0x0372, // ? (	cc_initial_I_mult )	189
+	0x0374, // ? (	cc_init_accel_rate )190
+	0x0376, // ? (	cc_demand_filter )	191
+	0x0378, // ? (	cc_open_intgl_mult )192
+	0x037A, // ? (	cc_lock_intgl_mult )193
+	0x037C, // cc_5_prptn_mult			194
+	0x037E, // cc_4_prptn_mult			195
+	0x0380, // cc_3_prptn_mult			196
+
+    0xFFFF  // END MARKER
+};
+
+// Scalars Addresses for Defender EU2
+wxWord td5mapeditorDoc::scalarIndexAddressDefEU2[] =
+{
+    0x05F2, // 	tb_intgl_deriv_rate	    	78
+    0x05F4, // 	tb_error_filt_const	    	79
+    0x05F6, // 	tb_intgl_enbl	    		80
+    0x05F8, // 	tb_clamp_intgl_hi	    	81
+    0x05FA, // 	tb_clamp_intgl_lo	    	82
+    0x05FC, // 	tb_deriv_enbi	    		83
+    0x05FE, // 	tb_clamp_deriv_hi	    	84
+    0x0600, // 	tb_clamp_deriv_lo	    	85
+    0x0602, // 	tb_gain_deriv_hi	    	86
+    0x0604, // 	tb_gain_deriv_lo	    	87
+    0x0606, // 	tb_max_err_intgl	    	88
+    0x0608, // 	tb_max_duty_ratio	    	89
+    0x060A, // 	tb_min_duty_ratio	    	90
+    0x060C, // 	tb_turbo_pwm_freq	    	91
+    0x0638, // 	tb_under_rev_enbl	    	92
+    0x063A, // 	tb_under_pres_disbl	    	93
+    0x063C, // 	tb_under_pres_enbl	    	94
+    0x063E, // 	tb_over_pres_enbl	    	95
+    0x0640, // 	tb_over_pres_disbl	    	96
+    0x0642, // 	tb_over_rev_enbl	    	97
+    0x0644, // 	tb_engine_speed_disbl	    98
+    0x0646, // 	tb_fuel_mass_disbl	    	99
+    0x0648, // 	tb_engine_speed_enbl	    100
+    0x064A, // 	tb_fuel_mass_enbl	    	101
+    0x064C, // 	tb_pwm_default	    		102
+    0x065C, // 	ai_limit_min_aap	    	103
+    0x0666, // 	ai_limit_min_map	    	104
+    0x066A, // 	ai_limit_min_maf	    	105
+    0x067C, // 	ai_limit_max_aap	    	106
+    0x0686, // 	ai_limit_max_map	    	107
+    0x068A, // 	ai_limit_max_maf	    	108
+    0x069C, // 	ai_anlg_multip_aap	    	109
+    0x06A6, // 	ai_anlg_multip_map	    	110
+    0x06AA, // 	ai_anlg_multip_maf	    	111
+    0x06BC, // 	ai_anlg_divisor_aap	    	112
+    0x06C6, // 	ai_anlg_divisor_map	    	113
+    0x06CA, // 	ai_anlg_divisor_maf	    	114
+    0x06DC, // 	ai_anlg_offset_aap	    	115
+    0x06E6, // 	ai_anlg_offset_map	    	116
+    0x06EA, // 	ai_anlg_offset_maf	    	117
+
+    0xFFFF  // END MARKER
+};
+
+// Scalars Addresses for Discovery EU2
+wxWord td5mapeditorDoc::scalarIndexAddressDiscoEU2[] =
+{
+    0x05FA, // 	tb_intgl_deriv_rate		79
+    0x05FC, // 	tb_error_filt_const		80
+    0x05FE, // 	tb_intgl_enbl			81
+    0x0600, // 	tb_clamp_intgl_hi		82
+    0x0602, // 	tb_clamp_intgl_lo		83
+    0x0604, // 	tb_deriv_enbi			84
+    0x0606, // 	tb_clamp_deriv_hi		85
+    0x0608, // 	tb_clamp_deriv_lo		86
+    0x060A, // 	tb_gain_deriv_hi		87
+    0x060C, // 	tb_gain_deriv_lo		88
+    0x060E, // 	tb_max_err_intgl		89
+    0x0610, // 	tb_max_duty_ratio		90
+    0x0612, // 	tb_min_duty_ratio		91
+    0x0614, // 	tb_turbo_pwm_freq		92
+    0x0640, // 	tb_under_rev_enbl		93
+    0x0642, // 	tb_under_pres_disbl		94
+    0x0644, // 	tb_under_pres_enbl		95
+    0x0646, // 	tb_over_pres_enbl		96
+    0x0648, // 	tb_over_pres_disbl		97
+    0x064A, // 	tb_over_rev_enbl		98
+    0x064C, // 	tb_engine_speed_disbl	99
+    0x064E, // 	tb_fuel_mass_disbl		100
+    0x0650, // 	tb_engine_speed_enbl	101
+    0x0652, // 	tb_fuel_mass_enbl		102
+    0x0654, // 	tb_pwm_default			103
+    0x0664, // 	ai_limit_min_aap		104
+    0x066E, // 	ai_limit_min_map		105
+    0x0672, // 	ai_limit_min_maf		106
+    0x0684, // 	ai_limit_max_aap		107
+    0x068E, // 	ai_limit_max_map		108
+    0x0692, // 	ai_limit_max_maf		109
+    0x06A4, // 	ai_anlg_multip_aap		110
+    0x06AE, // 	ai_anlg_multip_map		111
+    0x06B2, // 	ai_anlg_multip_maf		112
+    0x06C4, // 	ai_anlg_divisor_aap		113
+    0x06CE, // 	ai_anlg_divisor_map		114
+    0x06D2, // 	ai_anlg_divisor_maf		115
+    0x06E4, // 	ai_anlg_offset_aap		116
+    0x06EE, // 	ai_anlg_offset_map		117
+    0x06F2, // 	ai_anlg_offset_maf		118
+
+    0xFFFF  // END MARKER
+};

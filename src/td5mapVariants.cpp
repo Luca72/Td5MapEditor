@@ -40,10 +40,12 @@ td5mapVariant::td5mapVariant(wxUint32 id, wxString mapname, wxString variant)
 }
 
 td5mapVariant::td5mapVariant(const td5mapVariant& pmm)
+    :wxObject(pmm),
+    m_id(pmm.m_id),
+    m_mapName(pmm.m_mapName),
+    m_variant(pmm.m_variant)
 {
-    m_id = pmm.m_id;
-    m_mapName = pmm.m_mapName;
-    m_variant = pmm.m_variant;
+
 }
 
 td5mapVariant::~td5mapVariant()
@@ -65,12 +67,12 @@ td5mapVariants::td5mapVariants()
         _T("sthde021sttdp010"),
         _T("Disco, Manual, Europe, EU2, NNN500020"));
 
-    td5mapVariant mmDisco_Man_Eu_sthdr009_sttdp009(
+    td5mapVariant mmDisco_Man_ROW_sthdr009_sttdp009(
         IDR_STHDR009STTDP009_MAP,
         _T("sthdr009sttdp009"),
         _T("Disco, Manual, ROW, EU2, NNN000120"));
 
-    td5mapVariant mmDisco_Man_Eu_sthdr009_sttdp010(
+    td5mapVariant mmDisco_Man_ROW_sthdr009_sttdp010(
         IDR_STHDR009STTDP010_MAP,
         _T("sthdr009sttdp010"),
         _T("Disco, Manual, ROW, EU2, NNN500020"));
@@ -302,16 +304,16 @@ td5mapVariants::td5mapVariants()
 
     m_variants.Add(mmDisco_Man_Eu_sthde021_sttdp009);
     m_variants.Add(mmDisco_Man_Eu_sthde021_sttdp010);
-    m_variants.Add(mmDisco_Man_Eu_sthdr009_sttdp009);
-    m_variants.Add(mmDisco_Man_Eu_sthdr009_sttdp010);
+    //m_variants.Add(mmDisco_Man_ROW_sthdr009_sttdp009);
+    //m_variants.Add(mmDisco_Man_ROW_sthdr009_sttdp010);
     m_variants.Add(mmDef_Man_Eu_sthle022_sttlp009);
     m_variants.Add(mmDef_Man_Eu_sthle022_sttlp010);
     m_variants.Add(mmDisco_Auto_Eu_suhde036_sutdp012);
     m_variants.Add(mmDisco_Auto_Eu_suhde036_sutdp014);
-    m_variants.Add(mmDisco_Auto_ROW_suhdr009_sutzp004);
-    m_variants.Add(mmDisco_Auto_ROW_suhdr009_sutzp005);
-    m_variants.Add(mmDisco_Auto_Korea_surdk004_sutzp004);
-    m_variants.Add(mmDisco_Auto_Korea_surdk004_sutzp005);
+    //m_variants.Add(mmDisco_Auto_ROW_suhdr009_sutzp004);
+    //m_variants.Add(mmDisco_Auto_ROW_suhdr009_sutzp005);
+    //m_variants.Add(mmDisco_Auto_Korea_surdk004_sutzp004);
+    //m_variants.Add(mmDisco_Auto_Korea_surdk004_sutzp005);
     m_variants.Add(mmDisco_Man_Eu_svdxe003_svtnp003);
     m_variants.Add(mmDisco_Man_Eu_svdxe004_svtnp003);
     m_variants.Add(mmDisco_Man_Eu_svdxe006_svtnp003);

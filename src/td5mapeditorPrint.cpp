@@ -37,7 +37,7 @@ bool td5mapeditorPrint::OnPrintPage (int page) {
                                      dc, dc, m_printRect, m_pageRect);
     */
 
-    dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD, false));
+    dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false));
 
     int col[2] = {m_printRect.GetLeft() + 10, m_printRect.GetLeft() + 200 }; int row = m_printRect.GetTop() + 20;
     dc->DrawText(_T("Base firmware:"), col[0], row); dc->DrawText(m_doc->GetMapName(), col[1], row); row += 20;
@@ -170,7 +170,7 @@ bool td5mapeditorPrint::DrawGrid(wxDC *dc, wxRect& gridRect, int page)
     int origX = gridRect.GetX();
     int origY = gridRect.GetY();
 
-    wxFont font = wxFont(5, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD, false);
+    wxFont font = wxFont(5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false);
     wxBrush brush = *wxBLACK_BRUSH;
 
     int colIndex = 0; int rowIndex = 0;
@@ -306,7 +306,11 @@ void td5mapeditorPrint::DrawTextRectangle(wxDC& dc,const wxArrayString& lines,co
         // Align each line of a multi-line label
         for( l = 0; l < nLines; l++ )
         {
-            dc.GetTextExtent(lines[l], &lineWidth, &lineHeight);
+            //dc.GetTextExtent(lines[l], &lineWidth, &lineHeight);
+            wxCoord lw, lh;
+            dc.GetTextExtent(lines[l], &lw, &lh);
+            lineWidth = static_cast<long>(lw);
+            lineHeight = static_cast<long>(lh);
 
             switch( horizAlign )
             {
@@ -426,7 +430,12 @@ void td5mapeditorPrint::GetTextBoxSize( wxDC& dc,const wxArrayString& lines,long
     size_t i;
     for ( i = 0;  i < lines.GetCount();  i++ )
     {
-        dc.GetTextExtent( lines[i], &lineW, &lineH );
+        //dc.GetTextExtent( lines[i], &lineW, &lineH );
+        wxCoord lw, lh;
+        dc.GetTextExtent(lines[i], &lw, &lh);
+        lineW = static_cast<long>(lw);
+        lineH = static_cast<long>(lh);        
+        dc.GetTextExtent( lines[i]);
         w = wxMax( w, lineW );
         h += lineH;
     }

@@ -250,9 +250,11 @@ void graphDC::DrawSelectedPointArea(double xAxis, double yAxis, double zAxis)
 void graphDC::DrawCartesianAxis()
 {
 #ifndef __WINDOWS__
-    m_dc->SetFont(wxFont(8, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD, false));
+    //m_dc->SetFont(wxFont(8, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD, false));
+    m_dc->SetFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false));
 #else
-    m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD, false));
+    //m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD, false));
+    m_dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false));
 #endif
 
     if(m_table->IsBidimensional())
@@ -262,8 +264,8 @@ void graphDC::DrawCartesianAxis()
         m_dc->DrawLine(m_orgX, m_orgY - 10, m_orgX, m_axisRect.GetBottom() - (TOP_BOTTOM_MARGIN - 10));
 		m_dc->DrawLine(m_orgX - 10,  m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN, m_axisRect.GetRight() - (LEFT_RIGHT_MARGIN - 10), m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN);
 
-        m_dc->DrawText(m_table->m_tableInfo.m_xunit, m_axisRect.GetRight() - (LEFT_RIGHT_MARGIN - 10), m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN);
-        m_dc->DrawText(m_table->m_tableInfo.m_yunit, m_orgX - 10, m_orgY - 20);
+        m_dc->DrawText(m_table->m_xunit, m_axisRect.GetRight() - (LEFT_RIGHT_MARGIN - 10), m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN);
+        m_dc->DrawText(m_table->m_yunit, m_orgX - 10, m_orgY - 20);
     }
 
     if(m_table->IsTridimensional())
@@ -278,18 +280,20 @@ void graphDC::DrawCartesianAxis()
         DrawLine(orig, yaxis);
         DrawLine(orig, zaxis);
 
-        DrawText(m_table->m_tableInfo.m_xunit, (double)m_maxXAxis + ((double) m_maxXAxis * 0.1), 0.0, 0.0);
-        DrawText(m_table->m_tableInfo.m_yunit, 0.0, 0.0, (double)m_maxZAxis + ((double) m_maxZAxis * 0.10));
-        DrawText(m_table->m_tableInfo.m_zunit, 0.0, (double) m_maxYAxis, 0.0);
+        DrawText(m_table->m_xunit, (double)m_maxXAxis + ((double) m_maxXAxis * 0.1), 0.0, 0.0);
+        DrawText(m_table->m_yunit, 0.0, 0.0, (double)m_maxZAxis + ((double) m_maxZAxis * 0.10));
+        DrawText(m_table->m_zunit, 0.0, (double) m_maxYAxis, 0.0);
     }
 }
 
 void graphDC::DrawTitle()
 {
 #ifndef __WINDOWS__
-    m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    //m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    m_dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #else
-    m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    //m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    m_dc->SetFont(wxFont(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #endif
 
     if(m_show == GDC_SHOW_CURRENT)
@@ -305,9 +309,11 @@ void graphDC::DrawTitle()
 void graphDC::DrawTags()
 {
 #ifndef __WINDOWS__
-    m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    //m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    m_dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #else
-    m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    //m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    m_dc->SetFont(wxFont(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #endif
 
     if(m_table->IsBidimensional())
@@ -317,7 +323,10 @@ void graphDC::DrawTags()
             for(int c = 0; c < m_xaxisTagsNum; c++)
             {
                 short data = m_table->m_headerCol[c].current;
+                if (m_table->m_collabelsized == false)
                     m_dc->DrawText(wxString::Format(_T("%d"), data), m_orgX + 5 + (double)c * m_xaxisTagRes, (m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN + 10));
+                else
+                    m_dc->DrawText(wxString::Format(_T("%.1f"), m_table->ApplyColLabelSizer(data)), m_orgX + 5 + (double)c * m_xaxisTagRes, (m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN + 10));
             }
         }
 
@@ -326,34 +335,48 @@ void graphDC::DrawTags()
             int data = ((m_maxYAxis + abs(m_minYAxis)) / m_yaxisTagsNum) * r;
             if (m_minYAxis < 0)
                 data = ((m_maxYAxis + abs(m_minYAxis)) / m_yaxisTagsNum) * r - abs(m_minYAxis);
+            if (m_table->m_datasized == false)
                 m_dc->DrawText(wxString::Format(_T("%d"), data), m_orgX - 30, (m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN - 10) - (double)r * m_yaxisTagRes);
+            else
+                m_dc->DrawText(wxString::Format(_T("%.1f"), m_table->ApplyDataSizer(data)), m_orgX - 30, (m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN - 10) - (double)r * m_yaxisTagRes);
         }
     }
 
     if(m_table->IsTridimensional())
     {
 #ifndef __WINDOWS__
-        m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+        //m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+        m_dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #else
-        m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+        //m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+        m_dc->SetFont(wxFont(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #endif
 
         for(int c = 0; c < m_yaxisTagsNum; c++)
         {
             short data = (m_maxYAxis / m_yaxisTagsNum) * c;
+            if (m_table->m_datasized == false)
                 DrawText(wxString::Format(_T("%d"), data), (double)m_maxXAxis + ((double) m_maxXAxis * 0.05), data, 0.0);
+            else
+                DrawText(wxString::Format(_T("%.1f"), m_table->ApplyDataSizer(data)), (double)m_maxXAxis + ((double) m_maxXAxis * 0.05), data, 0.0);
         }
 
         for(int c = 0; c < m_xaxisTagsNum; c++)
         {
             short data = m_table->m_headerRow[c].current;
+            if (m_table->m_rowlabelsized == false)
                 DrawText(wxString::Format(_T("%d"), data), (double) c, 0.0, (double)m_maxZAxis + ((double) m_maxZAxis * 0.10));
+            else
+                DrawText(wxString::Format(_T("%.1f"), m_table->ApplyRowLabelSizer(data)), (double) c, 0.0, (double)m_maxZAxis + ((double) m_maxZAxis * 0.10));
         }
 
         for(int c = 0; c < m_zaxisTagsNum; c++)
         {
             short data = m_table->m_headerCol[c].current;
+            if (m_table->m_collabelsized == false)
                 DrawText(wxString::Format(_T("%d"), data), (double)m_maxXAxis + ((double) m_maxXAxis * 0.05), 0.0, (double)(m_maxZAxis - c));
+            else
+                DrawText(wxString::Format(_T("%.1f"), m_table->ApplyColLabelSizer(data)), (double)m_maxXAxis + ((double) m_maxXAxis * 0.05), 0.0, (double)(m_maxZAxis - c));
         }
 
         // Draw X Y Z helper axis
@@ -378,7 +401,7 @@ void graphDC::DrawHelpingLines()
     if(m_table->IsBidimensional())
     {
         // plot Y axis helping lines
-        m_dc->SetPen(wxPen(*wxLIGHT_GREY, 1, wxDOT));
+        m_dc->SetPen(wxPen(*wxLIGHT_GREY, 1, wxPENSTYLE_DOT));
         for(int c = 0; c < m_xaxisTagsNum; c++)
         {
             m_dc->DrawLine(m_orgX + (double)c * m_xaxisTagRes, m_axisRect.GetBottom() - TOP_BOTTOM_MARGIN, m_orgX + (double)c * m_xaxisTagRes, m_orgY);
@@ -394,7 +417,7 @@ void graphDC::DrawHelpingLines()
 
     if(m_table->IsTridimensional())
     {
-        m_dc->SetPen(wxPen(*wxLIGHT_GREY, 1, wxDOT));
+        m_dc->SetPen(wxPen(*wxLIGHT_GREY, 1, wxPENSTYLE_DOT));
 
         // plot Y axis helping lines
         for(int c = 0; c < m_yaxisTagsNum; c++)
@@ -593,7 +616,7 @@ void graphDC::DrawGraph()
                 }
         }
 
-        m_dc->SetBrush(wxBrush(wxColor(*wxBLACK), wxTRANSPARENT));
+        m_dc->SetBrush(wxBrush(wxColor(*wxBLACK), wxBRUSHSTYLE_TRANSPARENT));
     }
 }
 

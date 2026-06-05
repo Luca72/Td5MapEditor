@@ -41,17 +41,21 @@ point3d::point3d(double cx, double cy, double cz)
 }
 
 point3d::point3d(point3d& pt3d)
+    : wxObject(pt3d),
+      x(pt3d.x),
+      y(pt3d.y),
+      z(pt3d.z)
 {
-	x = pt3d.x;
-	y = pt3d.y;
-	z = pt3d.z;
+
 }
 
 point3d::point3d(const point3d& pt3d)
+    : wxObject(pt3d),
+      x(pt3d.x),
+      y(pt3d.y),
+      z(pt3d.z)
 {
-	x = pt3d.x;
-	y = pt3d.y;
-	z = pt3d.z;
+
 }
 
 point3d::~point3d()
@@ -200,6 +204,53 @@ wxPoint dc3d::TransformTo2d(double x, double y, double z)
 	return ptRet ;
 }
 
+point3d dc3d::DrawLine(double xbegin, double ybegin, double zbegin, double xend, double yend, double zend)
+{
+    point3d pt3d(xend, yend, zend);
+	wxPoint ptbegin, ptend;
+
+	ptbegin = TransformTo2d(xbegin, ybegin, zbegin);
+	ptend = TransformTo2d(xend, yend, zend);
+
+	m_dc->DrawLine(ptbegin.x, ptbegin.y, ptend.x, ptend.y);
+
+	return pt3d;
+}
+
+point3d dc3d::DrawLine(point3d pt3dBegin, point3d pt3dEnd)
+{
+    point3d pt3d;
+
+    pt3d = DrawLine(pt3dBegin.x, pt3dBegin.y, pt3dBegin.z, pt3dEnd.x, pt3dEnd.y, pt3dEnd.z);
+
+	return pt3d;
+}
+
+void dc3d::DrawText(const wxString& text, wxCoord x, wxCoord y, wxCoord z)
+{
+	wxPoint pt;
+
+	pt = TransformTo2d(x, y, z);
+
+    m_dc->DrawText(text, pt.x, pt.y);
+}
+
+void dc3d::DrawPolygon(int n, point3d points3d[], wxCoord xoffset, wxCoord yoffset, /*int*/wxPolygonFillMode fill_style)
+{
+    wxPoint *points2d = new wxPoint[n];
+
+    for(int i = 0; i < n; i++)
+    {
+        points2d[i] = TransformTo2d(points3d[i]);
+    }
+
+    m_dc->DrawPolygon(n, points2d , xoffset, yoffset, fill_style);
+
+    delete [] points2d;
+}
+
+
+
 /*
 bool dc3d::TransformTo3d(int x, int y, point3d& ptRet)
 {
@@ -249,48 +300,3 @@ bool dc3d::TransformTo3d(int x, int y, point3d& ptRet)
 	return found ;
 }
 */
-
-point3d dc3d::DrawLine(double xbegin, double ybegin, double zbegin, double xend, double yend, double zend)
-{
-    point3d pt3d(xend, yend, zend);
-	wxPoint ptbegin, ptend;
-
-	ptbegin = TransformTo2d(xbegin, ybegin, zbegin);
-	ptend = TransformTo2d(xend, yend, zend);
-
-	m_dc->DrawLine(ptbegin.x, ptbegin.y, ptend.x, ptend.y);
-
-	return pt3d;
-}
-
-point3d dc3d::DrawLine(point3d pt3dBegin, point3d pt3dEnd)
-{
-    point3d pt3d;
-
-    pt3d = DrawLine(pt3dBegin.x, pt3dBegin.y, pt3dBegin.z, pt3dEnd.x, pt3dEnd.y, pt3dEnd.z);
-
-	return pt3d;
-}
-
-void dc3d::DrawText(const wxString& text, wxCoord x, wxCoord y, wxCoord z)
-{
-	wxPoint pt;
-
-	pt = TransformTo2d(x, y, z);
-
-    m_dc->DrawText(text, pt.x, pt.y);
-}
-
-void dc3d::DrawPolygon(int n, point3d points3d[], wxCoord xoffset, wxCoord yoffset, /*int*/wxPolygonFillMode fill_style)
-{
-    wxPoint *points2d = new wxPoint[n];
-
-    for(int i = 0; i < n; i++)
-    {
-        points2d[i] = TransformTo2d(points3d[i]);
-    }
-
-    m_dc->DrawPolygon(n, points2d , xoffset, yoffset, fill_style);
-
-    delete [] points2d;
-}

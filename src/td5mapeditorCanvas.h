@@ -45,7 +45,7 @@ class td5mapeditorCanvas: public wxScrolledWindow
         DECLARE_EVENT_TABLE()
 
     protected:
-        int m_type;
+        int m_canvastype;
         int m_show;
         int m_zoom;
 

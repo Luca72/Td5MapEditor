@@ -32,6 +32,12 @@ td5mapTableInfoItem::td5mapTableInfoItem()
 	m_zunit = wxT("");
 	m_name = wxT("");
 	m_comment = wxT("");
+    m_collabelmult = 1.0;
+    m_collabeloff = 0;
+    m_rowlabelmult = 1.0;
+    m_rowlabeloff = 0;
+    m_datamult = 1.0;
+    m_dataoff = 0;
 }
 
 td5mapTableInfoItem::td5mapTableInfoItem(int iType, int iIndex, wxString sXUnit, wxString sYUnit, wxString sZUnit, wxString sName, wxString sComment)
@@ -43,17 +49,31 @@ td5mapTableInfoItem::td5mapTableInfoItem(int iType, int iIndex, wxString sXUnit,
 	m_zunit = sZUnit;
 	m_name = sName;
 	m_comment = sComment;
+    m_collabelmult = 1.0;
+    m_collabeloff = 0;
+    m_rowlabelmult = 1.0;
+    m_rowlabeloff = 0;
+    m_datamult = 1.0;
+    m_dataoff = 0;
 }
 
 td5mapTableInfoItem::td5mapTableInfoItem(const td5mapTableInfoItem& pmti)
+	:wxObject(pmti),
+    m_type(pmti.m_type),
+    m_index(pmti.m_index),
+	m_xunit(pmti.m_xunit),
+	m_yunit(pmti.m_yunit),
+	m_zunit(pmti.m_zunit),
+	m_name(pmti.m_name),
+	m_comment(pmti.m_comment),
+    m_collabelmult(pmti.m_collabelmult),
+    m_collabeloff(pmti.m_collabeloff),
+    m_rowlabelmult(pmti.m_rowlabelmult),
+    m_rowlabeloff(pmti.m_rowlabeloff),
+    m_datamult(pmti.m_datamult),
+    m_dataoff(pmti.m_dataoff)
 {
-    m_type = pmti.m_type;
-    m_index = pmti.m_index;
-	m_xunit = pmti.m_xunit;
-	m_yunit = pmti.m_yunit;
-	m_zunit = pmti.m_zunit;
-	m_name = pmti.m_name;
-	m_comment = pmti.m_comment;
+
 }
 
 td5mapTableInfoItem::~td5mapTableInfoItem()
@@ -75,6 +95,8 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T(""),
 		_T("TORQUE LIMITER HIGH RANGE"),
 		_T("Torque limiter table for HIGH range.\n\ndemand->smoke lim.->TORQUE LIM.->inj. duration\n\nX Axis: RPM\nY Axis: mg/stroke\n"));
+    mtiTorqueLimHighRange.SetDataSizers(0.01, 0);
+
 
 	td5mapTableInfoItem mtiTorqueLimLowRange(
         TORQUE_LIM_LOW_RANGE,
@@ -84,6 +106,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T(""),
 		_T("TORQUE LIMITER LOW RANGE"),
 		_T("Torque limiter table for LOW range.\n\ndemand->smoke lim.->TORQUE LIM.->inj. duration\n\nX Axis: RPM\nY Axis: mg/stroke\n"));
+    mtiTorqueLimLowRange.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiDriverDemandHighRange(
 		DRIVER_DEMAND_HIGH_RANGE,
@@ -93,6 +116,8 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("Inject Quantity (mg/stroke)"),
 		_T("DRIVER DEMAND HIGH RANGE"),
 		_T("Driver demand table for HIGH range.\n\nDEMAND->smoke lim.->torque lim.->inj. duration\n\nX Axis: RPM\nY Axis: mg/stroke\nZ Axis: %"));
+    mtiDriverDemandHighRange.SetColLabelSizers(0.01, 0);
+    mtiDriverDemandHighRange.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiDriverDemandLowRange(
 		DRIVER_DEMAND_LOW_RANGE,
@@ -102,6 +127,8 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("Inject Quantity (mg/stroke)"),
 		_T("DRIVER DEMAND LOW RANGE"),
 		_T("Driver demand table for LOW range.\n\nDEMAND->smoke lim.->torque lim.->inj. duration\n\nX Axis: RPM\nY Axis: mg/stroke\nZ Axis: %"));
+    mtiDriverDemandLowRange.SetColLabelSizers(0.01, 0);
+    mtiDriverDemandLowRange.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiSmokeLimLowRange(
 		SMOKE_LIM_LOW_RANGE,
@@ -111,6 +138,8 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("Limited Inj. (mg/stroke)"),
 		_T("SMOKE LIMITER MAP LOW RANGE"),
 		_T("Smoke limiter map for low range.\n\ndemand->SMOKE LIM.->torque lim.->inj. duration\n\nX Axis: Airmass (mg/stroke)\nY Axis: RPM\nZ Axis: Limited Inj. (mg/stroke)"));
+    mtiSmokeLimLowRange.SetColLabelSizers(0.1, 0);
+    mtiSmokeLimLowRange.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiSmokeLimHighRangeA(
 		SMOKE_LIM_HIGH_RANGE_A,
@@ -118,8 +147,10 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("Airmass (mg/stroke)"),
 		_T("RPM"),
 		_T("Limited Inj. (mg/stroke)"),
-		_T("SMOKE LIMITER MAP HIGH RANGE (normal load)"),
-		_T("Smoke limiter map for high range in normal load.\n\ndemand->SMOKE LIM.->torque lim.->inj. duration\n\nX Axis: Airmass (mg/stroke)\nY Axis: RPM\nZ Axis: Limited Inj. (mg/stroke)"));
+		_T("SMOKE LIM. MAP HIGH RANGE"),
+		_T("Smoke limiter map for high range.\n\ndemand->SMOKE LIM.->torque lim.->inj. duration\n\nX Axis: Airmass (mg/stroke)\nY Axis: RPM\nZ Axis: Limited Inj. (mg/stroke)"));
+    mtiSmokeLimHighRangeA.SetColLabelSizers(0.1, 0);
+    mtiSmokeLimHighRangeA.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiSmokeLimHighRangeB(
 		SMOKE_LIM_HIGH_RANGE_B,
@@ -127,8 +158,10 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("Airmass (mg/stroke)"),
 		_T("RPM"),
 		_T("Limited Inj. (mg/stroke)"),
-		_T("SMOKE LIMITER MAP HIGH RANGE (light load)"),
-		_T("Smoke limiter map for high range in light load.\n\ndemand->SMOKE LIM.->torque lim.->inj. duration\n\nX Axis: Airmass (mg/stroke)\nY Axis: RPM\nZ Axis: Limited Inj. (mg/stroke)"));
+		_T("SMOKE LIM. MAP HIGH RANGE (3 sec.)"),
+		_T("Smoke limiter map for high range (temp. - 3 sec. - after full throttle).\n\ndemand->SMOKE LIM.->torque lim.->inj. duration\n\nX Axis: Airmass (mg/stroke)\nY Axis: RPM\nZ Axis: Limited Inj. (mg/stroke)"));
+    mtiSmokeLimHighRangeB.SetColLabelSizers(0.1, 0);
+    mtiSmokeLimHighRangeB.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiFuelMap1(
 		FUEL_MAP_1,
@@ -138,6 +171,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("microsec."),
 		_T("FUEL MAP (0 deg. advance)"),
 		_T("Fuel map. Manages injection timing in function of engine speed and reference from throttle.\n\ndemand->smoke lim.->torque lim.->INJ. DURATION\n\nX Axis: Demand (mg/stroke)\nY Axis: RPMs\nZ Axis: Time (microsec.)"));
+    mtiFuelMap1.SetColLabelSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiFuelMap2(
 		FUEL_MAP_2,
@@ -147,6 +181,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("microsec."),
 		_T("FUEL MAP (5 deg. advance)"),
 		_T("Fuel map. Manages injection timing in function of engine speed and reference from throttle.\n\ndemand->smoke lim.->torque lim.->INJ. DURATION\n\nX Axis: Demand (mg/stroke)\nY Axis: RPMs\nZ Axis: Time (microsec.)"));
+    mtiFuelMap2.SetColLabelSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiFuelMap3(
 		FUEL_MAP_3,
@@ -156,6 +191,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("microsec."),
 		_T("FUEL MAP (10 deg. advance)"),
 		_T("Fuel map. Manages injection timing in function of engine speed and reference from throttle.\n\ndemand->smoke lim.->torque lim.->INJ. DURATION\n\nX Axis: Demand (mg/stroke)\nY Axis: RPMs\nZ Axis: Time (microsec.)"));
+    mtiFuelMap3.SetColLabelSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiFuelMap4(
 		FUEL_MAP_4,
@@ -165,6 +201,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("microsec."),
 		_T("FUEL MAP (25 deg. advance)"),
 		_T("Fuel map. Manages injection timing in function of engine speed and reference from throttle.\n\ndemand->smoke lim.->torque lim.->INJ. DURATION\n\nX Axis: Demand (mg/stroke)\nY Axis: RPMs\nZ Axis: Time (microsec.)"));
+    mtiFuelMap4.SetColLabelSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiFuelDensityCompLower(
 		FUEL_DENSITY_COMP_LOWER,
@@ -174,6 +211,9 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("Inject Quantity (mg/stroke)"),
 		_T("FUEL DENSITY COMPENSATION LOWER"),
 		_T("Fuel density compensation lower table\n\nX Axis: ?\nY Axis: Fuel temp.\nZ Axis: mg/stroke"));
+    mtiFuelDensityCompLower.SetColLabelSizers(0.01, 0);
+    mtiFuelDensityCompLower.SetRowLabelSizers(0.1, -2732);
+    mtiFuelDensityCompLower.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiFuelDensityCompUpper(
 		FUEL_DENSITY_COMP_UPPER,
@@ -183,6 +223,9 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("Inject Quantity (mg/stroke)"),
 		_T("FUEL DENSITY COMPENSATION UPPER"),
 		_T("Fuel density compensation upper table\n\nX Axis: ?\nY Axis: Fuel temp.\nZ Axis: mg/stroke"));
+    mtiFuelDensityCompUpper.SetColLabelSizers(0.01, 0);
+    mtiFuelDensityCompUpper.SetRowLabelSizers(0.1, -2732);
+    mtiFuelDensityCompUpper.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiIdleSpeed1(
 		IDLE_SPEED_1,
@@ -192,6 +235,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T(""),
 		_T("IDLE SPEED 1"),
 		_T("Idle speed map. Manages the idle speed. Both Idle Speed tables must be modified.\n\nX Axis: Ambient Temp.(deg.)\nY Axis: RPMs"));
+    mtiIdleSpeed1.SetColLabelSizers(0.1, -2732);
 
 	td5mapTableInfoItem mtiIdleSpeed2(
 		IDLE_SPEED_2,
@@ -201,6 +245,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T(""),
 		_T("IDLE SPEED 2"),
 		_T("Idle speed map. Manages the idle speed. Both Idle Speed tables must be modified.\n\nX Axis: Ambient Temp.(deg.)\nY Axis: RPMs"));
+    mtiIdleSpeed2.SetColLabelSizers(0.1, -2732);
 
 	td5mapTableInfoItem mtiEgrMap(
 		EGR_MAP,
@@ -219,6 +264,8 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("Temp (deg)"),
 		_T("COOLANT TEMPERATURE SENSOR"),
 		_T("Coolant temperature sensor table.\n\nX Axis: Temperature (Celsius deg.)\nY Axis: Battery (v)\nZ Axis: Sensor ref. (mV)"));
+    mtiCoolantTemp.SetColLabelSizers(0.1, -2732);
+    mtiCoolantTemp.SetRowLabelSizers(0.001, 0);
 
     td5mapTableInfoItem mtiTimingsMap(
 		TIMINGS_MAP,
@@ -283,6 +330,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T(""),
 		_T("UNKNOWN MAP 3"),
 		_T("Unknown (Increments improve response).\n\nX Axis: ?\nY Axis: ?\nZ Axis: ?"));
+    mtiUnknownMap3.SetRowLabelSizers(0.1, -2732);
 
 	td5mapTableInfoItem mtiUnknownMap4(
 		UNKNOWN_MAP_4,
@@ -329,6 +377,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T(""),
 		_T("TURBO OVERBOOST MAX"),
 		_T("Turbo overboost max pressure (kPa)"));
+    mtiScalarTurboOverboostMax.SetDataSizers(0.01, 0);
 
     td5mapTableInfoItem mtiScalarTurboOverboostRecovery(
 		SCALAR_TURBO_RECOVERY,
@@ -338,6 +387,70 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T(""),
 		_T("TURBO OVERBOOST RECOVERY"),
 		_T("Turbo overboost recovery pressure (kPa)"));
+    mtiScalarTurboOverboostRecovery.SetDataSizers(0.01, 0);
+
+
+    td5mapTableInfoItem mtiScalarCruiseControlMinSpeed(
+		SCALAR_CC_MIN_SPEED,
+		168,
+		_T("Km/h"),
+		_T(""),
+		_T(""),
+		_T("CRUISE CONTROL MIN SPEED"),
+		_T("Cruise Control lower speed limit (Km/h)"));
+    mtiScalarCruiseControlMinSpeed.SetDataSizers(0.1, 0);
+
+    td5mapTableInfoItem mtiScalarCruiseControlMaxSpeed(
+		SCALAR_CC_MAX_SPEED,
+		169,
+		_T("Km/h"),
+		_T(""),
+		_T(""),
+		_T("CRUISE CONTROL MAX SPEED"),
+		_T("Cruise Control upper speed limit (Km/h)"));
+    mtiScalarCruiseControlMaxSpeed.SetDataSizers(0.1, 0);
+
+    td5mapTableInfoItem mtiScalarCruiseControlIncrementForTap(
+		SCALAR_CC_INC_FOR_TAP,
+		170,
+		_T("Km/h"),
+		_T(""),
+		_T(""),
+		_T("CRUISE CONTROL INC. FOR TAP"),
+		_T("Cruise Control speed increment for each tap (Km/h)"));
+    mtiScalarCruiseControlIncrementForTap.SetDataSizers(0.1, 0);
+
+    td5mapTableInfoItem mtiScalarCruiseControlMaxAccelerationRate(
+		SCALAR_CC_MAX_ACC_RATE,
+		172,
+		_T("Km/h/sec"),
+		_T(""),
+		_T(""),
+		_T("CRUISE CONTROL MAX ACCELERATION RATE"),
+		_T("Cruise Control max acceleration rate (Km/h/sec)"));
+    mtiScalarCruiseControlMaxAccelerationRate.SetDataSizers(0.01, 0);
+
+    td5mapTableInfoItem mtiScalarCruiseControlMaxDecelerationRate(
+		SCALAR_CC_MAX_DEC_RATE,
+		173,
+		_T("Km/h/sec"),
+		_T(""),
+		_T(""),
+		_T("CRUISE CONTROL MAX DECELERATION RATE"),
+		_T("Cruise Control max deceleration rate (Km/h/sec)"));
+    mtiScalarCruiseControlMaxDecelerationRate.SetDataSizers(0.01, 0);
+
+    td5mapTableInfoItem mtiScalarCruiseControlTapsLimit(
+		SCALAR_CC_TAPS_LIMIT,
+		174,
+		_T("taps"),
+		_T(""),
+		_T(""),
+		_T("CRUISE CONTROL MAX UP TAPS"),
+		_T("Cruise Control number of max taps for up speed (taps)"));
+
+
+
 
 	switch(nID)
 	{
@@ -409,6 +522,12 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
             mtiScalarMapMaxLimit.m_index = 145;
             mtiScalarTurboOverboostMax.m_index = 133;
             mtiScalarTurboOverboostRecovery.m_index = 134;
+            mtiScalarCruiseControlMinSpeed.m_index = 168;
+            mtiScalarCruiseControlMaxSpeed.m_index = 169;
+            mtiScalarCruiseControlIncrementForTap.m_index = 170;
+            mtiScalarCruiseControlMaxAccelerationRate.m_index = 172;
+            mtiScalarCruiseControlMaxDecelerationRate.m_index = 173;
+            mtiScalarCruiseControlTapsLimit.m_index = 174;
 			break;
 
         case IDR_STHDE021STTDP009_MAP:
@@ -448,10 +567,16 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
             mtiTwgIntegralGain.m_index = 74;
             mtiTwgPressureMap.m_index = 78;
 
-            mtiScalarTwgPwmFreq.m_index = 255; // fake
-            mtiScalarMapMaxLimit.m_index = 255; // fake
-            mtiScalarTurboOverboostMax.m_index = 255; // fake
-            mtiScalarTurboOverboostRecovery.m_index = 255; // fake
+            mtiScalarTwgPwmFreq.m_index = 92;
+            mtiScalarMapMaxLimit.m_index = 108;
+            mtiScalarTurboOverboostMax.m_index = 96;
+            mtiScalarTurboOverboostRecovery.m_index = 97;
+            mtiScalarCruiseControlMinSpeed.m_index = 255; // fake
+            mtiScalarCruiseControlMaxSpeed.m_index = 255; // fake
+            mtiScalarCruiseControlIncrementForTap.m_index = 255; // fake
+            mtiScalarCruiseControlMaxAccelerationRate.m_index = 255; // fake
+            mtiScalarCruiseControlMaxDecelerationRate.m_index = 255; // fake
+            mtiScalarCruiseControlTapsLimit.m_index = 255; // fake
 			break;
 
 		case IDR_STHLE022STTLP009_MAP:
@@ -463,8 +588,8 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 			mtiSmokeLimHighRangeB.m_index = 255; // fake
 			mtiDriverDemandHighRange.m_index = 52;
 			mtiDriverDemandLowRange.m_index = 53;
-            mtiFuelDensityCompLower.m_index = 62;
-            mtiFuelDensityCompUpper.m_index = 63;
+            mtiFuelDensityCompLower.m_index = 61;
+            mtiFuelDensityCompUpper.m_index = 62;
 			mtiFuelMap1.m_index = 63;
 			mtiFuelMap2.m_index = 64;
 			mtiFuelMap3.m_index = 65;
@@ -483,10 +608,16 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
             mtiTwgIntegralGain.m_index = 255; // fake
             mtiTwgPressureMap.m_index = 77;
 
-            mtiScalarTwgPwmFreq.m_index = 255; // fake
-            mtiScalarMapMaxLimit.m_index = 255; // fake
-            mtiScalarTurboOverboostMax.m_index = 255; // fake
-            mtiScalarTurboOverboostRecovery.m_index = 255; // fake
+            mtiScalarTwgPwmFreq.m_index = 91;
+            mtiScalarMapMaxLimit.m_index = 107;
+            mtiScalarTurboOverboostMax.m_index = 95;
+            mtiScalarTurboOverboostRecovery.m_index = 96;
+            mtiScalarCruiseControlMinSpeed.m_index = 255; // fake
+            mtiScalarCruiseControlMaxSpeed.m_index = 255; // fake
+            mtiScalarCruiseControlIncrementForTap.m_index = 255; // fake
+            mtiScalarCruiseControlMaxAccelerationRate.m_index = 255; // fake
+            mtiScalarCruiseControlMaxDecelerationRate.m_index = 255; // fake
+            mtiScalarCruiseControlTapsLimit.m_index = 255; // fake
 			break;
 
         default:
@@ -520,6 +651,12 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
             mtiScalarMapMaxLimit.m_index = 255; // fake
             mtiScalarTurboOverboostMax.m_index = 255; // fake
             mtiScalarTurboOverboostRecovery.m_index = 255; // fake
+            mtiScalarCruiseControlMinSpeed.m_index = 255; // fake
+            mtiScalarCruiseControlMaxSpeed.m_index = 255; // fake
+            mtiScalarCruiseControlIncrementForTap.m_index = 255; // fake
+            mtiScalarCruiseControlMaxAccelerationRate.m_index = 255; // fake
+            mtiScalarCruiseControlMaxDecelerationRate.m_index = 255; // fake
+            mtiScalarCruiseControlTapsLimit.m_index = 255; // fake
 			break;
 	}
 
@@ -555,6 +692,12 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	m_mapInfo.Add(mtiScalarMapMaxLimit);
 	m_mapInfo.Add(mtiScalarTurboOverboostMax);
 	m_mapInfo.Add(mtiScalarTurboOverboostRecovery);
+	m_mapInfo.Add(mtiScalarCruiseControlMinSpeed);
+	m_mapInfo.Add(mtiScalarCruiseControlMaxSpeed);
+	m_mapInfo.Add(mtiScalarCruiseControlIncrementForTap);
+	m_mapInfo.Add(mtiScalarCruiseControlMaxAccelerationRate);
+	m_mapInfo.Add(mtiScalarCruiseControlMaxDecelerationRate);
+	m_mapInfo.Add(mtiScalarCruiseControlTapsLimit);
 
 }
 

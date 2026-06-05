@@ -57,8 +57,8 @@ class td5mapeditorMainFrame: public wxDocMDIParentFrame
 
     private:
         void CreateLayout();
-        wxTimer m_cyclicTimer;
-        void OnCyclicTimerEvent(wxTimerEvent& event);
+        //wxTimer m_cyclicTimer;
+        //void OnCyclicTimerEvent(wxTimerEvent& event);
 
 
     DECLARE_EVENT_TABLE()

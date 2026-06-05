@@ -29,6 +29,7 @@ BEGIN_EVENT_TABLE(td5mapeditorGridPanel, wxPanel)
     EVT_SIZE(td5mapeditorGridPanel::OnSize)
     EVT_MENU(wxID_COPY,td5mapeditorGridPanel::OnCopy)
     EVT_MENU(wxID_PASTE,td5mapeditorGridPanel::OnPaste)
+    EVT_MENU(ID_CONTEXTMENU_MODIFY_LABEL_VALUE,td5mapeditorGridPanel::OnModifyLabelValue)
     EVT_GRID_CELL_RIGHT_CLICK(td5mapeditorGridPanel::OnRClick)
     EVT_GRID_CELL_CHANGE(td5mapeditorGridPanel::OnCellChange)
     EVT_GRID_COPY_TO_CLIPBOARD(td5mapeditorGridPanel::OnGridCopy)
@@ -36,6 +37,7 @@ BEGIN_EVENT_TABLE(td5mapeditorGridPanel, wxPanel)
     EVT_GRID_RANGE_SELECT(td5mapeditorGridPanel::OnRangeSelect)
     EVT_GRID_SELECT_CELL(td5mapeditorGridPanel::OnCellSelect)
     EVT_KEY_DOWN( td5mapeditorGridPanel::OnKeyDown )
+    EVT_GRID_LABEL_RIGHT_CLICK(td5mapeditorGridPanel::OnLabelRClick)
 END_EVENT_TABLE()
 
 td5mapeditorGridPanel::td5mapeditorGridPanel(wxWindow* parent, wxView *view, wxWindowID id, const wxPoint& pos, const wxSize& size, long style):
@@ -46,6 +48,8 @@ td5mapeditorGridPanel::td5mapeditorGridPanel(wxWindow* parent, wxView *view, wxW
     m_valueType = GRID_VALUE_CURRENT;
     m_gridCols = 10;
     m_gridRows = 6;
+    m_clicked_label_row = - 1;
+    m_clicked_label_col = - 1;
 
     // Create a wxGrid object
     m_grid = new ewxGrid( this,
@@ -54,8 +58,9 @@ td5mapeditorGridPanel::td5mapeditorGridPanel(wxWindow* parent, wxView *view, wxW
                        wxSize( 10, 10 ) );
 
     m_grid->CreateGrid( m_gridRows, m_gridCols );
-    m_grid->SetDefaultCellFont(wxFont(8, wxDEFAULT, wxNORMAL, wxNORMAL, false));
-    m_grid->SetLabelFont(wxFont(8, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+    m_grid->InitLabelsColour(m_gridRows, m_gridCols);
+    m_grid->SetDefaultCellFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
+    m_grid->SetLabelFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
     m_grid->SetDefaultCellAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
     m_grid->SetDefaultRowSize(18, true);
     m_grid->SetRowLabelSize(50);
@@ -66,12 +71,18 @@ td5mapeditorGridPanel::td5mapeditorGridPanel(wxWindow* parent, wxView *view, wxW
     context_menu->Append(wxID_COPY, wxT("&Copy"));
     context_menu->Append(wxID_PASTE, wxT("&Paste"));
     context_menu->Enable(wxID_PASTE, false);
+
+    label_context_menu = new wxMenu();
+    label_context_menu->Append(ID_CONTEXTMENU_MODIFY_LABEL_VALUE, wxT("&Modify Value"));
+    label_context_menu->Enable(ID_CONTEXTMENU_MODIFY_LABEL_VALUE, true);
 }
 
 td5mapeditorGridPanel::~td5mapeditorGridPanel()
 {
     if(context_menu)
         delete context_menu;
+    if(label_context_menu)
+        delete label_context_menu;
 }
 
 void td5mapeditorGridPanel::OnSize(wxSizeEvent&
@@ -126,6 +137,32 @@ void td5mapeditorGridPanel::SetGridCellTextColour(int row, int col, short diff)
     }
 }
 
+void td5mapeditorGridPanel::SetGridRowLabelTextColour(int row, short diff)
+{
+    if ((diff == 0) || (m_valueType == GRID_VALUE_BASE))
+        m_grid->SetRowLabelTextColour(row, *wxBLACK);
+    else
+    {
+        if (diff > 0)
+            m_grid->SetRowLabelTextColour(row, *wxRED);
+        else
+            m_grid->SetRowLabelTextColour(row, *wxBLUE);
+    }
+}
+
+void td5mapeditorGridPanel::SetGridColLabelTextColour(int col, short diff)
+{
+    if ((diff == 0) || (m_valueType == GRID_VALUE_BASE))
+        m_grid->SetColLabelTextColour(col, *wxBLACK);
+    else
+    {
+        if (diff > 0)
+            m_grid->SetColLabelTextColour(col, *wxRED);
+        else
+            m_grid->SetColLabelTextColour(col, *wxBLUE);
+    }
+}
+
 void td5mapeditorGridPanel::UpdateGrid(td5mapeditorDoc *doc)
 {
     if(!doc->GetUpdateFlag(GRID_PANEL))
@@ -143,9 +180,11 @@ void td5mapeditorGridPanel::UpdateGrid(td5mapeditorDoc *doc)
 
     m_grid->InsertCols(0, m_gridCols);
     m_grid->InsertRows(0, m_gridRows);
+    m_grid->InitLabelsColour(m_gridRows, m_gridCols);
 
     wxString strdata;
-    short data = 0;
+    short rawdata = 0;
+    float sizeddata = 0.0;
 
 	for (int row = 0; row < m_grid->GetNumberRows(); row++)
     {
@@ -153,11 +192,30 @@ void td5mapeditorGridPanel::UpdateGrid(td5mapeditorDoc *doc)
         {
             if((m_valueType == GRID_VALUE_CURRENT) || (m_valueType == GRID_VALUE_DIFF))
             {
-                    m_grid->SetRowLabelIntValue(row, doc->GetSelMapRowHeaderCurrentValue(row));
+                if(doc->GetSelectedMapTable()->m_rowlabelsized == false)
+                {
+                    SetGridRowLabelTextColour(row, doc->GetSelMapRowLabelDiffRawValue(row));
+                    m_grid->SetRowLabelIntValue(row, doc->GetSelMapRowHeaderCurrentRawValue(row));
+                }
+                else
+                {
+                    SetGridRowLabelTextColour(row, doc->GetSelMapRowLabelDiffRawValue(row));
+                    m_grid->SetRowLabelFloatValue(row, doc->GetSelMapRowHeaderCurrentSizedValue(row));
+                }
             }
             if(m_valueType == GRID_VALUE_BASE)
             {
+                if(doc->GetSelectedMapTable()->m_rowlabelsized == false)
+                {
+                    SetGridRowLabelTextColour(row, doc->GetSelMapRowLabelDiffRawValue(row));
                     m_grid->SetRowLabelIntValue(row, doc->GetSelMapRowHeaderBaseRawValue(row));
+                }
+                else
+                {
+                    SetGridRowLabelTextColour(row, doc->GetSelMapRowLabelDiffRawValue(row));
+                    m_grid->SetRowLabelFloatValue(row, doc->GetSelMapRowHeaderBaseSizedValue(row));
+                }
+
             }
         }
         else
@@ -170,11 +228,29 @@ void td5mapeditorGridPanel::UpdateGrid(td5mapeditorDoc *doc)
         {
             if((m_valueType == GRID_VALUE_CURRENT) || (m_valueType == GRID_VALUE_DIFF))
             {
-                    m_grid->SetColLabelIntValue(col, doc->GetSelMapColHeaderCurrentValue(col));
+                if(doc->GetSelectedMapTable()->m_collabelsized == false)
+                {
+                    SetGridColLabelTextColour(col, doc->GetSelMapColLabelDiffRawValue(col));
+                    m_grid->SetColLabelIntValue(col, doc->GetSelMapColHeaderCurrentRawValue(col));
+                }
+                else
+                {
+                    SetGridColLabelTextColour(col, doc->GetSelMapColLabelDiffRawValue(col));
+                    m_grid->SetColLabelFloatValue(col, doc->GetSelMapColHeaderCurrentSizedValue(col));
+                }
             }
             if(m_valueType == GRID_VALUE_BASE)
             {
+                if(doc->GetSelectedMapTable()->m_collabelsized == false)
+                {
+                    SetGridColLabelTextColour(col, doc->GetSelMapColLabelDiffRawValue(col));
                     m_grid->SetColLabelIntValue(col, doc->GetSelMapColHeaderBaseRawValue(col));
+                }
+                else
+                {
+                    SetGridColLabelTextColour(col, doc->GetSelMapColLabelDiffRawValue(col));
+                    m_grid->SetColLabelFloatValue(col, doc->GetSelMapColHeaderBaseSizedValue(col));
+                }
             }
         }
         else
@@ -185,15 +261,33 @@ void td5mapeditorGridPanel::UpdateGrid(td5mapeditorDoc *doc)
         for (int col = 0; col < m_grid->GetNumberCols(); col++)
         {
             if(m_valueType == GRID_VALUE_CURRENT)
-                data = doc->GetSelMapCurrentValue(col, row);
+            {
+                if(doc->GetSelectedMapTable()->m_datasized == false)
+                    rawdata = doc->GetSelMapCurrentRawValue(col, row);
+                else
+                    sizeddata = doc->GetSelMapCurrentSizedValue(col, row);
+            }
             if(m_valueType == GRID_VALUE_BASE)
-                data = doc->GetSelMapBaseValue(col, row);
+            {
+                if(doc->GetSelectedMapTable()->m_datasized == false)
+                    rawdata = doc->GetSelMapBaseRawValue(col, row);
+                else
+                    sizeddata = doc->GetSelMapBaseSizedValue(col, row);
+            }
             if(m_valueType == GRID_VALUE_DIFF)
-                data = doc->GetSelMapDiffValue(col, row);
+            {
+                if(doc->GetSelectedMapTable()->m_datasized == false)
+                    rawdata = doc->GetSelMapDiffRawValue(col, row);
+                else
+                    sizeddata = doc->GetSelMapDiffSizedValue(col, row);
+            }
 
-            SetGridCellTextColour(row, col, doc->GetSelMapDiffValue(col, row));
+            if(doc->GetSelectedMapTable()->m_datasized == false)
+                m_grid->SetCellIntValue(row, col, rawdata);
+            else
+                m_grid->SetCellFloatValue(row, col, sizeddata);
 
-            m_grid->SetCellIntValue(row, col, data);
+            SetGridCellTextColour(row, col, doc->GetSelMapDiffRawValue(col, row));
 		}
 
     doc->ResetUpdateFlag(GRID_PANEL);
@@ -207,7 +301,11 @@ void td5mapeditorGridPanel::OnCopy(wxCommandEvent& WXUNUSED(event))
 
 void td5mapeditorGridPanel::OnPaste(wxCommandEvent& WXUNUSED(event))
 {
+    td5mapeditorDoc *doc = (td5mapeditorDoc *) m_view->GetDocument();
     m_grid->PasteFromClipboard();
+    doc->Modify(true);
+    doc->SetUpdateFlag(INFO_PANEL | GRAPH_PANEL);
+    doc->Update(NULL);
 }
 
 void td5mapeditorGridPanel::OnRClick(wxGridEvent& event)
@@ -224,6 +322,125 @@ void td5mapeditorGridPanel::OnRClick(wxGridEvent& event)
 
     m_view->GetFrame()->PopupMenu(context_menu);
 }
+
+void td5mapeditorGridPanel::OnLabelRClick(wxGridEvent& event)
+{
+    td5mapeditorDoc *doc = (td5mapeditorDoc *) m_view->GetDocument();
+    m_clicked_label_row = event.GetRow();
+    m_clicked_label_col = event.GetCol();
+
+    if(m_valueType == GRID_VALUE_CURRENT)
+    {
+        if(doc->GetSelectedMapTable()->IsSingleValue())
+        {
+            wxMessageBox( wxT("Single value tables does not\nallow header editing"), wxT("Invalid Header"), wxICON_ERROR);
+            return;
+        }
+
+        if(doc->GetSelectedMapTable()->IsBidimensional() &&  (m_clicked_label_row > -1))
+        {
+            wxMessageBox( wxT("Bidimensional tables does not\nallow row header editing"), wxT("Invalid Header"), wxICON_ERROR);
+            return;
+        }
+
+        if((m_clicked_label_row == -1) && (m_clicked_label_col == -1))
+        {
+            wxMessageBox( wxT("Wrong header"), wxT("Invalid Header"), wxICON_ERROR);
+            return;
+        }
+
+        PopupMenu(label_context_menu);
+    }
+    else
+        wxMessageBox( wxT("Header editing is allowed\nonly in CURRENT VIEW"), wxT("Invalid View"), wxICON_ERROR);
+}
+
+void td5mapeditorGridPanel::OnModifyLabelValue(wxCommandEvent& WXUNUSED(event))
+{
+    td5mapeditorDoc *doc = (td5mapeditorDoc *) m_view->GetDocument();
+    wxString label_value;
+
+    if(m_clicked_label_row > -1)
+    {
+        label_value = m_grid->GetRowLabelValue(m_clicked_label_row);
+    }
+    if(m_clicked_label_col > -1)
+    {
+        label_value = m_grid->GetColLabelValue(m_clicked_label_col);
+    }
+
+    wxString sNewValue = wxGetTextFromUser(wxT("Enter the new value"), wxT("Modify Label Value"), label_value);
+    if (sNewValue.Cmp(label_value) == 0)
+        return;
+
+    // check for invalid entries
+    if (sNewValue.IsEmpty())
+    {
+        wxMessageBox( wxT("Empty cell is not accepted"), wxT("Invalid Entry"), wxICON_ERROR);
+        return;
+    }
+
+    if(
+        ((m_clicked_label_row > -1) && (doc->GetSelectedMapTable()->m_rowlabelsized == false))
+        ||
+        ((m_clicked_label_col > -1) && (doc->GetSelectedMapTable()->m_collabelsized == false))
+       )
+    {
+        long value;
+        if(!sNewValue.ToLong(&value))
+        {
+            wxMessageBox( wxT("Integer value expected"), wxT("Invalid Entry"), wxICON_ERROR);
+            return;
+        }
+    }
+
+    if(
+        ((m_clicked_label_row > -1) && (doc->GetSelectedMapTable()->m_rowlabelsized == true))
+        ||
+        ((m_clicked_label_col > -1) && (doc->GetSelectedMapTable()->m_collabelsized == true))
+       )
+    {
+        double value;
+        if(!sNewValue.ToDouble(&value))
+        {
+            wxMessageBox( wxT("Float value expected"), wxT("Invalid Entry"), wxICON_ERROR);
+            return;
+        }
+        sNewValue.Printf(wxT("%0.1f"), value);
+    }
+
+
+    // entry is valid, proceed saving in database
+    if(m_clicked_label_row > -1)
+    {
+        m_grid->SetRowLabelValue(m_clicked_label_row, sNewValue);
+
+        if(doc->GetSelectedMapTable()->m_rowlabelsized == false)
+            doc->SetSelMapRowHeaderCurrentRawValue(m_clicked_label_row, m_grid->GetRowLabelIntValue(m_clicked_label_row));
+        else
+            doc->SetSelMapRowHeaderCurrentSizedValue(m_clicked_label_row, m_grid->GetRowLabelFloatValue(m_clicked_label_row));
+
+        SetGridRowLabelTextColour(m_clicked_label_row, doc->GetSelMapRowLabelDiffRawValue(m_clicked_label_row));
+    }
+
+    if(m_clicked_label_col > -1)
+    {
+        m_grid->SetColLabelValue(m_clicked_label_col, sNewValue);
+
+        if(doc->GetSelectedMapTable()->m_collabelsized == false)
+            doc->SetSelMapColHeaderCurrentRawValue(m_clicked_label_col, m_grid->GetColLabelIntValue(m_clicked_label_col));
+        else
+            doc->SetSelMapColHeaderCurrentSizedValue(m_clicked_label_col, m_grid->GetColLabelFloatValue(m_clicked_label_col));
+
+
+        SetGridColLabelTextColour(m_clicked_label_col, doc->GetSelMapColLabelDiffRawValue(m_clicked_label_col));
+    }
+
+    doc->Modify(true);
+    doc->SetUpdateFlag(INFO_PANEL | GRAPH_PANEL);
+    doc->Update(NULL);
+}
+
 
 void td5mapeditorGridPanel::OnKeyDown(wxKeyEvent& event)
 {
@@ -285,13 +502,21 @@ void td5mapeditorGridPanel::OnCellChange(wxGridEvent& event)
 
     if(m_valueType == GRID_VALUE_CURRENT)
     {
-        doc->SetSelMapCurrentValue(col, row, m_grid->GetCellIntValue(row, col));
+        if(doc->GetSelectedMapTable()->m_datasized == false)
+            doc->SetSelMapCurrentRawValue(col, row, m_grid->GetCellIntValue(row, col));
+        else
+            doc->SetSelMapCurrentSizedValue(col, row, m_grid->GetCellFloatValue(row, col));
+        SetGridCellTextColour(row, col, doc->GetSelMapDiffRawValue(col, row));
         doc->Modify(true);
     }
 
     if(m_valueType == GRID_VALUE_DIFF)
     {
-        doc->SetSelMapCurrentValue(col, row, m_grid->GetCellIntValue(row, col) + doc->GetSelMapBaseValue(col, row));
+        if(doc->GetSelectedMapTable()->m_datasized == false)
+            doc->SetSelMapCurrentRawValue(col, row, m_grid->GetCellIntValue(row, col) + doc->GetSelMapBaseRawValue(col, row));
+        else
+            doc->SetSelMapCurrentSizedValue(col, row, m_grid->GetCellFloatValue(row, col) + doc->GetSelMapBaseSizedValue(col, row));
+        SetGridCellTextColour(row, col, doc->GetSelMapDiffRawValue(col, row));
         doc->Modify(true);
     }
 
@@ -315,17 +540,23 @@ void td5mapeditorGridPanel::OnGridPaste(wxGridRangeSelectEvent& event)
         {
             if(m_valueType == GRID_VALUE_CURRENT)
             {
-                doc->SetSelMapCurrentValue(col, row, m_grid->GetCellIntValue(row, col));
+                if(doc->GetSelectedMapTable()->m_datasized == false)
+                    doc->SetSelMapCurrentRawValue(col, row, m_grid->GetCellIntValue(row, col));
+                else
+                    doc->SetSelMapCurrentSizedValue(col, row, m_grid->GetCellFloatValue(row, col));
                 doc->Modify(true);
             }
 
             if(m_valueType == GRID_VALUE_DIFF)
             {
-                doc->SetSelMapCurrentValue(col, row, m_grid->GetCellIntValue(row, col) + doc->GetSelMapBaseValue(col, row));
+                if(doc->GetSelectedMapTable()->m_datasized == false)
+                    doc->SetSelMapCurrentRawValue(col, row, m_grid->GetCellIntValue(row, col) + doc->GetSelMapBaseRawValue(col, row));
+                else
+                    doc->SetSelMapCurrentSizedValue(col, row, m_grid->GetCellFloatValue(row, col) + doc->GetSelMapBaseSizedValue(col, row));
                 doc->Modify(true);
             }
 
-            SetGridCellTextColour(row, col, doc->GetSelMapDiffValue(col, row));
+            SetGridCellTextColour(row, col, doc->GetSelMapDiffRawValue(col, row));
         }
     }
 
@@ -363,7 +594,8 @@ void td5mapeditorGridPanel::OnSumCellValue(int value)
         return;
 
     wxString strdata;
-    short data;
+    short rawdata = 0;
+    float sizeddata = 0.0;
 
     td5mapeditorDoc *doc = (td5mapeditorDoc *) m_view->GetDocument();
 
@@ -378,19 +610,37 @@ void td5mapeditorGridPanel::OnSumCellValue(int value)
             {
                 if(m_valueType == GRID_VALUE_CURRENT)
                 {
-                    data = doc->GetSelMapCurrentValue(col, row) + value;
-                    m_grid->SetCellIntValue( row, col, data);
-                    doc->SetSelMapCurrentValue(col, row, data);
+                    if(doc->GetSelectedMapTable()->m_datasized == false)
+                    {
+                        rawdata = doc->GetSelMapCurrentRawValue(col, row) + value;
+                        m_grid->SetCellIntValue( row, col, rawdata);
+                        doc->SetSelMapCurrentRawValue(col, row, rawdata);
+                    }
+                    else
+                    {
+                        sizeddata = doc->GetSelMapCurrentSizedValue(col, row) + value;
+                        m_grid->SetCellFloatValue( row, col, sizeddata);
+                        doc->SetSelMapCurrentSizedValue(col, row, sizeddata);
+                    }
                 }
 
                 if(m_valueType == GRID_VALUE_DIFF)
                 {
-                    data = doc->GetSelMapDiffValue(col, row) + value;
-                    m_grid->SetCellIntValue( row, col, data);
-                    doc->SetSelMapCurrentValue(col, row, doc->GetSelMapCurrentValue(col, row) + value);
+                    if(doc->GetSelectedMapTable()->m_datasized == false)
+                    {
+                        rawdata = doc->GetSelMapDiffRawValue(col, row) + value;
+                        m_grid->SetCellIntValue( row, col, rawdata);
+                        doc->SetSelMapCurrentRawValue(col, row, doc->GetSelMapCurrentRawValue(col, row) + value);
+                    }
+                    else
+                    {
+                        sizeddata = doc->GetSelMapDiffSizedValue(col, row) + value;
+                        m_grid->SetCellFloatValue( row, col, sizeddata);
+                        doc->SetSelMapCurrentSizedValue(col, row, doc->GetSelMapCurrentSizedValue(col, row) + value);
+                    }
                 }
 
-                SetGridCellTextColour(row, col, doc->GetSelMapDiffValue(col, row));
+                SetGridCellTextColour(row, col, doc->GetSelMapDiffRawValue(col, row));
             }
         }
     }
@@ -401,19 +651,37 @@ void td5mapeditorGridPanel::OnSumCellValue(int value)
 
         if(m_valueType == GRID_VALUE_CURRENT)
         {
-            data = doc->GetSelMapCurrentValue(col, row) + value;
-            m_grid->SetCellIntValue( row, col, data);
-            doc->SetSelMapCurrentValue(col, row, data);
+            if(doc->GetSelectedMapTable()->m_datasized == false)
+            {
+                rawdata = doc->GetSelMapCurrentRawValue(col, row) + value;
+                m_grid->SetCellIntValue( row, col, rawdata);
+                doc->SetSelMapCurrentRawValue(col, row, rawdata);
+            }
+            else
+            {
+                sizeddata = doc->GetSelMapCurrentSizedValue(col, row) + value;
+                m_grid->SetCellFloatValue( row, col, sizeddata);
+                doc->SetSelMapCurrentSizedValue(col, row, sizeddata);
+            }
         }
 
         if(m_valueType == GRID_VALUE_DIFF)
         {
-            data = doc->GetSelMapDiffValue(col, row) + value;
-            m_grid->SetCellIntValue( row, col, data);
-            doc->SetSelMapCurrentValue(col, row, doc->GetSelMapCurrentValue(col, row) + value);
+            if(doc->GetSelectedMapTable()->m_datasized == false)
+            {
+                rawdata = doc->GetSelMapDiffRawValue(col, row) + value;
+                m_grid->SetCellIntValue( row, col, rawdata);
+                doc->SetSelMapCurrentRawValue(col, row, doc->GetSelMapCurrentRawValue(col, row) + value);
+            }
+            else
+            {
+                sizeddata = doc->GetSelMapDiffSizedValue(col, row) + value;
+                m_grid->SetCellFloatValue( row, col, sizeddata);
+                doc->SetSelMapCurrentSizedValue(col, row, doc->GetSelMapCurrentSizedValue(col, row) + value);
+            }
         }
 
-        SetGridCellTextColour(row, col, doc->GetSelMapDiffValue(col, row));
+        SetGridCellTextColour(row, col, doc->GetSelMapDiffRawValue(col, row));
     }
 
     doc->Modify(true);

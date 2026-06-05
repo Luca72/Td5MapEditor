@@ -35,6 +35,7 @@ class td5mapeditorInfoPanel : public wxPanel
         void OnListItemSelected(wxListEvent& event);
         void OnHideEsoticMapsCheckBox(wxCommandEvent& event);
         void OnHideUnmodifiedMapsCheckBox(wxCommandEvent& event);
+        void OnResetToBaseMapButton(wxCommandEvent& event);
 
         void SetFlags(bool hideEsoticMaps, bool hideUnmodifiedMaps);
 
@@ -52,6 +53,7 @@ class td5mapeditorInfoPanel : public wxPanel
         wxStaticText *m_mapAddressLabel;
         wxStaticText *m_mapTagLabel;
         wxTextCtrl *m_mapCommentText;
+        wxButton *m_mapResetToBase;
 
 public:
     DECLARE_EVENT_TABLE()

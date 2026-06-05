@@ -47,7 +47,12 @@ class td5mapeditorGridPanel : public wxPanel
         void OnAddOne(){OnSumCellValue(1);};
         void OnSubtractOne(){OnSumCellValue(-1);};
         void OnEditRangeOfValues(){};
+        void OnLabelRClick(wxGridEvent& event);
+        void OnModifyLabelValue(wxCommandEvent& event);
+
         void SetGridCellTextColour(int row, int col, short diff);
+        void SetGridRowLabelTextColour(int row, short diff);
+        void SetGridColLabelTextColour(int col, short diff);
 
         ewxGrid *m_grid;
         int m_gridCols;
@@ -61,6 +66,9 @@ class td5mapeditorGridPanel : public wxPanel
         td5mapeditorView *m_view;
         int m_valueType;
         wxMenu *context_menu;
+        wxMenu *label_context_menu;
+        int m_clicked_label_row;
+        int m_clicked_label_col;
 
     public:
         DECLARE_EVENT_TABLE()

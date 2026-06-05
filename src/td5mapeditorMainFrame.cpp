@@ -80,13 +80,13 @@ BEGIN_EVENT_TABLE(td5mapeditorMainFrame, wxDocMDIParentFrame)
     EVT_MENU(ID_TOOLS_EDIT_RANGE_OF_VALUES,td5mapeditorMainFrame::OnEditRangeOfValues)
 #endif
     EVT_MENU(TD5MAPEDITOR_ABOUT, td5mapeditorMainFrame::OnAbout)
-    EVT_TIMER(wxID_ANY, td5mapeditorMainFrame::OnCyclicTimerEvent)
+    //EVT_TIMER(wxID_ANY, td5mapeditorMainFrame::OnCyclicTimerEvent)
 END_EVENT_TABLE()
 
 td5mapeditorMainFrame::td5mapeditorMainFrame()
 {
-    m_cyclicTimer.SetOwner( this, wxID_ANY );
-    m_cyclicTimer.Start( 200, wxTIMER_CONTINUOUS );
+    //m_cyclicTimer.SetOwner( this, wxID_ANY );
+    //m_cyclicTimer.Start( 200, wxTIMER_CONTINUOUS );
 }
 
 td5mapeditorMainFrame::td5mapeditorMainFrame(wxDocManager *manager, wxFrame *frame, const wxString& title,
@@ -94,8 +94,8 @@ td5mapeditorMainFrame::td5mapeditorMainFrame(wxDocManager *manager, wxFrame *fra
   wxDocMDIParentFrame(manager, frame, wxID_ANY, title, pos, size, type, _T("td5mapeditorMainFrame"))
 {
     CreateLayout();
-    m_cyclicTimer.SetOwner( this, wxID_ANY );
-    m_cyclicTimer.Start( 200, wxTIMER_CONTINUOUS );
+    //m_cyclicTimer.SetOwner( this, wxID_ANY );
+    //m_cyclicTimer.Start( 200, wxTIMER_CONTINUOUS );
 }
 
 bool td5mapeditorMainFrame::Create(wxDocManager *manager, wxFrame *frame, const wxString& title,
@@ -149,27 +149,36 @@ void td5mapeditorMainFrame::CreateLayout()
     int width = 16;
     int currentX = 5;
 
-    toolBar->AddTool(wxID_NEW, *(toolBarBitmaps[0]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("New file"));
+    //toolBar->AddTool(wxID_NEW, *(toolBarBitmaps[0]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("New file"));
+    toolBar->AddTool(wxID_NEW, "New file",*(toolBarBitmaps[0]),"Create new map file");
     currentX += width + 5;
-    toolBar->AddTool(wxID_OPEN, *(toolBarBitmaps[1]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Open file"));
+    //toolBar->AddTool(wxID_OPEN, *(toolBarBitmaps[1]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Open file"));
+    toolBar->AddTool(wxID_OPEN, "Open file",*(toolBarBitmaps[1]),"Open map file");
     currentX += width + 5;
-    toolBar->AddTool(wxID_SAVE, *(toolBarBitmaps[2]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Save file"));
-    currentX += width + 5;
-    toolBar->AddSeparator();
-    toolBar->AddTool(wxID_COPY, *(toolBarBitmaps[3]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Copy"));
-    currentX += width + 5;
-    toolBar->AddTool(wxID_CUT, *(toolBarBitmaps[4]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Cut"));
-    currentX += width + 5;
-    toolBar->AddTool(wxID_PASTE, *(toolBarBitmaps[5]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Paste"));
+    //toolBar->AddTool(wxID_SAVE, *(toolBarBitmaps[2]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Save file"));
+    toolBar->AddTool(wxID_SAVE, "Save file",*(toolBarBitmaps[2]),"Save current map file");
     currentX += width + 5;
     toolBar->AddSeparator();
-    toolBar->AddTool(wxID_PRINT, *(toolBarBitmaps[6]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Print"));
+    //toolBar->AddTool(wxID_COPY, *(toolBarBitmaps[3]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Copy"));
+    toolBar->AddTool(wxID_COPY, "Copy",*(toolBarBitmaps[3]),"Copy to clipboard");
+    currentX += width + 5;
+    //toolBar->AddTool(wxID_CUT, *(toolBarBitmaps[4]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Cut"));
+    toolBar->AddTool(wxID_CUT, "Cut",*(toolBarBitmaps[4]),"Cut to clipboard");
+    currentX += width + 5;
+    //toolBar->AddTool(wxID_PASTE, *(toolBarBitmaps[5]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Paste"));
+    toolBar->AddTool(wxID_PASTE, "Paste",*(toolBarBitmaps[5]),"Paste from clipboard");
+    currentX += width + 5;
+    toolBar->AddSeparator();
+    //toolBar->AddTool(wxID_PRINT, *(toolBarBitmaps[6]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Print"));
+    toolBar->AddTool(wxID_PRINT, "Print",*(toolBarBitmaps[6]),"Print map data");
     currentX += width + 5;
 
     toolBar->AddSeparator();
-    toolBar->AddTool(ID_TOOLS_ZOOM_MINUS, *(toolBarBitmaps[7]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Zoom Decrease"));
+    //toolBar->AddTool(ID_TOOLS_ZOOM_MINUS, *(toolBarBitmaps[7]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Zoom Decrease"));
+    toolBar->AddTool(ID_TOOLS_ZOOM_MINUS, "Zoom Decrease",*(toolBarBitmaps[7]),"Decrease zoom");
     currentX += width + 5;
-    toolBar->AddTool(ID_TOOLS_ZOOM_PLUS, *(toolBarBitmaps[8]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Zoom Increase"));
+    //toolBar->AddTool(ID_TOOLS_ZOOM_PLUS, *(toolBarBitmaps[8]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Zoom Increase"));
+    toolBar->AddTool(ID_TOOLS_ZOOM_PLUS, "Zoom Increase",*(toolBarBitmaps[8]),"Increase zoom");
     currentX += width + 5;
     toolBar->AddSeparator();
     toolBar->AddRadioTool(ID_TOOLS_CURR_VIEW, _T("Current view"), *(toolBarBitmaps[11]), wxNullBitmap, _T("Switch To Current View"));
@@ -179,11 +188,14 @@ void td5mapeditorMainFrame::CreateLayout()
     toolBar->AddRadioTool(ID_TOOLS_DIFF_VIEW, _T("Differences view"), *(toolBarBitmaps[9]), wxNullBitmap, _T("Switch To Differences View"));
     currentX += width + 5;
     toolBar->AddSeparator();
-    toolBar->AddTool(ID_TOOLS_ADD_ONE, *(toolBarBitmaps[12]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Value(s) +1"));
+    //toolBar->AddTool(ID_TOOLS_ADD_ONE, *(toolBarBitmaps[12]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Value(s) +1"));
+    toolBar->AddTool(ID_TOOLS_ADD_ONE, "Value(s) +1",*(toolBarBitmaps[12]),"Increase value(s) of 1 unit");
     currentX += width + 5;
-    toolBar->AddTool(ID_TOOLS_SUBTRACT_ONE, *(toolBarBitmaps[13]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Value(s) -1"));
+    //toolBar->AddTool(ID_TOOLS_SUBTRACT_ONE, *(toolBarBitmaps[13]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Value(s) -1"));
+    toolBar->AddTool(ID_TOOLS_SUBTRACT_ONE, "Value(s) -1",*(toolBarBitmaps[13]),"Decrease value(s) of 1 unit");
     currentX += width + 5;
-    toolBar->AddTool(ID_TOOLS_EDIT_RANGE_OF_VALUES, *(toolBarBitmaps[14]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Edit Range of Values"));
+    //toolBar->AddTool(ID_TOOLS_EDIT_RANGE_OF_VALUES, *(toolBarBitmaps[14]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Edit Range of Values"));
+    toolBar->AddTool(ID_TOOLS_EDIT_RANGE_OF_VALUES, "Edit Range of Values",*(toolBarBitmaps[13]),"Edit Range of values");
 
     DisableChildButtons();
 
@@ -327,7 +339,8 @@ void td5mapeditorMainFrame::OnEditRangeOfValues(wxCommandEvent& WXUNUSED(event))
     activeChild->OnEditRangeOfValues(event);
 }
 
+/*
 void td5mapeditorMainFrame::OnCyclicTimerEvent( wxTimerEvent& WXUNUSED(event) )
 {
 }
-
+*/

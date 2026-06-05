@@ -41,7 +41,7 @@ td5mapeditorCanvas::td5mapeditorCanvas(wxWindow *parent, wxView *v, int canvasty
     wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize)
 {
     m_view = v;
-    m_type = canvastype;
+    m_canvastype = canvastype;
     m_show = GDC_SHOW_CURRENT;
     m_zoom = 100;
     m_horizScrollBase = 20;

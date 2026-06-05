@@ -6,100 +6,118 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Win32 Debug">
-				<Option output="win32/debug/td5mapeditor" prefix_auto="1" extension_auto="1" />
-				<Option object_output="win32/debug/obj" />
+			<Target title="Win64 Debug">
+				<Option output="win64/debug/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="win64/debug/obj" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-w" />
+					<Add option="-std=gnu++11" />
 					<Add option="-g" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
 					<Add option='[[if (PLATFORM == PLATFORM_MSW &amp;&amp; (GetCompilerFactory().GetCompilerVersionString(_T(&quot;gcc&quot;)) &gt;= _T(&quot;4.0.0&quot;))) print(_T(&quot;-Wno-attributes&quot;));]]' />
-					<Add option="-D__WXDEBUG__" />
 					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXDEBUG__" />
 					<Add option="-D__WXMSW__" />
-					<Add option="-D__WINDOWS__" />
-					<Add option="-D__WIN32__" />
-					<Add directory="C:/wxWidgets/lib/gcc_lib/mswd" />
-					<Add directory="C:/wxWidgets/include" />
-					<Add directory="C:/wxWidgets/contrib/include" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-D_UNICODE" />
+					<Add directory="C:/wxWidgets-3.0.5/lib/gcc_lib/mswud" />
+					<Add directory="C:/wxWidgets-3.0.5/include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:/wxWidgets/lib/gcc_lib/mswd" />
-					<Add directory="C:/wxWidgets/include" />
+					<Add directory="C:/wxWidgets-3.0.2/include" />
+					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_lib/mswud" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="libwxmsw28d_core.a" />
-					<Add library="libwxbase28d.a" />
+					<Add library="libwxmsw30ud_adv.a" />
+					<Add library="libwxmsw30ud_core.a" />
+					<Add library="libwxbase30ud.a" />
+					<Add library="libwxtiffd.a" />
+					<Add library="libwxjpegd.a" />
 					<Add library="libwxpngd.a" />
 					<Add library="libwxzlibd.a" />
+					<Add library="libwxregexud.a" />
+					<Add library="libwxexpatd.a" />
 					<Add library="libkernel32.a" />
 					<Add library="libuser32.a" />
 					<Add library="libgdi32.a" />
-					<Add library="libwinspool.a" />
 					<Add library="libcomdlg32.a" />
-					<Add library="libadvapi32.a" />
+					<Add library="libwinspool.a" />
+					<Add library="libwinmm.a" />
 					<Add library="libshell32.a" />
+					<Add library="libcomctl32.a" />
 					<Add library="libole32.a" />
 					<Add library="liboleaut32.a" />
 					<Add library="libuuid.a" />
-					<Add library="libcomctl32.a" />
+					<Add library="librpcrt4.a" />
+					<Add library="libadvapi32.a" />
 					<Add library="libwsock32.a" />
-					<Add library="libodbc32.a" />
-					<Add library="libwxmsw28d_dbgrid.a" />
-					<Add library="libwxbase28d_odbc.a" />
-					<Add library="libwxmsw28d_adv.a" />
-					<Add directory="C:/wxWidgets/lib/gcc_lib" />
+					<Add library="libwininet.a" />
+					<Add directory="C:/wxWidgets-3.0.5/lib/gcc_lib" />
 				</Linker>
 			</Target>
-			<Target title="Win32 Release">
-				<Option output="win32/release/td5mapeditor" prefix_auto="1" extension_auto="1" />
-				<Option object_output="win32/release/obj" />
+			<Target title="Win64 Release">
+				<Option output="win64/release/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="win64/release/obj" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-w" />
+					<Add option="-std=gnu++11" />
+					<Add option="-m64" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
 					<Add option='[[if (PLATFORM == PLATFORM_MSW &amp;&amp; (GetCompilerFactory().GetCompilerVersionString(_T(&quot;gcc&quot;)) &gt;= _T(&quot;4.0.0&quot;))) print(_T(&quot;-Wno-attributes&quot;));]]' />
 					<Add option="-D__GNUWIN32__" />
 					<Add option="-D__WXMSW__" />
-					<Add option="-D__WINDOWS__" />
-					<Add option="-D__WIN32__" />
-					<Add directory="C:/wxWidgets/lib/gcc_lib/msw" />
-					<Add directory="C:/wxWidgets/include" />
-					<Add directory="C:/wxWidgets/contrib/include" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-D_UNICODE" />
+					<Add option="-DNDEBUG" />
+					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
+					<Add directory="C:/wxWidgets-3.0.2/include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:/wxWidgets/lib/gcc_lib/msw" />
-					<Add directory="C:/wxWidgets/include" />
+					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
+					<Add directory="C:/wxWidgets-3.0.2/include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="libwxmsw28_core.a" />
-					<Add library="libwxbase28.a" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m64" />
+					<Add option="-static-libstdc++" />
+					<Add option="-lwinpthread" />
+					<Add library="libwxmsw30u_adv.a" />
+					<Add library="libwxmsw30u_core.a" />
+					<Add library="libwxbase30u.a" />
+					<Add library="libwxtiff.a" />
+					<Add library="libwxjpeg.a" />
 					<Add library="libwxpng.a" />
 					<Add library="libwxzlib.a" />
+					<Add library="libwxregexu.a" />
+					<Add library="libwxexpat.a" />
 					<Add library="libkernel32.a" />
 					<Add library="libuser32.a" />
 					<Add library="libgdi32.a" />
-					<Add library="libwinspool.a" />
 					<Add library="libcomdlg32.a" />
-					<Add library="libadvapi32.a" />
+					<Add library="libwinspool.a" />
+					<Add library="libwinmm.a" />
 					<Add library="libshell32.a" />
+					<Add library="libcomctl32.a" />
 					<Add library="libole32.a" />
 					<Add library="liboleaut32.a" />
 					<Add library="libuuid.a" />
-					<Add library="libcomctl32.a" />
+					<Add library="librpcrt4.a" />
+					<Add library="libadvapi32.a" />
 					<Add library="libwsock32.a" />
-					<Add library="libodbc32.a" />
-					<Add library="libwxbase28_odbc.a" />
-					<Add library="libwxmsw28_dbgrid.a" />
-					<Add library="libwxmsw28_adv.a" />
-					<Add directory="C:/wxWidgets/lib/gcc_lib" />
+					<Add library="libwininet.a" />
+					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_lib" />
 				</Linker>
 			</Target>
 			<Target title="Linux x64 Debug">
@@ -176,6 +194,66 @@
 					<Add directory="/usr/lib32" />
 				</Linker>
 			</Target>
+			<Target title="Win32 Release">
+				<Option output="win32/release/td5mapeditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="win32/release/obj" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-std=gnu++11" />
+					<Add option="-m32" />
+					<Add option="-pipe" />
+					<Add option="-mthreads" />
+					<Add option='[[if (PLATFORM == PLATFORM_MSW &amp;&amp; (GetCompilerFactory().GetCompilerVersionString(_T(&quot;gcc&quot;)) &gt;= _T(&quot;4.0.0&quot;))) print(_T(&quot;-Wno-attributes&quot;));]]' />
+					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-D_UNICODE" />
+					<Add option="-DNDEBUG" />
+					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
+					<Add directory="C:/wxWidgets-3.0.2/include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
+					<Add directory="C:/wxWidgets-3.0.2/include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m32" />
+					<Add option="-lwinpthread" />
+					<Add library="libwxmsw30u_adv.a" />
+					<Add library="libwxmsw30u_core.a" />
+					<Add library="libwxbase30u.a" />
+					<Add library="libwxtiff.a" />
+					<Add library="libwxjpeg.a" />
+					<Add library="libwxpng.a" />
+					<Add library="libwxzlib.a" />
+					<Add library="libwxregexu.a" />
+					<Add library="libwxexpat.a" />
+					<Add library="libkernel32.a" />
+					<Add library="libuser32.a" />
+					<Add library="libgdi32.a" />
+					<Add library="libcomdlg32.a" />
+					<Add library="libwinspool.a" />
+					<Add library="libwinmm.a" />
+					<Add library="libshell32.a" />
+					<Add library="libcomctl32.a" />
+					<Add library="libole32.a" />
+					<Add library="liboleaut32.a" />
+					<Add library="libuuid.a" />
+					<Add library="librpcrt4.a" />
+					<Add library="libadvapi32.a" />
+					<Add library="libwsock32.a" />
+					<Add library="libwininet.a" />
+					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_lib" />
+				</Linker>
+			</Target>
 		</Build>
 		<Unit filename="src/baseMaps.cpp" />
 		<Unit filename="src/baseMaps.h" />
@@ -198,7 +276,8 @@
 		<Unit filename="src/resource.h" />
 		<Unit filename="src/resource.rc">
 			<Option compilerVar="WINDRES" />
-			<Option target="Win32 Debug" />
+			<Option target="Win64 Debug" />
+			<Option target="Win64 Release" />
 			<Option target="Win32 Release" />
 		</Unit>
 		<Unit filename="src/td5mapGraph.cpp" />
@@ -229,15 +308,18 @@
 		<Unit filename="src/td5mapeditorPrint.h" />
 		<Unit filename="src/td5mapeditorView.cpp" />
 		<Unit filename="src/td5mapeditorView.h" />
+		<Unit filename="src/tinyxml/tinystr.cpp" />
+		<Unit filename="src/tinyxml/tinystr.h" />
+		<Unit filename="src/tinyxml/tinyxml.cpp" />
+		<Unit filename="src/tinyxml/tinyxml.h" />
+		<Unit filename="src/tinyxml/tinyxmlerror.cpp" />
+		<Unit filename="src/tinyxml/tinyxmlparser.cpp" />
 		<Unit filename="src/version.h" />
 		<Unit filename="src/wizNewMap.cpp" />
 		<Unit filename="src/wizNewMap.h" />
 		<Unit filename="src/wizNewMapPage1.cpp" />
 		<Unit filename="src/wizNewMapPage1.h" />
 		<Extensions>
-			<code_completion />
-			<debugger />
-			<envvars />
 			<AutoVersioning>
 				<Scheme minor_max="99" build_max="9999" rev_max="99" rev_rand_max="1" build_times_to_increment_minor="9999" />
 				<Settings autoincrement="1" date_declarations="1" use_define="0" update_manifest="1" do_auto_increment="0" ask_to_increment="1" language="C++" svn="0" svn_directory="" header_path="src\version.h" />

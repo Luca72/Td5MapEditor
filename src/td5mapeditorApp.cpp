@@ -56,8 +56,8 @@ bool td5mapeditorApp::OnInit()
     title += wxString::Format(wxT("%ld"), AutoVersion::BUILD);
     title += _T(".");
     title += wxString::Format(wxT("%ld"), AutoVersion::REVISION);
-    //title += _T(" ");
-    //title += _T("by Luca Veronesi");
+    title += _T(" - ");
+    title += _T("unstable");
 
     //// Create the main frame window
     /*

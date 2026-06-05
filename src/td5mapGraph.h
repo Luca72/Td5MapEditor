@@ -61,7 +61,7 @@ class td5mapGraph
         wxScrolledWindow *m_parent;
 
         int m_show;
-        int m_type;
+        int m_graphtype;
         bool m_prepared;
 
         td5mapTable *m_table;

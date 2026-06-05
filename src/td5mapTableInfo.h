@@ -21,7 +21,12 @@ public:
 		m_zunit = s.m_zunit;
 		m_name = s.m_name;
 		m_comment = s.m_comment;
-
+        m_collabelmult = s.m_collabelmult;
+        m_collabeloff = s.m_collabeloff;
+        m_rowlabelmult = s.m_rowlabelmult;
+        m_rowlabeloff = s.m_rowlabeloff;
+        m_datamult = s.m_datamult;
+        m_dataoff = s.m_dataoff;
 		return *this;
 	}
 
@@ -29,7 +34,9 @@ public:
 	td5mapTableInfoItem();
 	td5mapTableInfoItem(int iType, int iIndex, wxString sXUnit, wxString sYUnit, wxString sZUnit, wxString sName, wxString sComment);
 	td5mapTableInfoItem(const td5mapTableInfoItem& pmti);
-
+	void SetColLabelSizers(double mult, int off) {m_collabelmult = mult; m_collabeloff = off;};
+	void SetRowLabelSizers(double mult, int off) {m_rowlabelmult = mult; m_rowlabeloff = off;};
+	void SetDataSizers(double mult, int off) {m_datamult = mult; m_dataoff = off;};
 	virtual ~td5mapTableInfoItem();
 
 public:
@@ -40,6 +47,12 @@ public:
 	wxString m_zunit;
 	wxString m_name;
 	wxString m_comment;
+	double m_collabelmult;
+	int m_collabeloff;
+	double m_rowlabelmult;
+	int m_rowlabeloff;
+   	double m_datamult;
+	int m_dataoff;
 };
 
 #define TORQUE_LIM_HIGH_RANGE          100
@@ -63,18 +76,26 @@ public:
 #define TWG_DUTY_CYCLE                 118
 #define TWG_INTEGRAL_GAIN              119
 #define TWG_PRESSURE_MAP               120
+#define XDF_MAP                        199
 
 #define SCALAR_TWG_PWM_FREQUENCY       200
 #define SCALAR_MAP_MAX_LIMIT           201
 #define SCALAR_TURBO_MAX_LIMIT  	   202
 #define SCALAR_TURBO_RECOVERY          203
-
+#define SCALAR_CC_MIN_SPEED            204
+#define SCALAR_CC_MAX_SPEED            205
+#define SCALAR_CC_INC_FOR_TAP          206
+#define SCALAR_CC_MAX_ACC_RATE         207
+#define SCALAR_CC_MAX_DEC_RATE         208
+#define SCALAR_CC_TAPS_LIMIT           209
+#define XDF_SCALAR                     299
 
 #define UNKNOWN_MAP_1                  900
 #define UNKNOWN_MAP_2                  901
 #define UNKNOWN_MAP_3                  902
 #define UNKNOWN_MAP_4                  903
 #define UNKNOWN_MAP_5                  904
+
 
 
 WX_DECLARE_OBJARRAY(td5mapTableInfoItem, arrayofTableInfoItem);

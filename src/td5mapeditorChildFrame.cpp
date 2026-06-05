@@ -44,6 +44,8 @@ BEGIN_EVENT_TABLE(td5mapeditorChildFrame, wxDocMDIChildFrame)
     EVT_MENU(ID_FILE_PRINT, td5mapeditorChildFrame::OnPrint)
     EVT_MENU(ID_FILE_EXPORT_TUNING, td5mapeditorChildFrame::OnExportTuning)
     EVT_MENU(ID_FILE_IMPORT_TUNING, td5mapeditorChildFrame::OnImportTuning)
+    EVT_MENU(ID_FILE_LOAD_XDF, td5mapeditorChildFrame::OnLoadXDF)
+    EVT_MENU(ID_TOOLS_HEX_COMPARE, td5mapeditorChildFrame::OnHexCompare)
     EVT_MENU(ID_TOOLS_EDIT_TAG,td5mapeditorChildFrame::OnEditTag)
     EVT_SIZE(td5mapeditorChildFrame::OnSize)
     EVT_SPLITTER_SASH_POS_CHANGED(SPLITTER_MAIN, td5mapeditorChildFrame::OnSplitterSashPosChanged)
@@ -56,6 +58,7 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
 {
     m_parentFrame = parent;
     m_showType = SHOW_CURRENT;
+    m_canvasCreated = false;
 
     canvasMainGraph = (td5mapeditorCanvas *) NULL;
     canvasDiffGraph = (td5mapeditorCanvas *) NULL;
@@ -82,6 +85,9 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
     file_menu->AppendSeparator();
     file_menu->Append(ID_FILE_EXPORT_TUNING, _T("&Export Tuning"));
     file_menu->Append(ID_FILE_IMPORT_TUNING, _T("&Import Tuning"));
+
+    file_menu->AppendSeparator();
+    file_menu->Append(ID_FILE_LOAD_XDF, _T("Load &XDF"));
 
     file_menu->AppendSeparator();
     file_menu->Append(ID_FILE_PRINT, _T("&Print..."));
@@ -118,7 +124,9 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
     tools_menu->Append(ID_TOOLS_SUBTRACT_ONE, _T("Value(s) -1\tCtrl-+"));
     tools_menu->Append(ID_TOOLS_EDIT_RANGE_OF_VALUES, _T("&Edit Range of Values\tCtrl-E"));
     tools_menu->AppendSeparator();
-    tools_menu->Append(ID_TOOLS_EDIT_TAG, _T("&Edit Tag\tCtrl-T"));
+    tools_menu->Append(ID_TOOLS_HEX_COMPARE, _T("&Hex Compare\tCtrl-H"));
+    //tools_menu->AppendSeparator();
+    //tools_menu->Append(ID_TOOLS_EDIT_TAG, _T("&Edit Tag\tCtrl-T"));
 
 
     wxMenu *help_menu = new wxMenu;
@@ -285,6 +293,7 @@ void td5mapeditorChildFrame::CreateCanvas(wxView *view)
     splitterGraph->SplitVertically(canvasDiffGraph, canvasMainGraph);
     splitterGraph->SetMinimumPaneSize(200);
 
+    m_canvasCreated = true;
 }
 
 void td5mapeditorChildFrame::OnSplitterSashPosChanged(wxSplitterEvent& event)
@@ -369,9 +378,11 @@ void td5mapeditorChildFrame::SetSelection(int col, int row, wxWindowID sender, w
     }
 
     //if((sender != ID_CANVAS_MAIN_PANE) && ((destination == ID_CANVAS_MAIN_PANE) || (destination ==ID_ALL_PANES)))
+    if (m_canvasCreated == true)
         canvasMainGraph->SetSelection(col, row);
 
     //if((sender != ID_CANVAS_DIFF_PANE) && ((destination == ID_CANVAS_DIFF_PANE) || (destination ==ID_ALL_PANES)))
+    if (m_canvasCreated == true)
         canvasDiffGraph->SetSelection(col, row);
 }
 
@@ -399,6 +410,7 @@ void td5mapeditorChildFrame::SetSelectionRange(ewxRange range, wxWindowID sender
 
     //if((sender != ID_CANVAS_DIFF_PANE) && ((destination == ID_CANVAS_DIFF_PANE) || (destination ==ID_ALL_PANES)))
         canvasDiffGraph->SetSelectionRange(range.leftCol, range.topRow, range.rightCol, range.bottomRow);
+
 }
 
 void td5mapeditorChildFrame::OnEditRangeOfValues(wxCommandEvent& WXUNUSED(event))
@@ -572,6 +584,23 @@ void td5mapeditorChildFrame::OnImportTuning (wxCommandEvent &WXUNUSED(event))
     }
 }
 
+void td5mapeditorChildFrame::OnLoadXDF(wxCommandEvent& event)
+{
+    td5mapeditorDoc* doc = (td5mapeditorDoc*)GetDocument();
+    wxFileDialog filedlg(this,
+        _("Choose a TunerPro XDF file to open"),
+        wxEmptyString,
+        wxEmptyString,
+        _("TunerPro files (*.xdf)|*.xdf|All files (*.*)|*.*"),
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR );
+
+    if (filedlg.ShowModal() == wxID_OK)
+    {
+        doc->LoadXDF(filedlg.GetPath());
+
+    }
+}
+
 void td5mapeditorChildFrame::OnEditTag (wxCommandEvent &WXUNUSED(event))
 {
     td5mapeditorDoc* doc = (td5mapeditorDoc*)GetDocument();
@@ -588,3 +617,139 @@ void td5mapeditorChildFrame::OnEditTag (wxCommandEvent &WXUNUSED(event))
     }
 
 }
+
+void td5mapeditorChildFrame::OnHexCompare (wxCommandEvent &WXUNUSED(event))
+{
+    td5mapeditorDoc* doc = (td5mapeditorDoc*)GetDocument();
+    HexCompareDialog dlg(this);
+
+    int counter = 0;
+    wxWord base, curr;
+
+    dlg.m_diffList.resize(counter);
+
+    for(int index = 0; index < (int) MAP_FILE_LENGTH_WORD; index++)
+    {
+        base = doc->GetBaseRawValue(index);
+        curr = doc->GetCurrentRawValue(index);
+        if(curr != base)
+        {
+            counter++;
+            dlg.m_diffList.resize(counter);
+            dlg.m_diffList[counter - 1].base = base;
+            dlg.m_diffList[counter - 1].current = curr;
+            dlg.m_diffList[counter - 1].address = (index * sizeof(wxWord));
+
+            dlg.m_grid->InsertRows(1, 1);
+            dlg.m_grid->InitLabelsColour(counter, 4);
+        }
+    }
+
+    for(int index = 0; index < counter; index++)
+    {
+        wxUint32 address = dlg.m_diffList[index].address;
+
+        dlg.m_grid->SetCellStringValue(index, 0, wxString::Format(_T("0x%08X"), address));
+        dlg.m_grid->SetCellIntValue(index, 1, dlg.m_diffList[index].base);
+        dlg.m_grid->SetCellIntValue(index, 2, dlg.m_diffList[index].current);
+
+        if((dlg.m_diffList[index].current - dlg.m_diffList[index].base) > 0)
+            dlg.m_grid->SetCellTextColour(index, 2, *wxRED);
+        else
+            dlg.m_grid->SetCellTextColour(index, 2, *wxBLUE);
+
+        if((address >= FUEL_PART_ADDRESS_BEGIN) && (address < CHEKSUM_ADDRESS_BEGIN))
+        {
+            for(int id = doc->GetMapIdBegin(); id <= doc->GetMapIdEnd(); id++)
+            {
+                if(doc->GetMapTable(id)->IsGlobalAddressInTableArea(address))
+                {
+                    wxString name = doc->GetMapTable(id)->GetName();
+                    if(name.IsEmpty())
+                        dlg.m_grid->SetCellStringValue(index, 3, _("Unknown role"));
+                    else
+                        dlg.m_grid->SetCellStringValue(index, 3, name);
+                    break;
+                }
+            }
+
+            for(int id = doc->GetScalarIdBegin(); id <= doc->GetScalarIdEnd(); id++)
+            {
+                if(doc->GetMapTable(id)->IsGlobalAddressInTableArea(address))
+                {
+                    wxString name = doc->GetMapTable(id)->GetName();
+                    if(name.IsEmpty())
+                        dlg.m_grid->SetCellStringValue(index, 3, _("Unknown role"));
+                    else
+                        dlg.m_grid->SetCellStringValue(index, 3, name);
+                    dlg.m_grid->SetCellTextColour(index, 0, wxColour( 60, 100, 225 ));
+                    dlg.m_grid->SetCellTextColour(index, 1, wxColour( 60, 100, 225 ));
+                    dlg.m_grid->SetCellTextColour(index, 2, wxColour( 60, 100, 225 ));
+                    dlg.m_grid->SetCellTextColour(index, 3, wxColour( 60, 100, 225 ));
+                    break;
+                }
+            }
+
+        }
+        else if (address == CHEKSUM_ADDRESS_BEGIN)
+        {
+            dlg.m_grid->SetCellStringValue(index, 3, _T("Checksum"));
+            dlg.m_grid->SetCellStringValue(index, 1, wxString::Format(_T("0x%04X"), dlg.m_diffList[index].base));
+            dlg.m_grid->SetCellStringValue(index, 2, wxString::Format(_T("0x%04X"), dlg.m_diffList[index].current));
+            dlg.m_grid->SetCellTextColour(index, 0, wxColour( 200, 200, 200 ));
+            dlg.m_grid->SetCellTextColour(index, 1, wxColour( 200, 200, 200 ));
+            dlg.m_grid->SetCellTextColour(index, 2, wxColour( 200, 200, 200 ));
+            dlg.m_grid->SetCellTextColour(index, 3, wxColour( 200, 200, 200 ));
+        }
+        else
+        {
+            dlg.m_grid->SetCellStringValue(index, 3, _T("DANGEROUS: code zone!"));
+            dlg.m_grid->SetCellBackgroundColour(index, 0, *wxYELLOW);
+            dlg.m_grid->SetCellBackgroundColour(index, 1, *wxYELLOW);
+            dlg.m_grid->SetCellBackgroundColour(index, 2, *wxYELLOW);
+            dlg.m_grid->SetCellBackgroundColour(index, 3, *wxYELLOW);
+        }
+
+    }
+
+    dlg.m_grid->AutoSizeColumn(0, false);
+    dlg.m_grid->AutoSizeColumn(3, false);
+
+    if ( dlg.ShowModal() == wxID_OK )
+    {
+        return;
+    }
+}
+
+
+// HexCompareDialog
+IMPLEMENT_CLASS(HexCompareDialog, wxDialog)
+wxBEGIN_EVENT_TABLE(HexCompareDialog, wxDialog)
+wxEND_EVENT_TABLE()
+
+
+HexCompareDialog::HexCompareDialog(wxWindow *parent)
+             : wxDialog(parent, wxID_ANY, wxT("HEX Compare"), wxDefaultPosition, wxSize( 500, 350 ))
+{
+    // Create a wxGrid object
+    m_grid = new ewxGrid( this,-1, wxPoint( 10, 10 ), wxSize( 100, 100 ) );
+
+    m_grid->CreateGrid( 0, 4 );
+    m_grid->InitLabelsColour(0, 4);
+    m_grid->EnableEditing(true);
+    m_grid->EnableGridLines(true);
+    m_grid->SetDefaultRowSize(18, true);
+    m_grid->SetRowLabelSize(50);
+    m_grid->SetDefaultColSize(60, true);
+    m_grid->SetColLabelSize(20);
+    m_grid->SetDefaultCellFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
+    m_grid->SetLabelFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
+    m_grid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTRE);
+
+    m_grid->SetColLabelStringValue(0, _T("Address"));
+    m_grid->SetColLabelStringValue(1, _T("Base Val."));
+    m_grid->SetColLabelStringValue(2, _T("Curr.Val."));
+    m_grid->SetColLabelStringValue(3, _T("Role"));
+
+}
+

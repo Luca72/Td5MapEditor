@@ -30,10 +30,26 @@ td5mapTable::td5mapTable()
 	m_rows = 0;
 	m_map3d = FALSE;
 	m_recognized = FALSE;
+	m_collabelsized = false;
+	m_rowlabelsized = false;
+	m_datasized = false;
+	m_singlevalue = false;
+
 	m_type = 0;
 	m_name = wxT("");
 	m_comment = wxT("");
-	m_singlevalue = false;
+	m_xunit = wxT("");
+	m_yunit = wxT("");
+	m_zunit = wxT("");
+    m_collabelmult = 1.0;
+    m_collabeloff = 0;
+    m_rowlabelmult = 1.0;
+    m_rowlabeloff = 0;
+    m_datamult = 1.0;
+    m_dataoff = 0;
+
+   	m_begin_global_address = 0x00000000;
+   	m_end_global_address = 0x00000000;
 }
 
 td5mapTable::~td5mapTable()
@@ -41,9 +57,21 @@ td5mapTable::~td5mapTable()
 
 }
 
+short td5mapTable::restore_raw(double sized, double mult, int offset)
+{
+    double value = ((sized / mult) - offset);
+    if (value > 0)
+        return (short)(value + 0.5);
+    else
+        return (short)(value - 0.5);
+};
+
+
 bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMapFileData)
 {
     wxWord wIndex = (FUEL_MAP_BEGIN_ADDRESS + m_address) / sizeof(wxWord);
+    m_begin_global_address = FUEL_MAP_BEGIN_ADDRESS + m_address;
+    m_end_global_address = m_begin_global_address;
 
     if(!m_singlevalue)
     {
@@ -52,7 +80,7 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
             pwBaseMapFileData += wIndex;
         m_cols = LoHi2HiLo(*pwMapFileData);
 
-        pwMapFileData += 1;
+        pwMapFileData += 1; m_end_global_address += 2;
         if(pwBaseMapFileData != NULL)
             pwBaseMapFileData += 1;
         m_rows = LoHi2HiLo(*pwMapFileData);
@@ -80,7 +108,7 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
     if (m_cols > 1)
         for(int c= 0; c < m_cols; c++)
         {
-            pwMapFileData += 1;
+            pwMapFileData += 1; m_end_global_address += 2;
             if(pwBaseMapFileData != NULL)
                 pwBaseMapFileData += 1;
             m_headerCol[c].current = LoHi2HiLo(*pwMapFileData);
@@ -93,7 +121,7 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
     if (m_rows > 1)
         for(int r= 0; r < m_rows; r++)
         {
-            pwMapFileData += 1;
+            pwMapFileData += 1; m_end_global_address += 2;
             if(pwBaseMapFileData != NULL)
                 pwBaseMapFileData += 1;
             m_headerRow[r].current = LoHi2HiLo(*pwMapFileData);
@@ -107,7 +135,7 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
         for(int r = 0; r < m_rows; r++)
             for(int c = 0; c < m_cols; c++)
         {
-            pwMapFileData += 1;
+            pwMapFileData += 1; m_end_global_address += 2;
             if(pwBaseMapFileData != NULL)
                 pwBaseMapFileData += 1;
             m_tableData[c][r].current = LoHi2HiLo(*pwMapFileData);
@@ -129,10 +157,41 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
     }
 
     td5mapTableInfo mapinfo(m_mapID);
-    m_recognized = mapinfo.GetInfoFromIndex(m_tableInfo, iIndex);
-    m_type = m_tableInfo.m_type;
-    m_name = m_tableInfo.m_name;
-    m_comment = m_tableInfo.m_comment;
+	td5mapTableInfoItem tableInfo;
+
+    m_recognized = mapinfo.GetInfoFromIndex(tableInfo, iIndex);
+
+    m_type = tableInfo.m_type;
+    m_name = tableInfo.m_name;
+    m_comment = tableInfo.m_comment;
+	m_xunit = tableInfo.m_xunit;
+	m_yunit = tableInfo.m_yunit;
+	m_zunit = tableInfo.m_zunit;
+    m_collabelmult = tableInfo.m_collabelmult;
+    m_collabeloff = tableInfo.m_collabeloff;
+    m_rowlabelmult = tableInfo.m_rowlabelmult;
+    m_rowlabeloff = tableInfo.m_rowlabeloff;
+    m_datamult = tableInfo.m_datamult;
+    m_dataoff = tableInfo.m_dataoff;
+
+    if ((m_collabelmult != 1.0) || (m_collabeloff != 0))
+        m_collabelsized = true;
+    else
+        m_collabelsized = false;
+
+    if ((m_rowlabelmult != 1.0) || (m_rowlabeloff != 0))
+        m_rowlabelsized = true;
+    else
+        m_rowlabelsized = false;
+
+    if ((m_datamult != 1.0) || (m_dataoff != 0))
+    {
+        m_datasized = true;
+    }
+    else
+    {
+        m_datasized = false;
+    }
 
 	return TRUE;
 }
@@ -280,7 +339,7 @@ void td5mapTable::EvalDiffRange(int& min, int& max)
 
 void td5mapTable::SumPercentCurrentValue(double sumpercent, int col, int row)
 {
-    short result = (m_tableData[col][row].current + (int)((double)m_tableData[col][row].current * sumpercent) / 100.0 );
+    int result = (m_tableData[col][row].current + (int)((double)m_tableData[col][row].current * sumpercent) / 100.0 );
 
     if ((result < 32767) && (result > -32768))
         m_tableData[col][row].current = result;
@@ -292,7 +351,7 @@ void td5mapTable::SumPercentCurrentValue(double sumpercent, int col, int row)
 
 void td5mapTable::SumCurrentValue(int sum, int col, int row)
 {
-    short result = m_tableData[col][row].current + sum;
+    int result = m_tableData[col][row].current + sum;
 
     if ((result < 32767) && (result > -32768))
         m_tableData[col][row].current = result;
@@ -336,4 +395,12 @@ bool td5mapTable::IsDifferentFromOriginal()
     }
 
     return diff;
+}
+
+bool td5mapTable::IsGlobalAddressInTableArea(wxUint32 gladdress)
+{
+    if ((gladdress >= m_begin_global_address) && (gladdress <= m_end_global_address))
+        return true;
+    else
+        return false;
 }

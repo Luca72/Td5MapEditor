@@ -75,37 +75,44 @@
 #define IDR_INFO_PANEL_MAPCOMMENT_TEXTCTRL          20005
 #define IDR_INFO_PANEL_UNMODIFIEDMAPSHIDE_CHECKBOX  20006
 #define IDR_INFO_PANEL_MAPTAG_STATIC                20007
+#define IDR_INFO_PANEL_RESETTOBASEMAP_BUTTON        20008
 
 #ifndef __WINDOWS__
-#define ID_TOOLS_ZOOM_MINUS             -32000
-#define ID_TOOLS_ZOOM_PLUS              -32001
-#define ID_TOOLS_DIFF_VIEW              -32002
-#define ID_TOOLS_ORIG_VIEW              -32003
-#define ID_TOOLS_CURR_VIEW              -32004
-#define ID_TOOLS_EDIT_RANGE_OF_VALUES   -32005
-#define ID_TOOLS_ADD_ONE                -32006
-#define ID_TOOLS_SUBTRACT_ONE           -32007
-#define ID_FILE_PRINT                   -32008
-#define ID_FILE_PRINT_SETUP             -32009
-#define ID_FILE_PREVIEW                 -32010
-#define ID_FILE_EXPORT_TUNING           -32011
-#define ID_FILE_IMPORT_TUNING           -32012
-#define ID_TOOLS_EDIT_TAG               -32013
+#define ID_TOOLS_ZOOM_MINUS                 -32000
+#define ID_TOOLS_ZOOM_PLUS                  -32001
+#define ID_TOOLS_DIFF_VIEW                  -32002
+#define ID_TOOLS_ORIG_VIEW                  -32003
+#define ID_TOOLS_CURR_VIEW                  -32004
+#define ID_TOOLS_EDIT_RANGE_OF_VALUES       -32005
+#define ID_TOOLS_ADD_ONE                    -32006
+#define ID_TOOLS_SUBTRACT_ONE               -32007
+#define ID_FILE_PRINT                       -32008
+#define ID_FILE_PRINT_SETUP                 -32009
+#define ID_FILE_PREVIEW                     -32010
+#define ID_FILE_EXPORT_TUNING               -32011
+#define ID_FILE_IMPORT_TUNING               -32012
+#define ID_TOOLS_EDIT_TAG                   -32013
+#define ID_FILE_LOAD_XDF                    -32014
+#define ID_TOOLS_HEX_COMPARE                -32015
+#define ID_CONTEXTMENU_MODIFY_LABEL_VALUE   -32100
 #else
-#define ID_TOOLS_ZOOM_MINUS             32000
-#define ID_TOOLS_ZOOM_PLUS              32001
-#define ID_TOOLS_DIFF_VIEW              32002
-#define ID_TOOLS_ORIG_VIEW              32003
-#define ID_TOOLS_CURR_VIEW              32004
-#define ID_TOOLS_EDIT_RANGE_OF_VALUES   32005
-#define ID_TOOLS_ADD_ONE                32006
-#define ID_TOOLS_SUBTRACT_ONE           32007
-#define ID_FILE_PRINT                   32008
-#define ID_FILE_PRINT_SETUP             32009
-#define ID_FILE_PREVIEW                 32010
-#define ID_FILE_EXPORT_TUNING           32011
-#define ID_FILE_IMPORT_TUNING           32012
-#define ID_TOOLS_EDIT_TAG               32013
+#define ID_TOOLS_ZOOM_MINUS                 32000
+#define ID_TOOLS_ZOOM_PLUS                  32001
+#define ID_TOOLS_DIFF_VIEW                  32002
+#define ID_TOOLS_ORIG_VIEW                  32003
+#define ID_TOOLS_CURR_VIEW                  32004
+#define ID_TOOLS_EDIT_RANGE_OF_VALUES       32005
+#define ID_TOOLS_ADD_ONE                    32006
+#define ID_TOOLS_SUBTRACT_ONE               32007
+#define ID_FILE_PRINT                       32008
+#define ID_FILE_PRINT_SETUP                 32009
+#define ID_FILE_PREVIEW                     32010
+#define ID_FILE_EXPORT_TUNING               32011
+#define ID_FILE_IMPORT_TUNING               32012
+#define ID_TOOLS_EDIT_TAG                   32013
+#define ID_FILE_LOAD_XDF                    32014
+#define ID_TOOLS_HEX_COMPARE                32015
+#define ID_CONTEXTMENU_MODIFY_LABEL_VALUE   32100
 #endif
 
 

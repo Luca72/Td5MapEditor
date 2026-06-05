@@ -31,11 +31,13 @@ ewxRange::~ewxRange()
 }
 
 ewxRange::ewxRange(const ewxRange& other)
+    : wxObject(other),
+      topRow(other.topRow),
+      bottomRow(other.bottomRow),
+      leftCol(other.leftCol),
+      rightCol(other.rightCol)      
 {
-    topRow = other.topRow;
-    bottomRow = other.bottomRow;
-    leftCol = other.leftCol;
-    rightCol = other.rightCol;
+
 }
 
 ewxRange& ewxRange::operator=(const ewxRange& rhs)

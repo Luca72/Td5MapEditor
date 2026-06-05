@@ -25,6 +25,7 @@ BEGIN_EVENT_TABLE(td5mapeditorInfoPanel, wxPanel)
     EVT_LIST_ITEM_SELECTED(IDR_INFO_PANEL_MAPLIST_LISTCTRL, td5mapeditorInfoPanel::OnListItemSelected)
     EVT_CHECKBOX(IDR_INFO_PANEL_ESOTICMAPSHIDE_CHECKBOX, td5mapeditorInfoPanel::OnHideEsoticMapsCheckBox)
     EVT_CHECKBOX(IDR_INFO_PANEL_UNMODIFIEDMAPSHIDE_CHECKBOX, td5mapeditorInfoPanel::OnHideUnmodifiedMapsCheckBox)
+    EVT_BUTTON ( IDR_INFO_PANEL_RESETTOBASEMAP_BUTTON, td5mapeditorInfoPanel::OnResetToBaseMapButton)
 END_EVENT_TABLE()
 
 td5mapeditorInfoPanel::td5mapeditorInfoPanel(wxWindow* parent, wxView *view, wxWindowID id, const wxPoint& pos, const wxSize& size, long style):
@@ -95,6 +96,12 @@ td5mapeditorInfoPanel::td5mapeditorInfoPanel(wxWindow* parent, wxView *view, wxW
                    wxLEFT | wxRIGHT | wxBOTTOM,
                    10 );         // set border width to 10
 
+    m_mapResetToBase = new wxButton(this, IDR_INFO_PANEL_RESETTOBASEMAP_BUTTON, _T("Reset To BaseMap"), wxDefaultPosition, wxDefaultSize, 0);
+    topsizer->Add( m_mapResetToBase,
+                   0,
+                   wxLEFT | wxRIGHT | wxBOTTOM,
+                   10 );         // set border width to 10
+
     topsizer->Add( new wxStaticText(this, -1, _T("Map role:")),
                    0,
                    wxLEFT | wxRIGHT | wxTOP,
@@ -158,6 +165,8 @@ td5mapeditorInfoPanel::~td5mapeditorInfoPanel()
     //dtor
 }
 
+
+
 void td5mapeditorInfoPanel::SetFlags(bool hideEsoticMaps, bool hideUnmodifiedMaps)
 {
     m_hideEsoticMaps = hideEsoticMaps;
@@ -189,9 +198,9 @@ void td5mapeditorInfoPanel::UpdateList(td5mapeditorDoc *doc)
             m_listTables->SetItem(index, 2, wxString::Format(_T("%02dx%02d"), doc->GetMapTable(i)->m_cols,doc->GetMapTable(i)->m_rows));
             m_listTables->SetItem(index, 3, doc->GetMapTable(i)->m_name);
             if (doc->GetMapTable(i)->IsDifferentFromOriginal())
-                m_listTables->SetItemFont(index, wxFont(8, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD , false));
+                m_listTables->SetItemFont(index, wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD , false));
             else
-                m_listTables->SetItemFont(index, wxFont(8, wxDEFAULT, wxNORMAL, wxNORMAL, false));
+                m_listTables->SetItemFont(index, wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
             if (doc->GetMapTable(i)->IsSingleValue())
                 m_listTables->SetItemTextColour(index,  wxColour( 60, 100, 225 ));
             else
@@ -258,3 +267,8 @@ void td5mapeditorInfoPanel::OnHideUnmodifiedMapsCheckBox(wxCommandEvent& event)
     doc->Update();
 }
 
+void td5mapeditorInfoPanel::OnResetToBaseMapButton(wxCommandEvent& event)
+{
+    td5mapeditorDoc *doc = (td5mapeditorDoc *) m_view->GetDocument();
+    doc->ResetTableToBaseMap();
+}
