@@ -84,10 +84,8 @@ class ewxGrid : public wxGrid
         DECLARE_EVENT_TABLE()
 };
 
-BEGIN_DECLARE_EVENT_TYPES()
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_ADV, wxEVT_GRID_COPY_TO_CLIPBOARD, 1650)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_ADV, wxEVT_GRID_PASTE_FROM_CLIPBOARD, 1651)
-END_DECLARE_EVENT_TYPES()
+wxDECLARE_EVENT(wxEVT_GRID_COPY_TO_CLIPBOARD, wxGridEvent);
+wxDECLARE_EVENT(wxEVT_GRID_PASTE_FROM_CLIPBOARD, wxGridEvent);
 
 #define EVT_GRID_CMD_COPY_TO_CLIPBOARD(id, fn)      wx__DECLARE_GRIDRANGESELEVT(COPY_TO_CLIPBOARD, id, fn)
 #define EVT_GRID_CMD_PASTE_FROM_CLIPBOARD(id, fn)   wx__DECLARE_GRIDRANGESELEVT(PASTE_FROM_CLIPBOARD, id, fn)
@@ -97,7 +95,7 @@ END_DECLARE_EVENT_TYPES()
 
 
 // Base class for the row/column header cells renderers
-class WXDLLIMPEXP_ADV ewxGridHeaderLabelsRenderer
+class ewxGridHeaderLabelsRenderer
     : public wxGridCornerHeaderRenderer
 {
 public:
@@ -112,17 +110,17 @@ public:
                            wxColour textColor) const;
 };
 
-class WXDLLIMPEXP_ADV ewxGridRowHeaderRenderer
+class ewxGridRowHeaderRenderer
     : public ewxGridHeaderLabelsRenderer
 {
 };
 
-class WXDLLIMPEXP_ADV ewxGridColumnHeaderRenderer
+class ewxGridColumnHeaderRenderer
     : public ewxGridHeaderLabelsRenderer
 {
 };
 
-class WXDLLIMPEXP_ADV ewxGridRowHeaderRendererDefault
+class ewxGridRowHeaderRendererDefault
     : public ewxGridRowHeaderRenderer
 {
 public:
@@ -132,7 +130,7 @@ public:
 };
 
 // Column header cells renderers
-class WXDLLIMPEXP_ADV ewxGridColumnHeaderRendererDefault
+class ewxGridColumnHeaderRendererDefault
     : public ewxGridColumnHeaderRenderer
 {
 public:

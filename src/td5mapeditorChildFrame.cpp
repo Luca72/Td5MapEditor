@@ -47,6 +47,7 @@ BEGIN_EVENT_TABLE(td5mapeditorChildFrame, wxDocMDIChildFrame)
     EVT_MENU(ID_FILE_LOAD_XDF, td5mapeditorChildFrame::OnLoadXDF)
     EVT_MENU(ID_TOOLS_HEX_COMPARE, td5mapeditorChildFrame::OnHexCompare)
     EVT_MENU(ID_TOOLS_EDIT_TAG,td5mapeditorChildFrame::OnEditTag)
+    EVT_MENU(ID_FOLLOW_LOCALE,td5mapeditorChildFrame::OnFollowLocale)
     EVT_SIZE(td5mapeditorChildFrame::OnSize)
     EVT_SPLITTER_SASH_POS_CHANGED(SPLITTER_MAIN, td5mapeditorChildFrame::OnSplitterSashPosChanged)
     EVT_SPLITTER_SASH_POS_CHANGED(SPLITTER_GRID, td5mapeditorChildFrame::OnSplitterSashPosChanged)
@@ -106,6 +107,8 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
     edit_menu->AppendSeparator();
     edit_menu->Append(wxID_COPY, _T("&Copy\tCtrl-C"));
     edit_menu->Append(wxID_PASTE, _T("&Paste\tCtrl-V"));
+    edit_menu->AppendSeparator();
+    edit_menu->AppendCheckItem(ID_FOLLOW_LOCALE, _T("&Follow System Locale\tCtrl-,"));
 
     doc->GetCommandProcessor()->SetEditMenu(edit_menu);
 
@@ -148,6 +151,7 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
     GetMainFrame()->SetStatusBarText(wxString::Format(_T("Selection: %d,%d -> %d,%d"), 0, 0, 0, 0), 5);
     GetMainFrame()->SetStatusBarText(wxString::Format(_T("Col: %d"), 0), 3);
     GetMainFrame()->SetStatusBarText(wxString::Format(_T("Row: %d"), 0), 4);
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Locale: %s"), setlocale(LC_NUMERIC, nullptr)), 1);
 
 /*
     GetToolBar()->EnableTool( wxID_COPY, true );
@@ -252,7 +256,7 @@ void td5mapeditorChildFrame::CreateCanvas(wxView *view)
     GetClientSize(&width, &height);
 
     // Main splitter window
-    splitterMain = new wxSplitterWindow(this, SPLITTER_MAIN, wxPoint(0, 0), wxSize(width, height), wxSP_3D /*| wxSP_3DSASH*/);
+    splitterMain = new wxSplitterWindow(this, SPLITTER_MAIN, wxPoint(0, 0), wxSize(width, height), wxSP_3D | wxSP_LIVE_UPDATE /*| wxSP_3DSASH*/);
     splitterMain->SetSashGravity(0.0);
 
     panelInfo = new td5mapeditorInfoPanel(splitterMain, GetView(), ID_INFO_PANE);
@@ -261,7 +265,7 @@ void td5mapeditorChildFrame::CreateCanvas(wxView *view)
 
 
     // Grid splitter window
-    splitterGrid = new wxSplitterWindow(splitterMain, SPLITTER_GRID, wxPoint(0, 0), /*wxSize(width - 250, height)*/ wxSize(0,0), wxSP_3D /*| wxSP_3DSASH*/);
+    splitterGrid = new wxSplitterWindow(splitterMain, SPLITTER_GRID, wxPoint(0, 0), /*wxSize(width - 250, height)*/ wxSize(0,0), wxSP_3D | wxSP_LIVE_UPDATE /*| wxSP_3DSASH*/);
     splitterGrid->SetSashGravity(0.25);
 
     splitterMain->SplitVertically(panelInfo, splitterGrid, 250);
@@ -272,7 +276,7 @@ void td5mapeditorChildFrame::CreateCanvas(wxView *view)
     panelGrid->Show(true);
 
     // Graph splitter window
-    splitterGraph = new wxSplitterWindow(splitterGrid, SPLITTER_GRAPH, wxPoint(0, 0), /*wxSize(width - 250, height - 250)*/wxSize(0,0), wxSP_3D /*| wxSP_3DSASH*/);
+    splitterGraph = new wxSplitterWindow(splitterGrid, SPLITTER_GRAPH, wxPoint(0, 0), /*wxSize(width - 250, height - 250)*/wxSize(0,0), wxSP_3D | wxSP_LIVE_UPDATE /*| wxSP_3DSASH*/);
     splitterGraph->SetSashGravity(0.5);
 
     splitterGrid->SplitHorizontally(panelGrid, splitterGraph, 200);
@@ -753,3 +757,22 @@ HexCompareDialog::HexCompareDialog(wxWindow *parent)
 
 }
 
+void td5mapeditorChildFrame::OnFollowLocale(wxCommandEvent &WXUNUSED(event))
+{
+    td5mapeditorDoc* doc = (td5mapeditorDoc*)GetDocument();
+
+    if(wxGetApp().isSystemLocale()) {
+        wxGetApp().unfollowSystemLocale();
+        GetMenuBar()->Check( ID_FOLLOW_LOCALE, false );
+    }
+    else {
+        wxGetApp().followSystemLocale();
+        GetMenuBar()->Check( ID_FOLLOW_LOCALE, true );
+    }
+
+    doc->Modify(true);
+    doc->SetUpdateFlag(GRID_PANEL);
+    doc->Update();
+
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Locale: %s"), setlocale(LC_NUMERIC, nullptr)), 1);
+}

@@ -41,6 +41,18 @@ td5mapeditorApp::td5mapeditorApp(void)
 bool td5mapeditorApp::OnInit()
 {
     //// Create a document manager
+    // Set locale
+    m_Locale = new wxLocale;
+    m_Locale->Init(wxLANGUAGE_DEFAULT);
+    m_Locale->AddCatalogLookupPathPrefix("locale");
+    m_Locale->AddCatalog(GetAppName());
+    // Make a "deep copy" of current locale name.
+    m_systemloc = setlocale(LC_NUMERIC, nullptr);
+    // Restore "C" numeric locale
+    setlocale(LC_NUMERIC, "C");
+    m_followingLocale = false;
+
+    // Create a document manager
     m_docManager = new wxDocManager;
 
     //// Create a template relating drawing documents to their views
@@ -56,8 +68,8 @@ bool td5mapeditorApp::OnInit()
     title += wxString::Format(wxT("%ld"), AutoVersion::BUILD);
     title += _T(".");
     title += wxString::Format(wxT("%ld"), AutoVersion::REVISION);
-    title += _T(" - ");
-    title += _T("unstable");
+    //title += _T(" ");
+    //title += _T("by Luca Veronesi");
 
     //// Create the main frame window
     /*
@@ -125,6 +137,19 @@ bool td5mapeditorApp::OnInit()
     return true;
 }
 
+bool td5mapeditorApp::followSystemLocale(void)
+{
+    setlocale(LC_NUMERIC, m_systemloc);
+    m_followingLocale = true;
+    return m_followingLocale;
+}
+
+bool td5mapeditorApp::unfollowSystemLocale(void)
+{
+    setlocale(LC_NUMERIC, "C");
+    m_followingLocale = false;
+    return m_followingLocale;
+}
 
 int td5mapeditorApp::OnExit(void)
 {

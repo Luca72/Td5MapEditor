@@ -384,7 +384,10 @@ bool td5mapeditorDoc::OnSaveDocument(const wxString& filename)
 		m_mapTable[m].WriteTable(m_mapFileData);
 	}
 
-	m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(Checksum(m_mapFileData));
+    // Experimental Checksum corrections
+    FirmwareAndTablesChecksum(m_mapFileData);
+
+	m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(NanocomChecksum(m_mapFileData));
 
     //td5mapeditorView *view = (td5mapeditorView *) GetFirstView();
     //m_fileName = ExtractFileName(filename);
@@ -527,9 +530,12 @@ void td5mapeditorDoc::Update(wxView* sender)
 		m_mapTable[m].WriteTable(m_mapFileData);
 	}
 
-	m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(Checksum(m_mapFileData));
+	// Experimental Checksum corrections
+    FirmwareAndTablesChecksum(m_mapFileData);
 
-    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Cks: 0x%04X"), Checksum(m_mapFileData)), 2);
+    m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(NanocomChecksum(m_mapFileData));
+
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Cks: 0x%04X"), NanocomChecksum(m_mapFileData)), 2);
 
     UpdateAllViews(sender);
 }
@@ -1297,6 +1303,11 @@ wxWord td5mapeditorDoc::scalarIndexAddressEU3[] =
 	0x037C, // cc_5_prptn_mult			194
 	0x037E, // cc_4_prptn_mult			195
 	0x0380, // cc_3_prptn_mult			196
+	0x0842, // gb_valid_ratio_1         197
+	0x0844, // gb_valid_ratio_2         198
+	0x0846, // gb_valid_ratio_3         199
+	0x0848, // gb_valid_ratio_4         200
+	0x084A, // gb_valid_ratio_5         201
 
     0xFFFF  // END MARKER
 };

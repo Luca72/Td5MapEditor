@@ -43,6 +43,7 @@ class td5mapeditorMainFrame: public wxDocMDIParentFrame
         void OnAddOne(wxCommandEvent& event);
         void OnSubtractOne(wxCommandEvent& event);
         void OnEditRangeOfValues(wxCommandEvent& event);
+        void OnFollowLocale(wxCommandEvent& event);
         void EnableChildButtons();
         void DisableChildButtons();
 

@@ -435,7 +435,6 @@ void td5mapeditorPrint::GetTextBoxSize( wxDC& dc,const wxArrayString& lines,long
         dc.GetTextExtent(lines[i], &lw, &lh);
         lineW = static_cast<long>(lw);
         lineH = static_cast<long>(lh);        
-        dc.GetTextExtent( lines[i]);
         w = wxMax( w, lineW );
         h += lineH;
     }

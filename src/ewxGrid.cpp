@@ -17,8 +17,8 @@ ewxGridRowHeaderRendererDefault rowRend;
 ewxGridColumnHeaderRendererDefault colRend;
 
 
-DEFINE_EVENT_TYPE(wxEVT_GRID_COPY_TO_CLIPBOARD)
-DEFINE_EVENT_TYPE(wxEVT_GRID_PASTE_FROM_CLIPBOARD)
+wxDEFINE_EVENT(wxEVT_GRID_COPY_TO_CLIPBOARD, wxGridEvent);
+wxDEFINE_EVENT(wxEVT_GRID_PASTE_FROM_CLIPBOARD, wxGridEvent);
 
 BEGIN_EVENT_TABLE(ewxGrid, wxGrid)
     EVT_GRID_RANGE_SELECT(ewxGrid::OnRangeSelect)
@@ -111,9 +111,9 @@ void ewxGrid::CopyToClipboard()
 
     wxGridRangeSelectEvent gridEvt( 
         GetId(),
-        wxEVT_GRID_COPY_TO_CLIPBOARD,
-        this,
-        wxGridCellCoords( row, col ),
+    wxEVT_GRID_COPY_TO_CLIPBOARD,
+    this,
+    wxGridCellCoords( row, col ),
         wxGridCellCoords( bottomrow, bottomcol));
 
     GetEventHandler()->ProcessEvent( gridEvt );

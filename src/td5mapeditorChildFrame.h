@@ -63,6 +63,7 @@ class td5mapeditorChildFrame : public wxDocMDIChildFrame
     void OnLoadXDF(wxCommandEvent& event);
     void OnHexCompare(wxCommandEvent& event);
     void OnEditTag(wxCommandEvent& WXUNUSED(event));
+    void OnFollowLocale(wxCommandEvent& event);
 
     td5mapeditorMainFrame *GetMainFrame() {return (td5mapeditorMainFrame*) m_parentFrame;}
     void SetShowType(int type);

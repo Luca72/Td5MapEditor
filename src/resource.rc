@@ -1,4 +1,18 @@
 td5mapeditor        ICON    "res/win32/td5mapeditor.ico"
 td5mapeditordoc     ICON    "res/win32/td5mapeditordoc.ico"
 
+// When embedding manifest here, predefine this symbol to enable full High DPI
+// support, see MSW subsection of "Platform-Specific Build Issues" section in
+// the "High DPI Support" guide in wxWidgets manual for more details.
+//
+// As mentioned above, this has no effect unless wxUSE_RC_MANIFEST=1.
+#ifndef wxUSE_RC_MANIFEST
+    #define wxUSE_RC_MANIFEST 1
+#endif
+#ifndef wxUSE_DPI_AWARE_MANIFEST
+    #define wxUSE_DPI_AWARE_MANIFEST 2
+#endif
+
+// this file contains the standard icons, cursors etc. and also includes the application
+// manifest mentioned above
 #include "wx/msw/wx.rc"

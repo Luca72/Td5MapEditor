@@ -9,8 +9,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-#define MAP_FILE_LENGTH 118798
-
 wxWord LoHi2HiLo(wxWord word)
 {
 	union ADDRESS {wxWord word; wxByte byte[2];};
@@ -39,7 +37,49 @@ wxWord HiLo2LoHi(wxWord word)
 	return addressHiLo.word;
 }
 
-wxWord Checksum(wxWord *pMapFileData)
+static wxWord ReadBE16AtByteOffset(const wxByte* data, size_t off)
+{
+    return static_cast<wxWord>((data[off] << 8) | data[off + 1]);
+}
+
+static void WriteBE16AtByteOffset(wxByte* data, size_t off, wxWord value)
+{
+    data[off]     = static_cast<wxByte>((value >> 8) & 0xFF);
+    data[off + 1] = static_cast<wxByte>(value & 0xFF);
+}
+
+static wxWord SumBE16RangeSkipping(const wxByte* data, size_t start, size_t endExclusive, size_t skipOffset)
+{
+    wxUint32 sum = 0;
+
+    for (size_t off = start; off < endExclusive; off += 2)
+    {
+        if (off == skipOffset)
+            continue;
+
+        sum += ReadBE16AtByteOffset(data, off);
+    }
+
+    return static_cast<wxWord>(sum & 0xFFFF);
+}
+
+void FirmwareAndTablesChecksum(wxWord *pMapFileData)
+{
+    wxByte* bytes = reinterpret_cast<wxByte*>(pMapFileData);
+
+    WriteBE16AtByteOffset(bytes, 0x01CFE8, 0x4D4D);
+
+    wxWord fwSum = SumBE16RangeSkipping(bytes, 0x000401, 0x019011, 0x00041B);
+    wxWord fwCorrection = static_cast<wxWord>((0xD343 - fwSum) & 0xFFFF);
+    WriteBE16AtByteOffset(bytes, 0x00041B, fwCorrection);
+
+    wxWord tbSum = SumBE16RangeSkipping(bytes, 0x019010, 0x01CFEA, 0x01CFE6);
+    wxWord tbCorrection = static_cast<wxWord>((0x005E - tbSum) & 0xFFFF);
+    WriteBE16AtByteOffset(bytes, 0x01CFE6, tbCorrection);
+}
+
+
+wxWord NanocomChecksum(wxWord *pMapFileData)
 {
   int count = (MAP_FILE_LENGTH - 2) / sizeof(wxWord);
 

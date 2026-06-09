@@ -26,11 +26,17 @@ class td5mapeditorApp : public wxApp
     td5mapeditorApp(void);
     bool OnInit(void);
     int OnExit(void);
+    bool followSystemLocale(void);
+    bool unfollowSystemLocale(void);
+    bool isSystemLocale(void){return m_followingLocale;};
 
     wxMDIChildFrame *CreateChildFrame(wxDocument *doc, wxView *view, bool isCanvas);
 
   protected:
     wxDocManager* m_docManager;
+    wxLocale* m_Locale;
+    wxString m_systemloc;
+    bool m_followingLocale;
 };
 
 DECLARE_APP(td5mapeditorApp)

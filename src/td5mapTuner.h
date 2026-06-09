@@ -70,16 +70,6 @@ class tuneData : public wxObject
 
         virtual ~tuneData(){};
 
-/*
-        tuneData(const tuneData& other)
-        {
-            constValue = other.constValue;
-            rtValue = other.rtValue;
-            ltValue = other.ltValue;
-            rbValue = other.rbValue;
-            lbValue = other.lbValue;
-        };
-*/        
         tuneData(const tuneData& other)
             :wxObject(other),
             ltValue(other.ltValue),

@@ -78,6 +78,7 @@ BEGIN_EVENT_TABLE(td5mapeditorMainFrame, wxDocMDIParentFrame)
     EVT_MENU(ID_TOOLS_ADD_ONE,td5mapeditorMainFrame::OnAddOne)
     EVT_MENU(ID_TOOLS_SUBTRACT_ONE,td5mapeditorMainFrame::OnSubtractOne)
     EVT_MENU(ID_TOOLS_EDIT_RANGE_OF_VALUES,td5mapeditorMainFrame::OnEditRangeOfValues)
+    EVT_MENU(ID_FOLLOW_LOCALE,td5mapeditorMainFrame::OnFollowLocale)
 #endif
     EVT_MENU(TD5MAPEDITOR_ABOUT, td5mapeditorMainFrame::OnAbout)
     //EVT_TIMER(wxID_ANY, td5mapeditorMainFrame::OnCyclicTimerEvent)
@@ -195,7 +196,7 @@ void td5mapeditorMainFrame::CreateLayout()
     toolBar->AddTool(ID_TOOLS_SUBTRACT_ONE, "Value(s) -1",*(toolBarBitmaps[13]),"Decrease value(s) of 1 unit");
     currentX += width + 5;
     //toolBar->AddTool(ID_TOOLS_EDIT_RANGE_OF_VALUES, *(toolBarBitmaps[14]), wxNullBitmap, false, currentX, wxDefaultCoord, (wxObject *) NULL, _T("Edit Range of Values"));
-    toolBar->AddTool(ID_TOOLS_EDIT_RANGE_OF_VALUES, "Edit Range of Values",*(toolBarBitmaps[13]),"Edit Range of values");
+    toolBar->AddTool(ID_TOOLS_EDIT_RANGE_OF_VALUES, "Edit Range of Values",*(toolBarBitmaps[14]),"Edit Range of values");
 
     DisableChildButtons();
 
@@ -207,9 +208,9 @@ void td5mapeditorMainFrame::CreateLayout()
         delete toolBarBitmaps[i];
 
     statusBar = CreateStatusBar(7);
-    int widths[7] = {-2, -1, 100, 65, 65, 170, 120};
+    int widths[7] = {-2, -1, 100, 65, 65, 170, 150};
     statusBar->SetStatusWidths(7, widths);
-    int styles[7] = {wxSB_FLAT, wxSB_FLAT, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL};
+    int styles[7] = {wxSB_FLAT, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL};
     statusBar->SetStatusStyles(7, styles);
 }
 
@@ -224,9 +225,9 @@ void td5mapeditorMainFrame::OnAbout(wxCommandEvent& WXUNUSED(event) )
     content += wxString::Format(wxT("%ld"), AutoVersion::BUILD);
     content += _T(".");
     content += wxString::Format(wxT("%ld"), AutoVersion::REVISION);
-#ifdef __WIN32__
+#ifdef __WXMSW__
     content += _T("\n");
-    content += _T("Windows 32-bit release");
+    content += _T("Windows 64-bit release");
 #endif
 #ifdef __LINUX_X86_64__
     content += _T("\n");
@@ -254,6 +255,7 @@ void td5mapeditorMainFrame::EnableChildButtons()
     toolBar->EnableTool( ID_TOOLS_ADD_ONE, true );
     toolBar->EnableTool( ID_TOOLS_SUBTRACT_ONE, true );
     toolBar->EnableTool( ID_TOOLS_EDIT_RANGE_OF_VALUES, true );
+    toolBar->EnableTool( ID_FOLLOW_LOCALE, true );
 }
 
 void td5mapeditorMainFrame::DisableChildButtons()
@@ -269,6 +271,7 @@ void td5mapeditorMainFrame::DisableChildButtons()
     toolBar->EnableTool( ID_TOOLS_ADD_ONE, false );
     toolBar->EnableTool( ID_TOOLS_SUBTRACT_ONE, false );
     toolBar->EnableTool( ID_TOOLS_EDIT_RANGE_OF_VALUES, false );
+    toolBar->EnableTool( ID_FOLLOW_LOCALE, false );
 }
 
 void td5mapeditorMainFrame::OnCopy(wxCommandEvent& WXUNUSED(event))
@@ -337,6 +340,13 @@ void td5mapeditorMainFrame::OnEditRangeOfValues(wxCommandEvent& WXUNUSED(event))
     td5mapeditorChildFrame *activeChild = (td5mapeditorChildFrame *) GetActiveChild();
     wxCommandEvent event;
     activeChild->OnEditRangeOfValues(event);
+}
+
+void td5mapeditorMainFrame::OnFollowLocale( wxCommandEvent& WXUNUSED(event) )
+{
+    td5mapeditorChildFrame *activeChild = (td5mapeditorChildFrame *) GetActiveChild();
+    wxCommandEvent event;
+    activeChild->OnFollowLocale(event);
 }
 
 /*

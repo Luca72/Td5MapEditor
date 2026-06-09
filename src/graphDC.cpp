@@ -250,10 +250,8 @@ void graphDC::DrawSelectedPointArea(double xAxis, double yAxis, double zAxis)
 void graphDC::DrawCartesianAxis()
 {
 #ifndef __WINDOWS__
-    //m_dc->SetFont(wxFont(8, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD, false));
     m_dc->SetFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false));
 #else
-    //m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxFONTWEIGHT_BOLD, false));
     m_dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false));
 #endif
 
@@ -289,10 +287,8 @@ void graphDC::DrawCartesianAxis()
 void graphDC::DrawTitle()
 {
 #ifndef __WINDOWS__
-    //m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
     m_dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #else
-    //m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
     m_dc->SetFont(wxFont(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #endif
 
@@ -309,10 +305,8 @@ void graphDC::DrawTitle()
 void graphDC::DrawTags()
 {
 #ifndef __WINDOWS__
-    //m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
     m_dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #else
-    //m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
     m_dc->SetFont(wxFont(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #endif
 
@@ -345,10 +339,8 @@ void graphDC::DrawTags()
     if(m_table->IsTridimensional())
     {
 #ifndef __WINDOWS__
-        //m_dc->SetFont(wxFont(7, wxDEFAULT, wxNORMAL, wxNORMAL, false));
         m_dc->SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #else
-        //m_dc->SetFont(wxFont(6, wxDEFAULT, wxNORMAL, wxNORMAL, false));
         m_dc->SetFont(wxFont(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 #endif
 
