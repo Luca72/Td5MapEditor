@@ -408,7 +408,7 @@ bool td5mapeditorDoc::OnSaveDocument(const wxString& filename)
 	}
 
     // Experimental Checksum corrections
-    //FirmwareAndTablesChecksum(m_mapFileData);
+    FirmwareAndTablesChecksum(m_mapFileData);
 
 	m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(NanocomChecksum(m_mapFileData));
 
@@ -554,7 +554,7 @@ void td5mapeditorDoc::Update(wxView* sender)
 	}
 
 	// Experimental Checksum corrections
-    //FirmwareAndTablesChecksum(m_mapFileData);
+    FirmwareAndTablesChecksum(m_mapFileData);
 
     m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(NanocomChecksum(m_mapFileData));
 
