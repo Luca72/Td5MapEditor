@@ -19,6 +19,7 @@
 #define FUEL_PART_ADDRESS_BEGIN             102416
 #define CHEKSUM_ADDRESS_BEGIN               (MAP_FILE_LENGTH - 2)
 
+#define MAX_NUM_OF_FUELLING_TABLES          117
 #define MAX_NUM_OF_TABLES                   /*128*/ 2024
 #define MAP_FILE_LENGTH_WORD                (MAP_FILE_LENGTH / sizeof(wxWord))
 #define MAP_TAG_ADDRESS_BEGIN_WORD          (TAG_ADDRESS_BEGIN / sizeof(wxWord))

@@ -204,7 +204,7 @@ bool td5mapeditorDoc::OnNewDocument()
     m_mapIdBegin = i;
     // while(tableAddress < 32767/*65535*/)
     while (tableAddress < 32767 &&
-        i < MAX_NUM_OF_TABLES &&
+        i < MAX_NUM_OF_FUELLING_TABLES &&
         ((indexStartAddress / sizeof(wxWord)) + i) < MAP_FILE_LENGTH_WORD)
     {
         address = (indexStartAddress / sizeof(wxWord)) + i;
@@ -314,7 +314,7 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
     m_mapIdBegin = i;
     // while(tableAddress < 32767/*65535*/)
     while (tableAddress < 32767 &&
-        i < MAX_NUM_OF_TABLES &&
+        i < MAX_NUM_OF_FUELLING_TABLES &&
         ((indexStartAddress / sizeof(wxWord)) + i) < MAP_FILE_LENGTH_WORD)
     {
         address = (indexStartAddress / sizeof(wxWord)) + i;
@@ -328,12 +328,7 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
         i++;
     }
 
-    //i = i - 3; // To be verified why "- 3" ????
-    //i = i - 1;
-	if (i <= 117)
-        i = i - 1;
-	else
-        i = i - 2;
+    i = i - 1;
     m_mapIdEnd = i;
 
 
@@ -413,7 +408,7 @@ bool td5mapeditorDoc::OnSaveDocument(const wxString& filename)
 	}
 
     // Experimental Checksum corrections
-    FirmwareAndTablesChecksum(m_mapFileData);
+    //FirmwareAndTablesChecksum(m_mapFileData);
 
 	m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(NanocomChecksum(m_mapFileData));
 
@@ -559,7 +554,7 @@ void td5mapeditorDoc::Update(wxView* sender)
 	}
 
 	// Experimental Checksum corrections
-    FirmwareAndTablesChecksum(m_mapFileData);
+    //FirmwareAndTablesChecksum(m_mapFileData);
 
     m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(NanocomChecksum(m_mapFileData));
 
