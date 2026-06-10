@@ -52,18 +52,29 @@ template <typename T> class ewxDynArray
     public:
         ewxDynArray():m_data(0){m_items = 0;};
         ewxDynArray(int items):m_data(items){m_items=items;};
+        /*
         ewxDynArray(const ewxDynArray& other)
         {
             for (int i = 0; i < m_items; i++)
             m_data[i] = other.m_data[i];
         };
+        */
+        ewxDynArray(const ewxDynArray& other)
+        : m_items(other.m_items), m_data(other.m_data)
+        {
+        }      
         inline T & operator[](int i) { return m_data[i];}
         inline const T & operator[] (int i) const { return m_data[i];}
         ewxDynArray& operator=(const ewxDynArray& other)
         {
-            if (this == &other) return *this; // handle self assignment
+            if (this == &other) 
+                return *this; // handle self assignment
+            /*
             for (int i = 0; i < m_items; i++)
             m_data[i] = other.m_data[i];
+            */
+            m_items = other.m_items;
+            m_data = other.m_data;           
             return *this;
         };
 

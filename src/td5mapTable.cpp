@@ -94,16 +94,15 @@ bool td5mapTable::ReadTable(wxWord* pwMapFileData, int iIndex, wxWord* pwBaseMap
         m_rows = 1;
     }
 
-    m_headerCol.resize(m_cols);
-    m_headerRow.resize(m_rows);
-    m_tableData.resize(m_cols, m_rows);
-
     if (m_rows > 1)
         m_map3d= TRUE;
 
     if ((m_cols < 1) || (m_rows < 1) || (m_cols > 32) || (m_rows > 32))
         return FALSE;
 
+    m_headerCol.resize(m_cols);
+    m_headerRow.resize(m_rows);
+    m_tableData.resize(m_cols, m_rows);        
 
     if (m_cols > 1)
         for(int c= 0; c < m_cols; c++)

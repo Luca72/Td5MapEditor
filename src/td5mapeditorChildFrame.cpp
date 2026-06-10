@@ -431,11 +431,23 @@ void td5mapeditorChildFrame::OnEditRangeOfValues(wxCommandEvent& WXUNUSED(event)
         if ( dlg.ShowModal() == wxID_OK )
         {
             long tempvalue;
+            /*
             dlg.m_ltValue->GetValue().ToLong(&tempvalue); data.ltValue = tempvalue;
             dlg.m_rtValue->GetValue().ToLong(&tempvalue); data.rtValue = tempvalue;
             dlg.m_lbValue->GetValue().ToLong(&tempvalue); data.lbValue = tempvalue;
             dlg.m_rbValue->GetValue().ToLong(&tempvalue); data.rbValue = tempvalue;
             dlg.m_constValue->GetValue().ToLong(&tempvalue); data.constValue = tempvalue;
+            */
+            if (!dlg.m_ltValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid left-top value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.ltValue = tempvalue;
+            if (!dlg.m_rtValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid right-top value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.rtValue = tempvalue;
+            if (!dlg.m_lbValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid left-bottom value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.lbValue = tempvalue;
+            if (!dlg.m_rbValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid right-bottom value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.rbValue = tempvalue;
+            if (!dlg.m_constValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid constant value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.constValue = tempvalue;
 
             tuner.DoPlaneTuning(range, data);
 
@@ -450,10 +462,18 @@ void td5mapeditorChildFrame::OnEditRangeOfValues(wxCommandEvent& WXUNUSED(event)
         if ( dlg.ShowModal() == wxID_OK )
         {
             long tempvalue;
+            /*
             dlg.m_ltValue->GetValue().ToLong(&tempvalue); data.ltValue = data.lbValue = tempvalue;
             dlg.m_rtValue->GetValue().ToLong(&tempvalue); data.rtValue = data.lbValue = tempvalue;
             dlg.m_constValue->GetValue().ToLong(&tempvalue); data.constValue = tempvalue;
-
+            */
+            if (!dlg.m_ltValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid left-top value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.ltValue = data.lbValue = tempvalue;
+            if (!dlg.m_rtValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid right-top value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.rtValue = data.lbValue = tempvalue;
+            if (!dlg.m_constValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid constant value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.constValue = tempvalue;
+            
             tuner.DoPlaneTuning(range, data);
 
             doc->Modify(true);
@@ -467,9 +487,17 @@ void td5mapeditorChildFrame::OnEditRangeOfValues(wxCommandEvent& WXUNUSED(event)
         if ( dlg.ShowModal() == wxID_OK )
         {
             long tempvalue;
+            /*
             dlg.m_ltValue->GetValue().ToLong(&tempvalue); data.ltValue = data.rtValue = tempvalue;
             dlg.m_lbValue->GetValue().ToLong(&tempvalue); data.lbValue = data.rbValue = tempvalue;
             dlg.m_constValue->GetValue().ToLong(&tempvalue); data.constValue = tempvalue;
+            */
+            if (!dlg.m_ltValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid left-top value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.ltValue = data.rtValue = tempvalue;
+            if (!dlg.m_lbValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid left-bottom value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.lbValue = data.rbValue = tempvalue;
+            if (!dlg.m_constValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid constant value"), _("Invalid Entry"), wxICON_ERROR); return;}
+            data.constValue = tempvalue;
 
             tuner.DoPlaneTuning(range, data);
 

@@ -72,12 +72,23 @@ td5mapeditorDoc::td5mapeditorDoc(void)
     m_scalarIdEnd = 0;
 }
 
+/*
 td5mapeditorDoc::~td5mapeditorDoc(void)
 {
     if(m_mapBaseData && m_mapFound)
         delete m_mapBaseData;
     if(m_mapExternalData)
         delete m_mapExternalData;
+}
+*/
+
+td5mapeditorDoc::~td5mapeditorDoc(void)
+{
+    if (m_mapBaseData && m_mapBaseData != m_mapFileData)
+        delete[] m_mapBaseData;
+
+    if (m_mapExternalData)
+        delete[] m_mapExternalData;
 }
 
 #if wxUSE_STD_IOSTREAM
@@ -169,8 +180,11 @@ bool td5mapeditorDoc::OnNewDocument()
 
 	// extract Base map
 	m_mapBaseData = ExtractMapResource(wiznewmapdata.mapID, m_mapFound);
-
+    /*
 	if(!m_mapFound)
+        m_mapBaseData = m_mapFileData;
+    */
+    if (!m_mapFound || m_mapBaseData == nullptr)
         m_mapBaseData = m_mapFileData;
 
     // create new map
@@ -188,16 +202,22 @@ bool td5mapeditorDoc::OnNewDocument()
 	int indexStartAddress = ExtractTablesIndexAddress();
 
     m_mapIdBegin = i;
-    while(tableAddress < 32767/*65535*/)
+    // while(tableAddress < 32767/*65535*/)
+    while (tableAddress < 32767 &&
+        i < MAX_NUM_OF_TABLES &&
+        ((indexStartAddress / sizeof(wxWord)) + i) < MAP_FILE_LENGTH_WORD)
     {
         address = (indexStartAddress / sizeof(wxWord)) + i;
         tableAddress = LoHi2HiLo(m_mapFileData[address]);
+
         m_mapTable[i].m_index = i;
         m_mapTable[i].m_address = tableAddress;
         m_mapAddresses[i] = tableAddress;
         m_mapTable[i].m_singlevalue = false;
+
         i++;
     }
+
 	//i = i - 3; // To be verified why "- 3" ????
 	//i = i - 1;
 	if (i <= 117)
@@ -271,7 +291,7 @@ bool td5mapeditorDoc::OnNewDocument()
 bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
 {
 	if (!wxDocument::OnOpenDocument(filename))
-		return true;
+		return false;
 
     //m_fileName = filename.Right(filename.Length() - (filename.Find(wxChar(47), true) + 1));
     m_fileName = ExtractFileName(filename);
@@ -283,7 +303,7 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
 	m_mapTag = ExtractTagFromFile();
 
     // Get base map ID
-	int m_mapID = ExtractMapIDFromFile();
+	/*int*/ m_mapID = ExtractMapIDFromFile();
 
 	// Build tables structures
 	int i = 0;
@@ -292,14 +312,19 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
 	int indexStartAddress = ExtractTablesIndexAddress();
 
     m_mapIdBegin = i;
-    while(tableAddress < 32767/*65535*/)
+    // while(tableAddress < 32767/*65535*/)
+    while (tableAddress < 32767 &&
+        i < MAX_NUM_OF_TABLES &&
+        ((indexStartAddress / sizeof(wxWord)) + i) < MAP_FILE_LENGTH_WORD)
     {
         address = (indexStartAddress / sizeof(wxWord)) + i;
         tableAddress = LoHi2HiLo(m_mapFileData[address]);
+
         m_mapTable[i].m_index = i;
         m_mapTable[i].m_address = tableAddress;
         m_mapAddresses[i] = tableAddress;
         m_mapTable[i].m_singlevalue = false;
+
         i++;
     }
 
@@ -334,8 +359,11 @@ bool td5mapeditorDoc::OnOpenDocument(const wxString& filename)
 
     // Extract base map from resources
 	m_mapBaseData = ExtractMapResource(m_mapID, m_mapFound);
-
+    /*
 	if(!m_mapFound)
+        m_mapBaseData = m_mapFileData;
+    */
+    if (!m_mapFound || m_mapBaseData == nullptr)
         m_mapBaseData = m_mapFileData;
 
     // read tables
@@ -553,6 +581,7 @@ void td5mapeditorDoc::ResetTableToBaseMap()
     Update();
 }
 
+/*
 wxWord *td5mapeditorDoc::ExtractMapResource(int nResourceId, bool& bOk)
 {
 	wxWord *baseMap; // pointer to resource data
@@ -599,6 +628,53 @@ wxWord *td5mapeditorDoc::ExtractMapResource(int nResourceId, bool& bOk)
 
 	return baseMap;
 }
+*/
+
+wxWord *td5mapeditorDoc::ExtractMapResource(int WXUNUSED(nResourceId), bool& bOk)
+{
+    bOk = false;
+
+    wxWord *baseMap = new wxWord[MAP_FILE_LENGTH_WORD];
+
+    wxString resourceName = _T(":") + m_mapName + _T(".map");
+
+#if wxUSE_STD_IOSTREAM
+    std::string mapFileName = std::string(resourceName.mb_str());
+    baseMaps baseMapArchive(mapFileName);
+    std::istream *stream = baseMapArchive.get(mapFileName);
+
+    if (stream == nullptr)
+    {
+        delete[] baseMap;
+        return nullptr;
+    }
+
+    union DATAWORD { wxWord word; char chr[2]; };
+    DATAWORD buff;
+
+    for (int i = 0; i < (int)MAP_FILE_LENGTH_WORD; i++)
+    {
+        stream->read(buff.chr, 2);
+        baseMap[i] = buff.word;
+    }
+#else
+    wxInputStream* stream;
+    baseMaps baseMapArchive(resourceName);
+    stream = baseMapArchive.Get(resourceName);
+
+    if (stream == nullptr)
+    {
+        delete[] baseMap;
+        return nullptr;
+    }
+
+    for (int i = 0; i < (int)MAP_FILE_LENGTH_WORD; i++)
+        stream->Read(&baseMap[i], 2);
+#endif
+
+    bOk = true;
+    return baseMap;
+}
 
 void td5mapeditorDoc::SetUpdateFlag(long panel)
 {
@@ -642,7 +718,11 @@ wxWord td5mapeditorDoc::GetBaseRawValue(int address)
 
 bool td5mapeditorDoc::SelectTable(int index)
 {
+    /*
     if (index > m_numberOfTables)
+        return false;
+    */
+    if (index < 0 || index >= m_numberOfTables)
         return false;
 
     m_selectedTable = index;
@@ -963,6 +1043,15 @@ bool td5mapeditorDoc::LoadXDF(const wxString& ifileName)
                 recognizedtable = true;
             }
 
+            TiXmlElement* data_units = constant->FirstChildElement( "description" );
+            if(data_units)
+            {
+                description = data_units->GetText();
+                if(strlen(description) > 6){
+                    d_units = description + 6;
+                }
+            }
+
             TiXmlElement* constant_address = constant->FirstChildElement( "EMBEDDEDDATA" );
             if(constant_address)
             {
@@ -1000,7 +1089,7 @@ bool td5mapeditorDoc::LoadXDF(const wxString& ifileName)
                 }
             }
 
-           for(int s = m_scalarIdBegin; s <= m_scalarIdEnd; s++)
+            for(int s = m_scalarIdBegin; s <= m_scalarIdEnd; s++)
             {
                 if(m_mapTable[s].m_address == tableAddress)
                 {
@@ -1010,9 +1099,9 @@ bool td5mapeditorDoc::LoadXDF(const wxString& ifileName)
                         m_mapTable[s].m_type = XDF_SCALAR;
                         m_mapTable[s].m_name = title;
                         m_mapTable[s].m_comment = description;
-                        m_mapTable[s].m_xunit = _T("");
-                        m_mapTable[s].m_yunit = _T("");
-                        m_mapTable[s].m_zunit = d_units;
+                        m_mapTable[s].m_xunit = _T("")/*d_units*/;
+                        m_mapTable[s].m_yunit = /*_T("")*/d_units;
+                        m_mapTable[s].m_zunit = _T("");
                         m_mapTable[s].m_collabelmult = 1.0;
                         m_mapTable[s].m_collabeloff = 0;
                         m_mapTable[s].m_rowlabelmult = 1.0;
@@ -1222,6 +1311,62 @@ wxWord* td5mapeditorDoc::ExtractScalarsIndexAddress()
 // Scalars Addresses for all Models EU3
 wxWord td5mapeditorDoc::scalarIndexAddressEU3[] =
 {
+    0x02D4, // as_amb_pres_default
+    0x02D6, // as_coolant_default
+    0x02D8, // as_inlet_air_default
+    0x02DA, // as_fuel_temp_default
+    0x02DE, // as_amb_air_default
+    0x02E0, // as_air_flow_default
+    0x02E2, // as_man_pres_default
+    0x02E4, // as_air_flow_test_spd
+    0x02E6, // as_air_flow_tst_hyst
+    0x02E8, // as_af_low_spd_min
+    0x02EA, // as_af_low_spd_max
+    0x02EC, // as_af_high_spd_min
+    0x02EE, // as_af_high_spd_max
+    0x0330, // ? (	cc_resume_sw_time )	156
+    0x0332, // ? (	cc_set_sw_time )	157
+    0x0334, // ? (	cc_sw_stuck_time )	158
+    0x0336, // ? (	cc_spd_chk_period )	159
+    0x0338, // cc_eng_spd_disi			160
+    0x033A, // cc_eng_spd_disd			161
+    0x033C, // cc_veh_spd_rate_disi		162
+    0x033E, // cc_veh_spd_ctrl_disd		163
+    0x0340, // ? (	cc_pedal_max_time )	164
+    0x0342, // ? (	cc_pedal_enbi )	    165
+    0x0344, // ? (	cc_veh_accel_filt )	166
+    0x0346, // ? (	cc_tap_up_interval )167
+    0x0348, // cc_vehicle_spd_disd		168
+    0x034A, // cc_vehicle_spd_disi		169
+    0x034C, // cc_vehicle_spd_inc		170
+    0x034E, // cc_vehicle_spd_dec		171
+    0x0350, // cc_max_accel_rate		172
+    0x0352, // cc_max_decel_rate		173
+    0x0354, // cc_tap_up_limit			174
+    0x0356, // ? (	cc_error_filt_rate )175
+    0x0358, // ? (	cc_int_der_lock_rt )176
+    0x035A, // ? (	cc_int_der_open_rt )177
+    0x035C, // ? (	cc_error_filt_const 178
+    0x035E, // ? (	cc_intgl_deadband )	179
+    0x0360, // ? (	cc_max_err_intgl )	180
+    0x0362, // cc_clamp_intgl_hi		181
+    0x0364, // cc_clamp_intgl_lo		182
+    0x0366, // ? (	cc_deriv_enbd )	    183
+    0x0368, // cc_clamp_deriv_hi		184
+    0x036A, // cc_clamp_deriv_lo		185
+    0x036C, // ? (	cc_gain_deriv_hi )	186
+    0x036E, // ? (	cc_gain_deriv_lo )	187
+    0x0370, // cc_dr_holding			188
+    0x0372, // ? (	cc_initial_I_mult )	189
+    0x0374, // ? (	cc_init_accel_rate )190
+    0x0376, // ? (	cc_demand_filter )	191
+    0x0378, // ? (	cc_open_intgl_mult )192
+    0x037A, // ? (	cc_lock_intgl_mult )193
+    0x037C, // cc_5_prptn_mult			194
+    0x037E, // cc_4_prptn_mult			195
+    0x0380, // cc_3_prptn_mult			196
+    0x04F0, // egr_valve_pwm_freq
+    0x054C, // egr_inlet_throt_freq
     0x06DC, // tb_intgl_deriv_rate      116
     0x06DE, // tb_error_filt_const      117
     0x06E0, // tb_intgl_enbl            118
@@ -1247,67 +1392,51 @@ wxWord td5mapeditorDoc::scalarIndexAddressEU3[] =
     0x0756, // tb_engine_speed_enbl     138
     0x0758, // tb_fuel_mass_enbl        139
     0x075A, // tb_pwm_default           140
+    0x075C, // tb_limit_temp1
+    0x075E, // tb_limit_temp2
+    0x0760, // tb_lower_guess_sq
+    0x0762, // tb_mid_guess_sq
+    0x0764, // tb_upper_guess_sq
+    0x0766, // tb_lower_guess
+    0x0768, // tb_mid_guess
+    0x076A, // tb_upper_guess
+    0x076C, // tb_spd_const
+    0x076E, // ai_limit_min_iat
+    0x0770, // ai_limit_min_mux
+    0x0772, // ai_limit_min_aat
     0x077C, // ai_limit_min_aap         141
     0x0786, // ai_limit_min_map         142
     0x078A, // ai_limit_min_maf         143
+    0x078E, // ai_limit_max_iat
+    0x0790, // ai_limit_max_mux
+    0x0792, // ai_limit_max_aat
     0x079C, // ai_limit_max_aap         144
     0x07A6, // ai_limit_max_map         145
     0x07AA, // ai_limit_max_maf         146
+    0x07AE, // ai_anlg_mult_iat
+    0x07B0, // ai_anlg_mult_mux
+    0x07B2, // ai_anlg_mult_aat
     0x07BC, // ai_anlg_multip_aap       147
     0x07C6, // ai_anlg_multip_map       148
     0x07CA, // ai_anlg_multip_maf       149
+    0x07CE, // ai_anlg_divisor_iat
+    0x07D0, // ai_anlg_divisor_mux
+    0x07D2, // ai_anlg_divisor_aat
     0x07DC, // ai_anlg_divisor_aap      150
     0x07E6, // ai_anlg_divisor_map      151
     0x07EA, // ai_anlg_divisor_maf      152
+    0x07EE, // ai_anlg_offset_iat
+    0x07F0, // ai_anlg_offset_mux
+    0x07F2, // ai_anlg_offset_aat
     0x07FC, // ai_anlg_offset_aap       153
     0x0806, // ai_anlg_offset_map       154
     0x080A, // ai_anlg_offset_maf       155
-	0x0330, // ? (	cc_resume_sw_time )	156
-	0x0332, // ? (	cc_set_sw_time )	157
-	0x0334, // ? (	cc_sw_stuck_time )	158
-	0x0336, // ? (	cc_spd_chk_period )	159
-	0x0338, // cc_eng_spd_disi			160
-	0x033A, // cc_eng_spd_disd			161
-	0x033C, // cc_veh_spd_rate_disi		162
-	0x033E, // cc_veh_spd_ctrl_disd		163
-	0x0340, // ? (	cc_pedal_max_time )	164
-	0x0342, // ? (	cc_pedal_enbi )	    165
-	0x0344, // ? (	cc_veh_accel_filt )	166
-	0x0346, // ? (	cc_tap_up_interval )167
-	0x0348, // cc_vehicle_spd_disd		168
-	0x034A, // cc_vehicle_spd_disi		169
-	0x034C, // cc_vehicle_spd_inc		170
-	0x034E, // cc_vehicle_spd_dec		171
-	0x0350, // cc_max_accel_rate		172
-	0x0352, // cc_max_decel_rate		173
-	0x0354, // cc_tap_up_limit			174
-	0x0356, // ? (	cc_error_filt_rate )175
-	0x0358, // ? (	cc_int_der_lock_rt )176
-	0x035A, // ? (	cc_int_der_open_rt )177
-	0x035C, // ? (	cc_error_filt_const 178
-	0x035E, // ? (	cc_intgl_deadband )	179
-	0x0360, // ? (	cc_max_err_intgl )	180
-	0x0362, // cc_clamp_intgl_hi		181
-	0x0364, // cc_clamp_intgl_lo		182
-	0x0366, // ? (	cc_deriv_enbd )	    183
-	0x0368, // cc_clamp_deriv_hi		184
-	0x036A, // cc_clamp_deriv_lo		185
-	0x036C, // ? (	cc_gain_deriv_hi )	186
-	0x036E, // ? (	cc_gain_deriv_lo )	187
-	0x0370, // cc_dr_holding			188
-	0x0372, // ? (	cc_initial_I_mult )	189
-	0x0374, // ? (	cc_init_accel_rate )190
-	0x0376, // ? (	cc_demand_filter )	191
-	0x0378, // ? (	cc_open_intgl_mult )192
-	0x037A, // ? (	cc_lock_intgl_mult )193
-	0x037C, // cc_5_prptn_mult			194
-	0x037E, // cc_4_prptn_mult			195
-	0x0380, // cc_3_prptn_mult			196
-	0x0842, // gb_valid_ratio_1         197
-	0x0844, // gb_valid_ratio_2         198
-	0x0846, // gb_valid_ratio_3         199
-	0x0848, // gb_valid_ratio_4         200
-	0x084A, // gb_valid_ratio_5         201
+    0x0840, // gb_valid_ratio_0
+    0x0842, // gb_valid_ratio_1         197
+    0x0844, // gb_valid_ratio_2         198
+    0x0846, // gb_valid_ratio_3         199
+    0x0848, // gb_valid_ratio_4         200
+    0x084A, // gb_valid_ratio_5         201
 
     0xFFFF  // END MARKER
 };

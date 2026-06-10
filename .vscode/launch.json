@@ -5,7 +5,7 @@
             "name": "Debug Td5MapEditor",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../linux_x64/debug/td5mapeditor",
+            "program": "${workspaceFolder}/linux_x64/debug/td5mapeditor",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

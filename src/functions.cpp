@@ -78,7 +78,7 @@ void FirmwareAndTablesChecksum(wxWord *pMapFileData)
     WriteBE16AtByteOffset(bytes, 0x01CFE6, tbCorrection);
 }
 
-
+/*
 wxWord NanocomChecksum(wxWord *pMapFileData)
 {
   int count = (MAP_FILE_LENGTH - 2) / sizeof(wxWord);
@@ -100,9 +100,27 @@ wxWord NanocomChecksum(wxWord *pMapFileData)
 
   return(sum.word[0]);
 }
+*/
+wxWord NanocomChecksum(wxWord *pMapFileData)
+{
+    wxUint32 sum = 0;
+    wxByte* bytes = reinterpret_cast<wxByte*>(pMapFileData);
+
+    for (int i = 0; i < MAP_FILE_LENGTH - 2; i++)
+        sum += bytes[i];
+
+    return static_cast<wxWord>(sum & 0xFFFF);
+}
 
 
+/*
 wxString ExtractFileName(wxString path)
 {
     return path.Right(path.Length() - (path.Find(wxChar(47), true) + 1));
+}
+*/
+#include <wx/filename.h>
+wxString ExtractFileName(wxString path)
+{
+    return wxFileName(path).GetFullName();
 }
