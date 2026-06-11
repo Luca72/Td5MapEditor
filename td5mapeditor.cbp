@@ -10,54 +10,50 @@
 				<Option output="win64/debug/td5mapeditor" prefix_auto="1" extension_auto="1" />
 				<Option object_output="win64/debug/obj" />
 				<Option type="0" />
-				<Option compiler="gcc-msys2-mingw64" />
+				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-w" />
-					<Add option="-std=gnu++11" />
+					<Add option="-std=gnu++17" />
 					<Add option="-g" />
 					<Add option="-pipe" />
+					<Add option="-funsigned-char" />
 					<Add option="-mthreads" />
 					<Add option='[[if (PLATFORM == PLATFORM_MSW &amp;&amp; (GetCompilerFactory().GetCompilerVersionString(_T(&quot;gcc&quot;)) &gt;= _T(&quot;4.0.0&quot;))) print(_T(&quot;-Wno-attributes&quot;));]]' />
-					<Add option="-D__GNUWIN32__" />
-					<Add option="-D__WXDEBUG__" />
 					<Add option="-D__WXMSW__" />
-					<Add option="-DWIN32" />
-					<Add option="-D_WINDOWS" />
-					<Add option="-D_UNICODE" />
-					<Add directory="C:/wxWidgets-3.0.5/lib/gcc_lib/mswud" />
-					<Add directory="C:/wxWidgets-3.0.5/include" />
+					<Add directory="C:/wxWidgets-3.2/lib/gcc1420UCRT_x64/mswud" />
+					<Add directory="C:/wxWidgets-3.2/include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:/wxWidgets-3.0.2/include" />
 					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_lib/mswud" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="libwxmsw30ud_adv.a" />
-					<Add library="libwxmsw30ud_core.a" />
-					<Add library="libwxbase30ud.a" />
-					<Add library="libwxtiffd.a" />
-					<Add library="libwxjpegd.a" />
-					<Add library="libwxpngd.a" />
-					<Add library="libwxzlibd.a" />
-					<Add library="libwxregexud.a" />
-					<Add library="libwxexpatd.a" />
-					<Add library="libkernel32.a" />
-					<Add library="libuser32.a" />
-					<Add library="libgdi32.a" />
-					<Add library="libcomdlg32.a" />
-					<Add library="libwinspool.a" />
-					<Add library="libwinmm.a" />
-					<Add library="libshell32.a" />
-					<Add library="libcomctl32.a" />
-					<Add library="libole32.a" />
-					<Add library="liboleaut32.a" />
-					<Add library="libuuid.a" />
-					<Add library="librpcrt4.a" />
-					<Add library="libadvapi32.a" />
-					<Add library="libwsock32.a" />
-					<Add library="libwininet.a" />
-					<Add directory="C:/wxWidgets-3.0.5/lib/gcc_lib" />
+					<Add option="-lwinpthread" />
+					<Add library="libwxmsw32ud_core" />
+					<Add library="libwxbase32ud" />
+					<Add library="libwxpngd" />
+					<Add library="libwxzlibd" />
+					<Add library="libkernel32" />
+					<Add library="libuser32" />
+					<Add library="libgdi32" />
+					<Add library="libcomdlg32" />
+					<Add library="libwinspool" />
+					<Add library="libwinmm" />
+					<Add library="libshell32" />
+					<Add library="libcomctl32" />
+					<Add library="libole32" />
+					<Add library="liboleaut32" />
+					<Add library="libuuid" />
+					<Add library="librpcrt4" />
+					<Add library="libadvapi32" />
+					<Add library="libwsock32" />
+					<Add library="libwininet" />
+					<Add library="uxtheme" />
+					<Add library="shlwapi" />
+					<Add library="oleacc" />
+					<Add library="libversion" />
+					<Add directory="C:/wxWidgets-3.2/lib/gcc1420UCRT_x64" />
 				</Linker>
 			</Target>
 			<Target title="Win64 Release">
