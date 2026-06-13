@@ -18,6 +18,10 @@ The project was originally developed with Code::Blocks and wxWidgets, and has re
 - Code::Blocks project files retained for compatibility with the original workflow.
 - Makefile-based builds added for faster incremental builds.
 
+## User manual
+
+See [USER_MANUAL.md](USER_MANUAL.md).
+
 ## Project layout
 
 Typical layout:
