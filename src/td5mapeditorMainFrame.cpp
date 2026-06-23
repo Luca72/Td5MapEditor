@@ -79,6 +79,7 @@ BEGIN_EVENT_TABLE(td5mapeditorMainFrame, wxDocMDIParentFrame)
     EVT_MENU(ID_TOOLS_SUBTRACT_ONE,td5mapeditorMainFrame::OnSubtractOne)
     EVT_MENU(ID_TOOLS_EDIT_RANGE_OF_VALUES,td5mapeditorMainFrame::OnEditRangeOfValues)
     EVT_MENU(ID_FOLLOW_LOCALE,td5mapeditorMainFrame::OnFollowLocale)
+    EVT_MENU(ID_TOOLS_EDIT_CHECKSUM,td5mapeditorMainFrame::OnEditChecksum)
 #endif
     EVT_MENU(TD5MAPEDITOR_ABOUT, td5mapeditorMainFrame::OnAbout)
     //EVT_TIMER(wxID_ANY, td5mapeditorMainFrame::OnCyclicTimerEvent)
@@ -108,6 +109,78 @@ bool td5mapeditorMainFrame::Create(wxDocManager *manager, wxFrame *frame, const 
     CreateLayout();
 
     return true;
+}
+
+void td5mapeditorMainFrame::CreateStatusBarCell(int number)
+{
+    if (!statusBar || number < 0 || number >= statusBar->GetFieldsCount())
+        return;
+
+    statusBarCell[number] = new wxStaticText(
+        statusBar,
+        wxID_ANY,
+        wxEmptyString,
+        wxDefaultPosition,
+        wxDefaultSize,
+        wxALIGN_CENTER_VERTICAL
+    );
+
+    statusBarBackgroundColor = new wxColour(statusBar->GetBackgroundColour());
+    statusBarForegroundColor = new wxColour(statusBar->GetForegroundColour());
+
+    statusBarCell[number]->SetBackgroundColour(*statusBarBackgroundColor);
+    statusBarCell[number]->SetForegroundColour(*statusBarForegroundColor);
+
+    PositionStatusBarCell(number);
+}
+
+void td5mapeditorMainFrame::PositionStatusBarCell(int number)
+{
+    wxRect rect;
+
+    if (!statusBar || number < 0 || number >= statusBar->GetFieldsCount() || !statusBarCell[number])
+        return;
+
+    if (statusBar->GetFieldRect(number, rect)) {
+        rect.Deflate(1, 1);
+        statusBarCell[number]->SetSize(rect);
+    }
+}
+
+void td5mapeditorMainFrame::PositionStatusBarCells()
+{
+    if (!statusBar)
+        return;
+
+    for (int i = 0; i < statusBar->GetFieldsCount(); i++)
+        PositionStatusBarCell(i);
+}
+
+void td5mapeditorMainFrame::OnStatusBarSize(wxSizeEvent& event)
+{
+    PositionStatusBarCells();
+    event.Skip();
+}
+
+void td5mapeditorMainFrame::SetStatusBarText(const wxString& text, int i)
+{
+    if (!statusBar || i < 0 || i >= statusBar->GetFieldsCount())
+        return;
+
+    statusBar->SetStatusText(text, i);
+
+    if (statusBarCell[i])
+        statusBarCell[i]->SetLabel(text);
+}
+
+void td5mapeditorMainFrame::SetStatusBarCellColours(int i, const wxColour& backgroundColour, const wxColour& foregroundColour)
+{
+    if (!statusBar || i < 0 || i >= statusBar->GetFieldsCount() || !statusBarCell[i])
+        return;
+
+    statusBarCell[i]->SetBackgroundColour(backgroundColour);
+    statusBarCell[i]->SetForegroundColour(foregroundColour);
+    statusBarCell[i]->Refresh();
 }
 
 #ifdef __WXGTK__
@@ -207,24 +280,32 @@ void td5mapeditorMainFrame::CreateLayout()
     for (i = 0; i < /*15*/7; i++)
         delete toolBarBitmaps[i];
 
-    statusBar = CreateStatusBar(7);
-    int widths[7] = {-2, -1, 100, 65, 65, 170, 150};
-    statusBar->SetStatusWidths(7, widths);
-    int styles[7] = {wxSB_FLAT, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL};
-    statusBar->SetStatusStyles(7, styles);
+    statusBar = CreateStatusBar(9);
+    int widths[9] = {-2, -1, 110, 110, 110, 70, 70, 170, 150};
+    statusBar->SetStatusWidths(9, widths);
+    int styles[9] = {wxSB_FLAT, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL,wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL};
+    statusBar->SetStatusStyles(9, styles);
+
+    for (int i = 0; i < statusBar->GetFieldsCount(); i++) {
+        statusBarCell[i] = NULL;
+        CreateStatusBarCell(i);
+    }
+
+    statusBar->Bind(wxEVT_SIZE, &td5mapeditorMainFrame::OnStatusBarSize, this);
+    PositionStatusBarCells();
 }
 
 void td5mapeditorMainFrame::OnAbout(wxCommandEvent& WXUNUSED(event) )
 {
     wxString content(_T("Td5 Map Editor"));
     content += _T(" ");
-    content += wxString::Format(wxT("%ld"), AutoVersion::MAJOR);
+    content += wxString::Format(wxT("%ld"), Version::MAJOR);
     content += _T(".");
-    content += wxString::Format(wxT("%ld"), AutoVersion::MINOR);
+    content += wxString::Format(wxT("%ld"), Version::MINOR);
     content += _T(".");
-    content += wxString::Format(wxT("%ld"), AutoVersion::BUILD);
+    content += wxString::Format(wxT("%ld"), Version::BUILD);
     content += _T(".");
-    content += wxString::Format(wxT("%ld"), AutoVersion::REVISION);
+    content += wxString::Format(wxT("%ld"), Version::REVISION);
 #ifdef __WXMSW__
     content += _T("\n");
     content += _T("Windows 64-bit release");
@@ -347,6 +428,13 @@ void td5mapeditorMainFrame::OnFollowLocale( wxCommandEvent& WXUNUSED(event) )
     td5mapeditorChildFrame *activeChild = (td5mapeditorChildFrame *) GetActiveChild();
     wxCommandEvent event;
     activeChild->OnFollowLocale(event);
+}
+
+void td5mapeditorMainFrame::OnEditChecksum( wxCommandEvent& WXUNUSED(event) )
+{
+    td5mapeditorChildFrame *activeChild = (td5mapeditorChildFrame *) GetActiveChild();
+    wxCommandEvent event;
+    activeChild->OnEditChecksum(event);
 }
 
 /*

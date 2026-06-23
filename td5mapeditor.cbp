@@ -71,6 +71,7 @@
 					<Add option="-mthreads" />
 					<Add option='[[if (PLATFORM == PLATFORM_MSW &amp;&amp; (GetCompilerFactory().GetCompilerVersionString(_T(&quot;gcc&quot;)) &gt;= _T(&quot;4.0.0&quot;))) print(_T(&quot;-Wno-attributes&quot;));]]' />
 					<Add option="-D__WXMSW__" />
+					<Add option="-D__WINDOWS__" />
 					<Add directory="C:/wxWidgets-3.2/lib/gcc1420UCRT_x64/mswu" />
 					<Add directory="C:/wxWidgets-3.2/include" />
 				</Compiler>
@@ -141,8 +142,6 @@
 		</Build>
 		<Unit filename="src/baseMaps.cpp" />
 		<Unit filename="src/baseMaps.h" />
-		<Unit filename="src/dc3d.cpp" />
-		<Unit filename="src/dc3d.h" />
 		<Unit filename="src/dlgEditRangeOfValues.cpp" />
 		<Unit filename="src/dlgEditRangeOfValues.h" />
 		<Unit filename="src/dlgEditTag.cpp" />
@@ -155,8 +154,6 @@
 		<Unit filename="src/ewxRange.h" />
 		<Unit filename="src/functions.cpp" />
 		<Unit filename="src/functions.h" />
-		<Unit filename="src/graphDC.cpp" />
-		<Unit filename="src/graphDC.h" />
 		<Unit filename="src/resource.h" />
 		<Unit filename="src/resource.rc">
 			<Option compilerVar="WINDRES" />

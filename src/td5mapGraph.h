@@ -2,7 +2,7 @@
  * Name:      td5mapGraph.h
  * Purpose:   Code for Application Class
  * Author:    Luca Veronesi (luca72@libero.it)
- * Created:   2012-04-25
+ * Created:   2026-06-13
  * Copyright: Luca Veronesi ()
  * License:
  **************************************************************/
@@ -27,72 +27,6 @@
 #define GDC_SHOW_BASE_CURRENT   13
 
 class td5mapGraphCursor;
-class point3D;
-
-class td5mapGraph
-{
-    public:
-        td5mapGraph(wxScrolledWindow *parent);
-        td5mapGraph(wxDC& dc, wxScrolledWindow *parent, wxRect canvasrect, td5mapTable *maptable = NULL, int graphshow = GDC_SHOW_CURRENT);
-        virtual ~td5mapGraph();
-
-        bool Prepare(wxDC& dc, wxRect canvasrect, td5mapTable *maptable = NULL, int graphshow = GDC_SHOW_CURRENT);
-        bool IsPrepared(){return m_prepared;};
-        void Draw();
-
-        void SetRange2D(double minX, double maxX, double minY, double maxY);
-        void DrawLine2D(wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
-
-        void DrawPolygon2D(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, wxPolygonFillMode fill_style = wxODDEVEN_RULE);
-        void DrawText2D(const wxString& text, wxCoord x, wxCoord y);
-
-        void SetRange3D(double minX, double maxX, double minY, double maxY, double minZ, double maxZ, double orgX = 0.0, double orgY = 0.0);
-        point3D DrawLine3D(double xbegin, double ybegin, double zbegin, double xend, double yend, double zend);
-        point3D DrawLine3D(point3D pt3dBegin, point3D pt3dEnd);
-        void DrawPolygon3D(int n, point3D points3d[], wxCoord xoffset = 0, wxCoord yoffset = 0, wxPolygonFillMode fill_style = wxODDEVEN_RULE);
-        void DrawText3D(const wxString& text, wxCoord x, wxCoord y, wxCoord z);
-    	wxPoint TransformTo2D(point3D pt3d);
-        wxPoint TransformTo2D(double x, double y, double z);
-
-    protected:
-
-    private:
-    	wxDC* m_dc;
-        wxScrolledWindow *m_parent;
-
-        int m_show;
-        int m_graphtype;
-        bool m_prepared;
-
-        td5mapTable *m_table;
-        ewxDyn2DArray<point3D> m_points;
-
-        td5mapGraphCursor *m_cursor;
-        bool m_selecting;
-        wxPoint m_selectionBegin;
-        wxPoint m_selectionEnd;
-
-        wxRect m_axisRect;
-        double m_theta0 ;
-        double m_theta1 ;
-        double m_resXZ , m_resXY , m_resZY;
-        double m_orgY;
-        double m_orgX;
-        double m_r3dZ[2], m_r3dX[2], m_r3dY[2] ;
-        double m_resY, m_resX ;
-        double m_rangeY[2], m_rangeX[2];
-
-        int m_maxXAxis;
-        int m_maxYAxis;
-        int m_maxZAxis;
-        int m_minXAxis;
-        int m_minYAxis;
-        int m_minZAxis;
-        int m_xaxisTagsNum;
-        int m_yaxisTagsNum;
-        int m_zaxisTagsNum;
-
-};
 
 class point3D : public wxObject
 {
@@ -118,6 +52,108 @@ public:
 	double x, y, z;
 };
 
+class td5mapGraph
+{
+    public:
+        td5mapGraph(wxScrolledWindow *parent);
+        td5mapGraph(wxDC& dc, wxScrolledWindow *parent, wxRect canvasrect, td5mapTable *maptable = NULL, int graphshow = GDC_SHOW_CURRENT);
+        virtual ~td5mapGraph();
+
+        bool Prepare(wxDC& dc, wxRect canvasrect, td5mapTable *maptable = NULL, int graphshow = GDC_SHOW_CURRENT);
+        bool IsPrepared(){return m_prepared;};
+
+        void OnMouseMove(int x, int y);
+        void OnMouseSelectBegin(int x, int y);
+        void OnMouseSelectEnd(int x, int y);
+
+        void MoveCursor2D(int col, int row);
+        void MoveCursor3D(int x, int y, int z);
+        void MoveCursor3D(point3D pt3d){MoveCursor3D(pt3d.x, pt3d.y, pt3d.z);};
+
+        void Draw();
+        void DrawSelectedPointArea(double xAxis, double yAxis, double zAxis);
+
+        void SelectRange(ewxRange range);
+        void ResetRange(){ m_selectionBegin = wxPoint(0, 0); m_selectionEnd = wxPoint(0, 0); };
+        bool IsSelecting(){return m_selecting;};
+
+        wxScrolledWindow *GetParent(){return m_parent;};
+
+        // New members
+        void SetRange2D(double minX, double maxX, double minY, double maxY);
+        void DrawLine2D(wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
+        void DrawPolygon2D(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, wxPolygonFillMode fill_style = wxODDEVEN_RULE);
+        void DrawText2D(const wxString& text, wxCoord x, wxCoord y);
+
+        void SetRange3D(double minX, double maxX, double minY, double maxY, double minZ, double maxZ, double orgX = 0.0, double orgY = 0.0);
+        point3D DrawLine3D(double xbegin, double ybegin, double zbegin, double xend, double yend, double zend);
+        point3D DrawLine3D(point3D pt3dBegin, point3D pt3dEnd);
+        void DrawPolygon3D(int n, point3D points3d[], wxCoord xoffset = 0, wxCoord yoffset = 0, wxPolygonFillMode fill_style = wxODDEVEN_RULE);
+        void DrawText3D(const wxString& text, wxCoord x, wxCoord y, wxCoord z);
+        void DrawText3D(const wxString& text, wxCoord x, wxCoord y, wxCoord z, wxCoord offsetx2D, wxCoord offsety2D);
+
+    protected:
+        void DrawCartesianAxis();
+        void DrawTags();
+        void DrawHelpingLines();
+        void DrawGraph();
+        void DrawCursor();
+        void DrawSelection();
+        void DrawTitle();
+        bool TransformTo3DGrid(wxPoint pt2d, point3D& ptRet){return TransformTo3DGrid(pt2d.x, pt2d.y, ptRet);};
+        bool TransformTo3DGrid(int x, int y, point3D& ptRet);
+        bool TransformTo2DGrid(wxPoint pt2d, wxPoint& ptRet){return TransformTo2DGrid(pt2d.x, pt2d.y, ptRet);};
+        bool TransformTo2DGrid(int x, int y, wxPoint& ptRet);
+        bool PointIsNear(wxPoint mapPoint, wxPoint mousePoint, double precision);
+        wxPoint TransformTo2D(wxPoint pt){return TransformTo2D(pt.x, pt.y);};
+        wxPoint TransformTo2D(double x, double y, double z);
+        wxPoint TransformTo2D(int x, int y);
+        wxPoint TransformTo2D(point3D pt3d);
+
+    private:
+        int m_maxXAxis;
+        int m_maxYAxis;
+        int m_maxZAxis;
+        int m_minXAxis;
+        int m_minYAxis;
+        int m_minZAxis;
+
+        int m_xaxisTagsNum;
+        int m_yaxisTagsNum;
+        int m_zaxisTagsNum;
+
+        double m_xaxisRes;
+        double m_yaxisRes;
+        double m_zaxisRes;
+
+        double m_xaxisTagRes;
+        double m_yaxisTagRes;
+        double m_zaxisTagRes;
+
+        int m_show;
+        bool m_prepared;
+
+        td5mapTable *m_table;
+        wxScrolledWindow *m_parent;
+        td5mapGraphCursor *m_cursor;
+        ewxDyn2DArray<point3D> m_points;
+        bool m_selecting;
+        wxPoint m_selectionBegin;
+        wxPoint m_selectionEnd;
+
+        // from dc3d.h
+    	wxDC* m_dc;
+        wxRect m_axisRect;
+        double m_theta0 ;
+        double m_theta1 ;
+        double m_resXZ , m_resXY , m_resZY;
+        double m_orgY;
+        double m_orgX;
+        double m_r3dZ[2], m_r3dX[2], m_r3dY[2] ;
+        double m_resY, m_resX ;
+        double m_rangeY[2], m_rangeX[2];
+};
+
 
 #define cursorDefaultSize wxSize(5, 5)
 
@@ -131,8 +167,8 @@ class td5mapGraphCursor
         point3D Move(point3D pt){return Move(pt.x, pt.y, pt.z);};
         wxPoint Move(int xpos, int ypos);
         wxPoint Move(wxPoint pt){return Move(pt.x, pt.y);};
-        point3D Get3dPosition(){return point3D(m_xpos, m_ypos, m_zpos);};
-        wxPoint Get2dPosition(){return wxPoint(m_xpos, m_ypos);};
+        point3D Get3DPosition(){return point3D(m_xpos, m_ypos, m_zpos);};
+        wxPoint Get2DPosition(){return wxPoint(m_xpos, m_ypos);};
         int GetX(){return m_xpos;};
         int GetY(){return m_ypos;};
         int GetZ(){return m_zpos;};

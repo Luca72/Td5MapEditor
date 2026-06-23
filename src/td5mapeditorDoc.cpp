@@ -39,6 +39,7 @@
 #include "ewxRange.h"
 #include "td5mapTuner.h"
 #include "tinyxml/tinyxml.h"
+#include "functions.h"
 
 
 IMPLEMENT_DYNAMIC_CLASS(td5mapeditorDoc, wxDocument)
@@ -407,10 +408,9 @@ bool td5mapeditorDoc::OnSaveDocument(const wxString& filename)
 		m_mapTable[m].WriteTable(m_mapFileData);
 	}
 
-    // Experimental Checksum corrections
-    FirmwareAndTablesChecksum(m_mapFileData);
+    WriteFirmwareAndTablesCorrection(m_mapFileData);
 
-	m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(NanocomChecksum(m_mapFileData));
+    WriteNanocomChecksum(m_mapFileData);
 
     //td5mapeditorView *view = (td5mapeditorView *) GetFirstView();
     //m_fileName = ExtractFileName(filename);
@@ -548,17 +548,64 @@ bool td5mapeditorDoc::ImportTuning(const wxString& ifileName)
 
 void td5mapeditorDoc::Update(wxView* sender)
 {
-    for(int m = 0; m < m_numberOfTables; m++)
-	{
-		m_mapTable[m].WriteTable(m_mapFileData);
-	}
+    wxWord nanoChecksum, nanoReadChecksum;
+    wxWord fwChecksum, fwReadChecksum;
+    wxWord tablesChecksum, tablesReadChecksum;
+    wxWord fwVerificationWord, tbVerificationWord;
 
-	// Experimental Checksum corrections
-    FirmwareAndTablesChecksum(m_mapFileData);
+    if(m_numberOfTables > 0)
+    {
+        for(int m = 0; m < m_numberOfTables; m++)
+        {
+            m_mapTable[m].WriteTable(m_mapFileData);
+        }
 
-    m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(NanocomChecksum(m_mapFileData));
+        // Nanocom checksum
+        nanoChecksum = ComputeNanocomChecksum(m_mapFileData);
+        nanoReadChecksum = HiLo2LoHi(m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1]);
 
-    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Cks: 0x%04X"), NanocomChecksum(m_mapFileData)), 2);
+        if(nanoChecksum != nanoReadChecksum)
+            GetMainFrame()->SetStatusBarCellColours(2, *wxYELLOW, *wxBLACK);
+        else
+            GetMainFrame()->SetStatusBarCellColours(2, *GetMainFrame()->statusBarBackgroundColor, *GetMainFrame()->statusBarForegroundColor);
+
+        fwChecksum = ComputeFirmwareCorrection(m_mapFileData);
+        fwReadChecksum = GetFirmwareCorrection(m_mapFileData);
+
+        if(fwChecksum != fwReadChecksum)
+            GetMainFrame()->SetStatusBarCellColours(3, *wxYELLOW, *wxBLACK);
+        else
+            GetMainFrame()->SetStatusBarCellColours(3, *GetMainFrame()->statusBarBackgroundColor, *GetMainFrame()->statusBarForegroundColor);
+
+        tablesChecksum = ComputeTablesCorrection(m_mapFileData);
+        tablesReadChecksum = GetTablesCorrection(m_mapFileData);
+
+        if(tablesChecksum != tablesReadChecksum)
+            GetMainFrame()->SetStatusBarCellColours(4, *wxYELLOW, *wxBLACK);
+        else
+            GetMainFrame()->SetStatusBarCellColours(4, *GetMainFrame()->statusBarBackgroundColor, *GetMainFrame()->statusBarForegroundColor);
+
+        fwVerificationWord = GetFirmwareVerificationWord(m_mapFileData);
+        tbVerificationWord = GetTablesVerificationWord(m_mapFileData);
+
+        if((fwVerificationWord == 0x5AA5) && (tbVerificationWord == 0x5AA5))
+        {
+            GetMainFrame()->SetStatusBarCellColours(0, *GetMainFrame()->statusBarBackgroundColor, *GetMainFrame()->statusBarForegroundColor);
+            GetMainFrame()->SetStatusBarText(wxString::Format(_T("")), 0);
+        }
+        else
+        {
+            GetMainFrame()->SetStatusBarCellColours(0, *wxYELLOW, *wxBLACK);
+            GetMainFrame()->SetStatusBarText(wxString::Format(_T("UNCHECKED MAP FILE!!!")), 0);
+        }
+
+        //m_mapFileData[(MAP_FILE_LENGTH / sizeof(wxWord)) - 1] = LoHi2HiLo(nanoChecksum);
+
+        //GetMainFrame()->SetStatusBarText(wxString::Format(_T("Cks: 0x%04X"), nanoChecksum), 2);
+        GetMainFrame()->SetStatusBarText(wxString::Format(_T("Cks: 0x%04X"), nanoReadChecksum), 2);
+        GetMainFrame()->SetStatusBarText(wxString::Format(_T("fwC: 0x%04X"), fwReadChecksum), 3);
+        GetMainFrame()->SetStatusBarText(wxString::Format(_T("tbC: 0x%04X"), tablesReadChecksum), 4);
+    }
 
     UpdateAllViews(sender);
 }
@@ -575,55 +622,6 @@ void td5mapeditorDoc::ResetTableToBaseMap()
     SetUpdateFlag(GRID_PANEL | INFO_PANEL |GRAPH_PANEL);
     Update();
 }
-
-/*
-wxWord *td5mapeditorDoc::ExtractMapResource(int nResourceId, bool& bOk)
-{
-	wxWord *baseMap; // pointer to resource data
-	baseMap = new wxWord[MAP_FILE_LENGTH_WORD];
-    bOk = true;
-
-    wxString m_fileName = _T(":") + m_mapName + _T(".map");
-
-#if wxUSE_STD_IOSTREAM
-    std::string mapFileName = std::string(m_fileName.mb_str());
-    std::istream *stream;
-
-    baseMaps baseMapArchive(mapFileName);
-    stream = baseMapArchive.get(mapFileName);
-
-    if(stream == 0)
-    {
-        bOk = false;
-        return baseMap;
-    }
-
-    union DATAWORD {wxWord word; char chr[2];};
-    DATAWORD buff;
-
-    for(int i = 0; i <(int) MAP_FILE_LENGTH_WORD; i++)
-    {
-        stream->read(buff.chr, 2);
-        baseMap[i] = buff.word;
-    }
-#else
-    wxInputStream* stream;
-    baseMaps baseMapArchive(m_fileName);
-    stream = baseMapArchive.Get(m_fileName);
-
-    if(stream == 0)
-    {
-        bOk = false;
-        return baseMap;
-    }
-
-    for(int i = 0; i < (int) MAP_FILE_LENGTH_WORD; i++)
-        stream->Read(&baseMap[i], 2);
-#endif
-
-	return baseMap;
-}
-*/
 
 wxWord *td5mapeditorDoc::ExtractMapResource(int WXUNUSED(nResourceId), bool& bOk)
 {

@@ -17,9 +17,13 @@
 
 #include <wx/dialog.h>
 
-#define RANGE_TABLE         1
-#define RANGE_HORIZ_LINE    2
-#define RANGE_VERT_LINE     3
+enum RangeFlags : int
+{
+    RANGE_TABLE         = 1,
+    RANGE_HORIZ_LINE    = 2,
+    RANGE_VERT_LINE     = 3
+};
+
 
 class dlgEditRangeOfValues : public wxDialog
 {

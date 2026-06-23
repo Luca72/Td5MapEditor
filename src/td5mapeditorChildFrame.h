@@ -27,9 +27,12 @@
 #include "ewxGrid.h"
 #include "ewxDynArray.h"
 
-#define SPLITTER_MAIN     100
-#define SPLITTER_GRID     101
-#define SPLITTER_GRAPH    102
+enum SplitterFlags : int
+{
+    SPLITTER_MAIN   = 100,
+    SPLITTER_GRID   = 101,
+    SPLITTER_GRAPH  = 102
+};
 
 class td5mapeditorInfoPanel;
 class td5mapeditorGridPanel;
@@ -63,7 +66,8 @@ class td5mapeditorChildFrame : public wxDocMDIChildFrame
     void OnLoadXDF(wxCommandEvent& event);
     void OnHexCompare(wxCommandEvent& event);
     void OnEditTag(wxCommandEvent& WXUNUSED(event));
-    void OnFollowLocale(wxCommandEvent& event);
+    void OnFollowLocale(wxCommandEvent& WXUNUSED(event));
+    void OnEditChecksum(wxCommandEvent& WXUNUSED(event));
 
     td5mapeditorMainFrame *GetMainFrame() {return (td5mapeditorMainFrame*) m_parentFrame;}
     void SetShowType(int type);

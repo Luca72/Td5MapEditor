@@ -150,9 +150,9 @@ td5mapeditorInfoPanel::td5mapeditorInfoPanel(wxWindow* parent, wxView *view, wxW
 
     topsizer->SetSizeHints( this );   // set size hints to honour minimum size
 
-    m_listTables->InsertColumn(0, wxString(_T("#")), wxLIST_FORMAT_LEFT, 45);
-    m_listTables->InsertColumn(1, wxString(_T("Addr.")), wxLIST_FORMAT_LEFT, 65);
-    m_listTables->InsertColumn(2, wxString(_T("Size")), wxLIST_FORMAT_LEFT, 60);
+    m_listTables->InsertColumn(0, wxString(_T("#")), wxLIST_FORMAT_LEFT, /*45*/40);
+    m_listTables->InsertColumn(1, wxString(_T("Addr.")), wxLIST_FORMAT_LEFT, /*65*/60);
+    m_listTables->InsertColumn(2, wxString(_T("Size")), wxLIST_FORMAT_LEFT, /*60*/50);
     m_listTables->InsertColumn(3, wxString(_T("Name")), wxLIST_FORMAT_LEFT, 300);
 
     m_hideEsoticMapsLabel->SetValue(m_hideEsoticMaps);

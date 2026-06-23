@@ -48,6 +48,7 @@ BEGIN_EVENT_TABLE(td5mapeditorChildFrame, wxDocMDIChildFrame)
     EVT_MENU(ID_TOOLS_HEX_COMPARE, td5mapeditorChildFrame::OnHexCompare)
     EVT_MENU(ID_TOOLS_EDIT_TAG,td5mapeditorChildFrame::OnEditTag)
     EVT_MENU(ID_FOLLOW_LOCALE,td5mapeditorChildFrame::OnFollowLocale)
+    EVT_MENU(ID_TOOLS_EDIT_CHECKSUM,td5mapeditorChildFrame::OnEditChecksum)
     EVT_SIZE(td5mapeditorChildFrame::OnSize)
     EVT_SPLITTER_SASH_POS_CHANGED(SPLITTER_MAIN, td5mapeditorChildFrame::OnSplitterSashPosChanged)
     EVT_SPLITTER_SASH_POS_CHANGED(SPLITTER_GRID, td5mapeditorChildFrame::OnSplitterSashPosChanged)
@@ -60,6 +61,8 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
     m_parentFrame = parent;
     m_showType = SHOW_CURRENT;
     m_canvasCreated = false;
+
+    Bind(wxEVT_ACTIVATE, &td5mapeditorChildFrame::OnActivate, this);
 
     canvasMainGraph = (td5mapeditorCanvas *) NULL;
     canvasDiffGraph = (td5mapeditorCanvas *) NULL;
@@ -130,6 +133,8 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
     tools_menu->Append(ID_TOOLS_HEX_COMPARE, _T("&Hex Compare\tCtrl-H"));
     //tools_menu->AppendSeparator();
     //tools_menu->Append(ID_TOOLS_EDIT_TAG, _T("&Edit Tag\tCtrl-T"));
+    tools_menu->AppendSeparator();
+    tools_menu->Append(ID_TOOLS_EDIT_CHECKSUM, _T("&Checksum Correction\tCtrl-H"));
 
 
     wxMenu *help_menu = new wxMenu;
@@ -148,9 +153,9 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
     GetMenuBar()->Enable(wxID_PASTE, false);
     GetMenuBar()->Enable(ID_TOOLS_EDIT_RANGE_OF_VALUES, false);
 
-    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Selection: %d,%d -> %d,%d"), 0, 0, 0, 0), 5);
-    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Col: %d"), 0), 3);
-    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Row: %d"), 0), 4);
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Selection: %d,%d -> %d,%d"), 0, 0, 0, 0), 7);
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Col: %d"), 0), 5);
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Row: %d"), 0), 6);
     GetMainFrame()->SetStatusBarText(wxString::Format(_T("Locale: %s"), setlocale(LC_NUMERIC, nullptr)), 1);
 
 /*
@@ -164,9 +169,11 @@ td5mapeditorChildFrame::td5mapeditorChildFrame(wxDocument* doc, wxView* view, wx
 
     GetMainFrame()->EnableChildButtons();
 
-#ifndef __WINDOWS__
-    Maximize();
-#endif
+    CallAfter([this]()
+    {
+        if (!IsBeingDeleted())
+            Maximize();
+    });
 }
 
 td5mapeditorChildFrame::~td5mapeditorChildFrame()
@@ -268,7 +275,7 @@ void td5mapeditorChildFrame::CreateCanvas(wxView *view)
     splitterGrid = new wxSplitterWindow(splitterMain, SPLITTER_GRID, wxPoint(0, 0), /*wxSize(width - 250, height)*/ wxSize(0,0), wxSP_3D | wxSP_LIVE_UPDATE /*| wxSP_3DSASH*/);
     splitterGrid->SetSashGravity(0.25);
 
-    splitterMain->SplitVertically(panelInfo, splitterGrid, 250);
+    splitterMain->SplitVertically(panelInfo, splitterGrid, 350);
     splitterMain->SetMinimumPaneSize(220);
 
     panelGrid = new td5mapeditorGridPanel(splitterGrid, GetView(),ID_GRID_PANE);
@@ -279,7 +286,7 @@ void td5mapeditorChildFrame::CreateCanvas(wxView *view)
     splitterGraph = new wxSplitterWindow(splitterGrid, SPLITTER_GRAPH, wxPoint(0, 0), /*wxSize(width - 250, height - 250)*/wxSize(0,0), wxSP_3D | wxSP_LIVE_UPDATE /*| wxSP_3DSASH*/);
     splitterGraph->SetSashGravity(0.5);
 
-    splitterGrid->SplitHorizontally(panelGrid, splitterGraph, 200);
+    splitterGrid->SplitHorizontally(panelGrid, splitterGraph, /*200*/230);
     splitterGrid->SetMinimumPaneSize(100);
 
     canvasMainGraph = new td5mapeditorCanvas(splitterGraph, view, CANVAS_MAIN, ID_CANVAS_MAIN_PANE );
@@ -371,8 +378,8 @@ void td5mapeditorChildFrame::SetSelection(int col, int row, wxWindowID sender, w
     td5mapeditorDoc* doc = (td5mapeditorDoc*)GetDocument();
     doc->SetSelectionRange(ewxRange(row, col, row, col));
 
-    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Col: %d"), col), 3);
-    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Row: %d"), row), 4);
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Col: %d"), col), 5);
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Row: %d"), row), 6);
 
     if((sender != ID_GRID_PANE) && ((destination == ID_GRID_PANE) || (destination ==ID_ALL_PANES)))
     {
@@ -400,7 +407,7 @@ void td5mapeditorChildFrame::SetSelectionRange(ewxRange range, wxWindowID sender
                                                       range.topRow,
                                                       range.rightCol,
                                                       range.bottomRow)
-                                     , 5);
+                                     , 7);
 
     if((sender != ID_GRID_PANE) && ((destination == ID_GRID_PANE) || (destination ==ID_ALL_PANES)))
     {
@@ -473,7 +480,7 @@ void td5mapeditorChildFrame::OnEditRangeOfValues(wxCommandEvent& WXUNUSED(event)
             data.rtValue = data.lbValue = tempvalue;
             if (!dlg.m_constValue->GetValue().ToLong(&tempvalue)) { wxMessageBox(_("Invalid constant value"), _("Invalid Entry"), wxICON_ERROR); return;}
             data.constValue = tempvalue;
-            
+
             tuner.DoPlaneTuning(range, data);
 
             doc->Modify(true);
@@ -690,7 +697,7 @@ void td5mapeditorChildFrame::OnHexCompare (wxCommandEvent &WXUNUSED(event))
         else
             dlg.m_grid->SetCellTextColour(index, 2, *wxBLUE);
 
-        if((address >= FUEL_PART_ADDRESS_BEGIN) && (address < CHEKSUM_ADDRESS_BEGIN))
+        if((address >= FUEL_PART_ADDRESS_BEGIN) && (address < CHECKSUM_ADDRESS_BEGIN))
         {
             for(int id = doc->GetMapIdBegin(); id <= doc->GetMapIdEnd(); id++)
             {
@@ -723,7 +730,7 @@ void td5mapeditorChildFrame::OnHexCompare (wxCommandEvent &WXUNUSED(event))
             }
 
         }
-        else if (address == CHEKSUM_ADDRESS_BEGIN)
+        else if (address == CHECKSUM_ADDRESS_BEGIN)
         {
             dlg.m_grid->SetCellStringValue(index, 3, _T("Checksum"));
             dlg.m_grid->SetCellStringValue(index, 1, wxString::Format(_T("0x%04X"), dlg.m_diffList[index].base));
@@ -803,4 +810,8 @@ void td5mapeditorChildFrame::OnFollowLocale(wxCommandEvent &WXUNUSED(event))
     doc->Update();
 
     GetMainFrame()->SetStatusBarText(wxString::Format(_T("Locale: %s"), setlocale(LC_NUMERIC, nullptr)), 1);
+}
+
+void td5mapeditorChildFrame::OnEditChecksum(wxCommandEvent &WXUNUSED(event))
+{
 }

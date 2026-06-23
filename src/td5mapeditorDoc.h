@@ -10,30 +10,34 @@
 #ifndef __DOCSAMPLEH__
 #define __DOCSAMPLEH__
 
-#define MAP_FILE_LENGTH                     118798
-#define TABLES_ADDRESS_AREA_BEGIN           118526
-#define TABLES_ADDRESS_AREA_BEGIN_DISCO_EU2 113032
-#define TABLES_ADDRESS_AREA_BEGIN_DEF_EU2   112882
-#define MAPNAME_ADDRESS_BEGIN               102418
-#define TAG_ADDRESS_BEGIN                   118448
-#define FUEL_PART_ADDRESS_BEGIN             102416
-#define CHEKSUM_ADDRESS_BEGIN               (MAP_FILE_LENGTH - 2)
-
-#define MAX_NUM_OF_FUELLING_TABLES          117
-#define MAX_NUM_OF_TABLES                   /*128*/ 2024
-#define MAP_FILE_LENGTH_WORD                (MAP_FILE_LENGTH / sizeof(wxWord))
-#define MAP_TAG_ADDRESS_BEGIN_WORD          (TAG_ADDRESS_BEGIN / sizeof(wxWord))
-#define MAP_MAPNAME_ADDRESS_BEGIN_WORD      (MAPNAME_ADDRESS_BEGIN / sizeof(wxWord))
-
-#define GRID_PANEL      0x0100
-#define INFO_PANEL      0x0200
-#define GRAPH_PANEL     0x0400
-
 #include "wx/docview.h"
 #include "wx/cmdproc.h"
 
 #include "td5mapTable.h"
 #include "wizNewMap.h"
+
+inline constexpr size_t MAP_FILE_LENGTH                     = 0x01D00E;    // 118798
+inline constexpr size_t TABLES_ADDRESS_AREA_BEGIN           = 0x01CEFE;    // 118526
+inline constexpr size_t TABLES_ADDRESS_AREA_BEGIN_DISCO_EU2 = 0x01B988;    // 113032
+inline constexpr size_t TABLES_ADDRESS_AREA_BEGIN_DEF_EU2   = 0x01B8F2;    // 112882
+inline constexpr size_t MAPNAME_ADDRESS_BEGIN               = 0x019012;    // 102418
+inline constexpr size_t TAG_ADDRESS_BEGIN                   = 0x01CEB0;    // 118448
+inline constexpr size_t FUEL_PART_ADDRESS_BEGIN             = 0x019010;    // 102416
+inline constexpr size_t CHECKSUM_ADDRESS_BEGIN              = (MAP_FILE_LENGTH - 2);
+inline constexpr size_t MAP_FILE_LENGTH_WORD                = (MAP_FILE_LENGTH / 2);
+inline constexpr size_t MAP_TAG_ADDRESS_BEGIN_WORD          = (TAG_ADDRESS_BEGIN / 2);
+inline constexpr size_t MAP_MAPNAME_ADDRESS_BEGIN_WORD      = (MAPNAME_ADDRESS_BEGIN / 2);
+
+inline constexpr int MAX_NUM_OF_FUELLING_TABLES             = 117;
+inline constexpr int MAX_NUM_OF_TABLES                      = 2024;
+
+enum UpdatePanelFlags : long
+{
+    GRID_PANEL  = 0x0100,
+    INFO_PANEL  = 0x0200,
+    GRAPH_PANEL = 0x0400
+};
+
 
 class td5mapeditorDoc: public wxDocument
 {
@@ -50,7 +54,6 @@ class td5mapeditorDoc: public wxDocument
         wxOutputStream& SaveObject(wxOutputStream& stream);
         wxInputStream& LoadObject(wxInputStream& stream);
     #endif
-
         virtual bool OnNewDocument();
         virtual bool OnOpenDocument(const wxString& filename);
         virtual bool OnSaveDocument(const wxString& filename);

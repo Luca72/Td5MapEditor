@@ -61,13 +61,13 @@ bool td5mapeditorApp::OnInit()
 
     wxString title(_T("Td5 Map Editor"));
     title += _T(" ");
-    title += wxString::Format(wxT("%ld"), AutoVersion::MAJOR);
+    title += wxString::Format(wxT("%ld"), Version::MAJOR);
     title += _T(".");
-    title += wxString::Format(wxT("%ld"), AutoVersion::MINOR);
+    title += wxString::Format(wxT("%ld"), Version::MINOR);
     title += _T(".");
-    title += wxString::Format(wxT("%ld"), AutoVersion::BUILD);
+    title += wxString::Format(wxT("%ld"), Version::BUILD);
     title += _T(".");
-    title += wxString::Format(wxT("%ld"), AutoVersion::REVISION);
+    title += wxString::Format(wxT("%ld"), Version::REVISION);
     //title += _T(" ");
     //title += _T("by Luca Veronesi");
 
@@ -79,7 +79,7 @@ bool td5mapeditorApp::OnInit()
     */
     mainframe = new td5mapeditorMainFrame;
     mainframe->Create((wxDocManager *) m_docManager, (wxFrame *) NULL,
-                      title , wxPoint(0, 0), wxSize(1024, 768),
+                      title , wxPoint(0, 0), wxSize(1300, 900),
                       wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE);
 
 
@@ -173,6 +173,7 @@ int td5mapeditorApp::OnExit(void)
 wxMDIChildFrame *td5mapeditorApp::CreateChildFrame(wxDocument *doc, wxView *view, bool isCanvas)
 {
     int width, height;
+
 #ifndef __WINDOWS__
     GetMainFrame()->GetClientSize(&width, &height);
 #else
@@ -181,7 +182,7 @@ wxMDIChildFrame *td5mapeditorApp::CreateChildFrame(wxDocument *doc, wxView *view
 
     //// Make a child frame
     td5mapeditorChildFrame *subframe =
-    new td5mapeditorChildFrame(doc, view, GetMainFrame(), wxID_ANY, _T(""),
+    new td5mapeditorChildFrame(doc, view, GetMainFrame(), wxID_ANY, _T(" "),
                              wxPoint(0,0), wxSize(width, height),
                              wxDEFAULT_FRAME_STYLE |
                              wxNO_FULL_REPAINT_ON_RESIZE);

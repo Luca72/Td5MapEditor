@@ -95,6 +95,7 @@
 #define ID_FILE_LOAD_XDF                    -32014
 #define ID_TOOLS_HEX_COMPARE                -32015
 #define ID_FOLLOW_LOCALE                    -32016
+#define ID_TOOLS_EDIT_CHECKSUM              -32017
 #define ID_CONTEXTMENU_MODIFY_LABEL_VALUE   -32100
 #else
 #define ID_TOOLS_ZOOM_MINUS                 32000
@@ -114,6 +115,7 @@
 #define ID_FILE_LOAD_XDF                    32014
 #define ID_TOOLS_HEX_COMPARE                32015
 #define ID_FOLLOW_LOCALE                    32016
+#define ID_TOOLS_EDIT_CHECKSUM              32017
 #define ID_CONTEXTMENU_MODIFY_LABEL_VALUE   32100
 #endif
 

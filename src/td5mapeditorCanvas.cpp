@@ -47,7 +47,8 @@ td5mapeditorCanvas::td5mapeditorCanvas(wxWindow *parent, wxView *v, int canvasty
     m_horizScrollBase = 20;
     m_vertScrollBase = 20;
 
-    m_graphDC = new graphDC(this);
+    //m_graphDC = new graphDC(this);
+    m_graphDC = new td5mapGraph(this);
 }
 
 td5mapeditorCanvas::~td5mapeditorCanvas()
@@ -96,7 +97,7 @@ void td5mapeditorCanvas::SetZoomLevel(int level)
     SetScrollbars((int) (20.0  * ratio), (int) (20.0 * ratio), m_horizScrollBase, m_vertScrollBase, xpos, ypos);
     Refresh();
 
-    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Zoom: %d%s"), level, _T("%")), 6);
+    GetMainFrame()->SetStatusBarText(wxString::Format(_T("Zoom: %d%s"), level, _T("%")), 8);
 }
 
 // Define the repainting behaviour
@@ -181,7 +182,8 @@ void td5mapeditorCanvas::OnSize(wxSizeEvent&
 void td5mapeditorCanvas::SetSelection(int x, int y)
 {
     if(m_graphDC->IsPrepared())
-        m_graphDC->MoveCursor(x, y);
+        //m_graphDC->MoveCursor(x, y);
+        m_graphDC->MoveCursor2D(x, y);
 }
 
 void td5mapeditorCanvas::SetSelectionRange(int x1, int y1, int x2, int y2)

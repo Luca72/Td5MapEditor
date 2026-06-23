@@ -44,10 +44,13 @@ class td5mapeditorMainFrame: public wxDocMDIParentFrame
         void OnSubtractOne(wxCommandEvent& event);
         void OnEditRangeOfValues(wxCommandEvent& event);
         void OnFollowLocale(wxCommandEvent& event);
+        void OnEditChecksum(wxCommandEvent& event);
+        
         void EnableChildButtons();
         void DisableChildButtons();
 
-        void SetStatusBarText(const wxString& text, int i){statusBar->SetStatusText(text, i);};
+        void SetStatusBarText(const wxString& text, int i);
+        void SetStatusBarCellColours(int i, const wxColour& backgroundColour, const wxColour& foregroundColour = *wxBLACK);
 #ifdef __WXGTK__
         /*virtual wxMDIClientWindow* OnCreateClient();*/
 #endif
@@ -55,11 +58,17 @@ class td5mapeditorMainFrame: public wxDocMDIParentFrame
     public:
         wxToolBar *toolBar;
         wxStatusBar *statusBar;
-
+        wxStaticText *statusBarCell[9];
+        wxColor *statusBarForegroundColor;
+        wxColor *statusBarBackgroundColor;
     private:
         void CreateLayout();
         //wxTimer m_cyclicTimer;
         //void OnCyclicTimerEvent(wxTimerEvent& event);
+        void CreateStatusBarCell(int number);
+        void PositionStatusBarCell(int number);
+        void PositionStatusBarCells();
+        void OnStatusBarSize(wxSizeEvent& event);
 
 
     DECLARE_EVENT_TABLE()

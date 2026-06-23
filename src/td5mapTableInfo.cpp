@@ -91,10 +91,10 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
         TORQUE_LIM_HIGH_RANGE,
 		17,
 		_T("RPM"),
-		_T("Inject Quantity mg/stroke"),
+		_T("mg/stk"),
 		_T(""),
 		_T("TORQUE LIMITER HIGH RANGE"),
-		_T("Torque limiter table for HIGH range.\n\ndemand->smoke lim.->TORQUE LIM.->inj. duration\n\nX Axis: RPM\nY Axis: mg/stroke\n"));
+		_T("Torque limiter table for HIGH range.\n\ndemand->smoke lim.->TORQUE LIM.->inj. duration\n\nX Axis: RPM\nY Axis: Inject Quantity (mg/stroke)\n"));
     mtiTorqueLimHighRange.SetDataSizers(0.01, 0);
 
 
@@ -102,40 +102,40 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
         TORQUE_LIM_LOW_RANGE,
 		18,
 		_T("RPM"),
-		_T("Inject Quantity mg/stroke"),
+		_T("mg/stk"),
 		_T(""),
 		_T("TORQUE LIMITER LOW RANGE"),
-		_T("Torque limiter table for LOW range.\n\ndemand->smoke lim.->TORQUE LIM.->inj. duration\n\nX Axis: RPM\nY Axis: mg/stroke\n"));
+		_T("Torque limiter table for LOW range.\n\ndemand->smoke lim.->TORQUE LIM.->inj. duration\n\nX Axis: RPM\nY Axis: Inject Quantity (mg/stroke)\n"));
     mtiTorqueLimLowRange.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiDriverDemandHighRange(
 		DRIVER_DEMAND_HIGH_RANGE,
 		69,
-		_T("Throttle ref. %"),
+		_T("%"),
 		_T("RPM"),
-		_T("Inject Quantity (mg/stroke)"),
+		_T("mg/stk)"),
 		_T("DRIVER DEMAND HIGH RANGE"),
-		_T("Driver demand table for HIGH range.\n\nDEMAND->smoke lim.->torque lim.->inj. duration\n\nX Axis: RPM\nY Axis: mg/stroke\nZ Axis: %"));
+		_T("Driver demand table for HIGH range.\n\nDEMAND->smoke lim.->torque lim.->inj. duration\n\nX Axis: RPM\nY Axis: Inject Quantity (mg/stroke)\nZ Axis: Throttle ref. (%)"));
     mtiDriverDemandHighRange.SetColLabelSizers(0.01, 0);
     mtiDriverDemandHighRange.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiDriverDemandLowRange(
 		DRIVER_DEMAND_LOW_RANGE,
 		70,
-		_T("Throttle ref. %"),
+		_T("%"),
 		_T("RPM"),
-		_T("Inject Quantity (mg/stroke)"),
+		_T("mg/stk"),
 		_T("DRIVER DEMAND LOW RANGE"),
-		_T("Driver demand table for LOW range.\n\nDEMAND->smoke lim.->torque lim.->inj. duration\n\nX Axis: RPM\nY Axis: mg/stroke\nZ Axis: %"));
+		_T("Driver demand table for LOW range.\n\nDEMAND->smoke lim.->torque lim.->inj. duration\n\nX Axis: RPM\nY Axis: Inject Quantity (mg/stroke)\nZ Axis: Throttle ref. (%)"));
     mtiDriverDemandLowRange.SetColLabelSizers(0.01, 0);
     mtiDriverDemandLowRange.SetDataSizers(0.01, 0);
 
 	td5mapTableInfoItem mtiSmokeLimLowRange(
 		SMOKE_LIM_LOW_RANGE,
 		0,
-		_T("Airmass (mg/stroke)"),
+		_T("mg/stk"),
 		_T("RPM"),
-		_T("Limited Inj. (mg/stroke)"),
+		_T("mg/stk"),
 		_T("SMOKE LIMITER MAP LOW RANGE"),
 		_T("Smoke limiter map for low range.\n\ndemand->SMOKE LIM.->torque lim.->inj. duration\n\nX Axis: Airmass (mg/stroke)\nY Axis: RPM\nZ Axis: Limited Inj. (mg/stroke)"));
     mtiSmokeLimLowRange.SetColLabelSizers(0.1, 0);
@@ -144,9 +144,9 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiSmokeLimHighRangeA(
 		SMOKE_LIM_HIGH_RANGE_A,
 		60,
-		_T("Airmass (mg/stroke)"),
+		_T("mg/stk)"),
 		_T("RPM"),
-		_T("Limited Inj. (mg/stroke)"),
+		_T("mg/stk"),
 		_T("SMOKE LIM. MAP HIGH RANGE"),
 		_T("Smoke limiter map for high range.\n\ndemand->SMOKE LIM.->torque lim.->inj. duration\n\nX Axis: Airmass (mg/stroke)\nY Axis: RPM\nZ Axis: Limited Inj. (mg/stroke)"));
     mtiSmokeLimHighRangeA.SetColLabelSizers(0.1, 0);
@@ -155,9 +155,9 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiSmokeLimHighRangeB(
 		SMOKE_LIM_HIGH_RANGE_B,
 		0,
-		_T("Airmass (mg/stroke)"),
+		_T("mg/stk"),
 		_T("RPM"),
-		_T("Limited Inj. (mg/stroke)"),
+		_T("mg/stk"),
 		_T("SMOKE LIM. MAP HIGH RANGE (3 sec.)"),
 		_T("Smoke limiter map for high range (temp. - 3 sec. - after full throttle).\n\ndemand->SMOKE LIM.->torque lim.->inj. duration\n\nX Axis: Airmass (mg/stroke)\nY Axis: RPM\nZ Axis: Limited Inj. (mg/stroke)"));
     mtiSmokeLimHighRangeB.SetColLabelSizers(0.1, 0);
@@ -166,9 +166,9 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiFuelMap1(
 		FUEL_MAP_1,
 		0,
-		_T("Requested IQ (mg/stroke)"),
+		_T("mg/stk)"),
 		_T("RPM"),
-		_T("microsec."),
+		_T("usec."),
 		_T("FUEL MAP (0 deg. advance)"),
 		_T("Fuel map. Manages injection timing in function of engine speed and reference from throttle.\n\ndemand->smoke lim.->torque lim.->INJ. DURATION\n\nX Axis: Demand (mg/stroke)\nY Axis: RPMs\nZ Axis: Time (microsec.)"));
     mtiFuelMap1.SetColLabelSizers(0.01, 0);
@@ -176,9 +176,9 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiFuelMap2(
 		FUEL_MAP_2,
 		0,
-		_T("Requested IQ (mg/stroke)"),
+		_T("mg/stk)"),
 		_T("RPM"),
-		_T("microsec."),
+		_T("usec."),
 		_T("FUEL MAP (5 deg. advance)"),
 		_T("Fuel map. Manages injection timing in function of engine speed and reference from throttle.\n\ndemand->smoke lim.->torque lim.->INJ. DURATION\n\nX Axis: Demand (mg/stroke)\nY Axis: RPMs\nZ Axis: Time (microsec.)"));
     mtiFuelMap2.SetColLabelSizers(0.01, 0);
@@ -186,9 +186,9 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiFuelMap3(
 		FUEL_MAP_3,
 		0,
-		_T("Requested IQ (mg/stroke)"),
+		_T("mg/stk)"),
 		_T("RPM"),
-		_T("microsec."),
+		_T("usec."),
 		_T("FUEL MAP (10 deg. advance)"),
 		_T("Fuel map. Manages injection timing in function of engine speed and reference from throttle.\n\ndemand->smoke lim.->torque lim.->INJ. DURATION\n\nX Axis: Demand (mg/stroke)\nY Axis: RPMs\nZ Axis: Time (microsec.)"));
     mtiFuelMap3.SetColLabelSizers(0.01, 0);
@@ -196,9 +196,9 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiFuelMap4(
 		FUEL_MAP_4,
 		0,
-		_T("Requested IQ (mg/stroke)"),
+		_T("mg/stk)"),
 		_T("RPM"),
-		_T("microsec."),
+		_T("usec."),
 		_T("FUEL MAP (25 deg. advance)"),
 		_T("Fuel map. Manages injection timing in function of engine speed and reference from throttle.\n\ndemand->smoke lim.->torque lim.->INJ. DURATION\n\nX Axis: Demand (mg/stroke)\nY Axis: RPMs\nZ Axis: Time (microsec.)"));
     mtiFuelMap4.SetColLabelSizers(0.01, 0);
@@ -206,11 +206,11 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiFuelDensityCompLower(
 		FUEL_DENSITY_COMP_LOWER,
 		0,
-		_T("?"),
-		_T("Fuel Temp"),
-		_T("Inject Quantity (mg/stroke)"),
+		_T("mg/stk"),
+		_T("°C"),
+		_T("mmc/stk)"),
 		_T("FUEL DENSITY COMPENSATION LOWER"),
-		_T("Fuel density compensation lower table\n\nX Axis: ?\nY Axis: Fuel temp.\nZ Axis: mg/stroke"));
+		_T("Fuel density compensation lower table\n\nX Axis: Inject Quantity (mg/stk)\nY Axis: Fuel temp. (°C)\nZ Axis: Inject volume (mmc/stk)"));
     mtiFuelDensityCompLower.SetColLabelSizers(0.01, 0);
     mtiFuelDensityCompLower.SetRowLabelSizers(0.1, -2732);
     mtiFuelDensityCompLower.SetDataSizers(0.01, 0);
@@ -218,11 +218,11 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiFuelDensityCompUpper(
 		FUEL_DENSITY_COMP_UPPER,
 		0,
-		_T("?"),
-		_T("Fuel Temp"),
-		_T("Inject Quantity (mg/stroke)"),
+		_T("mg/stk"),
+		_T("°C"),
+		_T("mmc/stk)"),
 		_T("FUEL DENSITY COMPENSATION UPPER"),
-		_T("Fuel density compensation upper table\n\nX Axis: ?\nY Axis: Fuel temp.\nZ Axis: mg/stroke"));
+		_T("Fuel density compensation upper table\n\nX Axis: Inject Quantity (mg/stk)\nY Axis: Fuel temp. (°C)\nZ Axis: Inject volume (mmc/stk)"));
     mtiFuelDensityCompUpper.SetColLabelSizers(0.01, 0);
     mtiFuelDensityCompUpper.SetRowLabelSizers(0.1, -2732);
     mtiFuelDensityCompUpper.SetDataSizers(0.01, 0);
@@ -230,80 +230,88 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	td5mapTableInfoItem mtiIdleSpeed1(
 		IDLE_SPEED_1,
 		0,
-		_T("Ambient Temp (deg.)"),
+		_T("°C"),
 		_T("RPM"),
 		_T(""),
 		_T("IDLE SPEED 1"),
-		_T("Idle speed map. Manages the idle speed. Both Idle Speed tables must be modified.\n\nX Axis: Ambient Temp.(deg.)\nY Axis: RPMs"));
+		_T("Idle speed map. Manages the idle speed. Both Idle Speed tables must be modified.\n\nX Axis: Ambient Temp.(°C)\nY Axis: RPMs"));
     mtiIdleSpeed1.SetColLabelSizers(0.1, -2732);
 
 	td5mapTableInfoItem mtiIdleSpeed2(
 		IDLE_SPEED_2,
 		0,
-		_T("Ambient Temp (deg.)"),
+		_T("°C"),
 		_T("RPM"),
 		_T(""),
 		_T("IDLE SPEED 2"),
-		_T("Idle speed map. Manages the idle speed. Both Idle Speed tables must be modified.\n\nX Axis: Ambient Temp.(deg.)\nY Axis: RPMs"));
+		_T("Idle speed map. Manages the idle speed. Both Idle Speed tables must be modified.\n\nX Axis: Ambient Temp.(°C)\nY Axis: RPMs"));
     mtiIdleSpeed2.SetColLabelSizers(0.1, -2732);
 
 	td5mapTableInfoItem mtiEgrMap(
 		EGR_MAP,
 		0,
+		_T("mg/stk"),
 		_T("RPM"),
-		_T("?"),
-		_T("?"),
+		_T("af mg/stk"),
 		_T("EGR MAP"),
-		_T("EGR map. Manages the EGR valve. To exclude it you must set all the values to 16000 (decimal).\n\nX Axis: ?\nY Axis: ?\nZ Axis: ?"));
+		_T("EGR map. Manages the EGR valve. To exclude it you must set all the values to 16000 (decimal).\n\nX Axis: (mg/stk))\nY Axis: RPM\nZ Axis: (af mg/stk)"));
+    mtiEgrMap.SetColLabelSizers(0.01, 0);
+    mtiEgrMap.SetDataSizers(0.1, 0);
 
     td5mapTableInfoItem mtiCoolantTemp(
 		COOLANT_TEMPERATURE,
 		0,
-		_T("Sensor (mV)"),
-		_T("Battery (V)"),
-		_T("Temp (deg)"),
+		_T("°C"),
+		_T("V"),
+		_T("%"),
 		_T("COOLANT TEMPERATURE SENSOR"),
-		_T("Coolant temperature sensor table.\n\nX Axis: Temperature (Celsius deg.)\nY Axis: Battery (v)\nZ Axis: Sensor ref. (mV)"));
+		_T("Coolant temperature sensor table.\n\nX Axis: Temperature (°C)\nY Axis: Battery (v)\nZ Axis: Duty ratio (%)"));
     mtiCoolantTemp.SetColLabelSizers(0.1, -2732);
     mtiCoolantTemp.SetRowLabelSizers(0.001, 0);
+	mtiCoolantTemp.SetDataSizers(0.01, 0);
 
     td5mapTableInfoItem mtiTimingsMap(
 		TIMINGS_MAP,
 		0,
 		_T("RPM"),
-		_T("Requested IQ (mg/stroke)"),
-		_T("Timing (deg)"),
+		_T("mg/stk"),
+		_T("deg"),
 		_T("TIMINGS MAP"),
-		_T("Timings table.\n\nX Axis: RPM\nY Axis: mg/stroke\nZ Axis: deg"));
+		_T("Timings table.\n\nX Axis: RPM\nY Axis: Requested IQ (mg/stroke)\nZ Axis: Timing (deg.)"));
 
     td5mapTableInfoItem mtiTwgDutyCycle(
 		TWG_DUTY_CYCLE,
 		0,
+		_T("kPa"),
 		_T("RPM"),
-		_T("Boost (kPa)"),
-		_T("Duty Cycle"),
+		_T("%"),
 		_T("TWG DUTY CYCLE"),
-		_T("TWG Duty Cycle.\n\nX Axis: RPM\nY Axis: kPa\nZ Axis: D.C."));
+		_T("TWG Duty Cycle.\n\nX Axis: Boost (kPa)\nY Axis: RPM\nZ Axis: Duty Cycle (%)"));
+    mtiTwgDutyCycle.SetColLabelSizers(0.01, 0);
+	mtiTwgDutyCycle.SetDataSizers(0.01, 0);		
 
 	td5mapTableInfoItem mtiTwgIntegralGain(
 		TWG_INTEGRAL_GAIN,
 		0,
 		_T("RPM"),
-		_T("RPM"),
-		_T("Integral Gain"),
+		_T("kPa"),
+		_T("gain"),
 		_T("TWG INTEGRAL GAIN"),
-		_T("TWG Integral gain.\n\nX Axis: Boost\nY Axis: RPM\nZ Axis: I.G."));
+		_T("TWG Integral gain.\n\nX Axis: RPM\nY Axis: Boost (kPa)\nZ Axis: Integral Gain"));
+	mtiTwgIntegralGain.SetRowLabelSizers(0.01, 0);
 
     td5mapTableInfoItem mtiTwgPressureMap(
 		TWG_PRESSURE_MAP,
 		0,
+		_T("mg/stk"),
 		_T("RPM"),
-		_T("Requested IQ (mg/stroke)"),
-		_T("Boost (kPa)"),
+		_T("kPa"),
 		_T("TWG PRESSURE MAP"),
-		_T("Twg pressure table.\n\nX Axis: RPM\nY Axis: mg/stroke\nZ Axis: kPa"));
+		_T("Twg pressure table.\n\nX Axis: Requested IQ (mg/stroke)\nY Axis: RPM\nZ Axis: Boost (kPa)"));
+    mtiTwgPressureMap.SetColLabelSizers(0.01, 0);
+	mtiTwgPressureMap.SetDataSizers(0.01, 0);		
 
-
+/*
 	td5mapTableInfoItem mtiUnknownMap1(
 		UNKNOWN_MAP_1,
 		0,
@@ -349,7 +357,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		_T("?"),
 		_T("UNKNOWN MAP 5"),
 		_T("Unknown.\n\nX Axis: ?\nY Axis: ?\nZ Axis: ?"));
-
+*/
 
     td5mapTableInfoItem mtiScalarTwgPwmFreq(
 		SCALAR_TWG_PWM_FREQUENCY,
@@ -493,7 +501,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		case IDR_SWDXR004SWTNP006_MAP:
             mtiTorqueLimHighRange.m_index = 17;
             mtiTorqueLimLowRange.m_index = 18;
-            mtiUnknownMap3.m_index = 54;
+            //mtiUnknownMap3.m_index = 54;
             mtiSmokeLimHighRangeA.m_index = 60;
             mtiSmokeLimHighRangeB.m_index = 61;
             mtiDriverDemandHighRange.m_index = 69;
@@ -508,11 +516,11 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
             mtiIdleSpeed2.m_index = 41;
             mtiEgrMap.m_index = 73;
             mtiCoolantTemp.m_index = 112;
-            mtiUnknownMap1.m_index = 16;
-            mtiUnknownMap2.m_index = 57;
+            //mtiUnknownMap1.m_index = 16;
+            //mtiUnknownMap2.m_index = 57;
             mtiSmokeLimLowRange.m_index = 59;
-            mtiUnknownMap4.m_index = 90;
-            mtiUnknownMap5.m_index = 94;
+            //mtiUnknownMap4.m_index = 90;
+            //mtiUnknownMap5.m_index = 94;
             mtiTimingsMap.m_index = 64;
             mtiTwgDutyCycle.m_index = 110;
             mtiTwgIntegralGain.m_index = 111;
@@ -542,7 +550,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
         case IDR_SURDK004SUTZP005_MAP:
             mtiTorqueLimHighRange.m_index = 255; // fake
             mtiTorqueLimLowRange.m_index = 8;
-			mtiUnknownMap3.m_index = 255; // fake
+			//mtiUnknownMap3.m_index = 255; // fake
 			mtiSmokeLimHighRangeA.m_index = 42;
 			mtiSmokeLimHighRangeB.m_index = 255; // fake
 			mtiDriverDemandHighRange.m_index = 53;
@@ -557,11 +565,11 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 			mtiIdleSpeed2.m_index = 24;
 			mtiEgrMap.m_index = 56;
 			mtiCoolantTemp.m_index = 75; // fake
-            mtiUnknownMap1.m_index = 255; // fake
-            mtiUnknownMap2.m_index = 255; // fake
+            //mtiUnknownMap1.m_index = 255; // fake
+            //mtiUnknownMap2.m_index = 255; // fake
             mtiSmokeLimLowRange.m_index = 255; // fake
-            mtiUnknownMap4.m_index = 255; // fake
-            mtiUnknownMap5.m_index = 255; // fake
+            //mtiUnknownMap4.m_index = 255; // fake
+            //mtiUnknownMap5.m_index = 255; // fake
             mtiTimingsMap.m_index = 255; // fake
             mtiTwgDutyCycle.m_index = 73;
             mtiTwgIntegralGain.m_index = 74;
@@ -583,7 +591,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 		case IDR_STHLE022STTLP010_MAP:
             mtiTorqueLimHighRange.m_index = 255; // fake
             mtiTorqueLimLowRange.m_index = 9;
-			mtiUnknownMap3.m_index = 255; // fake
+			//mtiUnknownMap3.m_index = 255; // fake
 			mtiSmokeLimHighRangeA.m_index = 41;
 			mtiSmokeLimHighRangeB.m_index = 255; // fake
 			mtiDriverDemandHighRange.m_index = 52;
@@ -598,11 +606,11 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 			mtiIdleSpeed2.m_index = 26;
 			mtiEgrMap.m_index = 55;
 			mtiCoolantTemp.m_index = 74; // fake
-            mtiUnknownMap1.m_index = 255; // fake
-            mtiUnknownMap2.m_index = 255; // fake
+            //mtiUnknownMap1.m_index = 255; // fake
+            //mtiUnknownMap2.m_index = 255; // fake
             mtiSmokeLimLowRange.m_index = 255; // fake
-            mtiUnknownMap4.m_index = 255; // fake
-            mtiUnknownMap5.m_index = 255; // fake
+            //mtiUnknownMap4.m_index = 255; // fake
+            //mtiUnknownMap5.m_index = 255; // fake
             mtiTimingsMap.m_index = 255; // fake
             mtiTwgDutyCycle.m_index = 72;
             mtiTwgIntegralGain.m_index = 255; // fake
@@ -623,7 +631,7 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
         default:
             mtiTorqueLimHighRange.m_index = 255; // fake
             mtiTorqueLimLowRange.m_index = 255; // fake
-			mtiUnknownMap3.m_index = 255; // fake
+			//mtiUnknownMap3.m_index = 255; // fake
 			mtiSmokeLimHighRangeA.m_index = 255; // fake
 			mtiSmokeLimHighRangeB.m_index = 255; // fake
 			mtiDriverDemandHighRange.m_index = 255; // fake
@@ -637,11 +645,11 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 			mtiIdleSpeed1.m_index = 255; // fake
 			mtiIdleSpeed2.m_index = 255; // fake
 			mtiEgrMap.m_index = 255; // fake
-            mtiUnknownMap1.m_index = 255; // fake
-            mtiUnknownMap2.m_index = 255; // fake
+            //mtiUnknownMap1.m_index = 255; // fake
+            //mtiUnknownMap2.m_index = 255; // fake
             mtiSmokeLimLowRange.m_index = 255; // fake
-            mtiUnknownMap4.m_index = 255; // fake
-            mtiUnknownMap5.m_index = 255; // fake
+            //mtiUnknownMap4.m_index = 255; // fake
+            //mtiUnknownMap5.m_index = 255; // fake
             mtiTimingsMap.m_index = 255; // fake
             mtiTwgDutyCycle.m_index = 255; // fake
             mtiTwgIntegralGain.m_index = 255; // fake
@@ -679,11 +687,11 @@ td5mapTableInfo::td5mapTableInfo(wxUint32 nID)
 	m_mapInfo.Add(mtiEgrMap);
 	m_mapInfo.Add(mtiCoolantTemp);
 	m_mapInfo.Add(mtiTimingsMap);
-    m_mapInfo.Add(mtiUnknownMap1);
-    m_mapInfo.Add(mtiUnknownMap2);
-	m_mapInfo.Add(mtiUnknownMap3);
-    m_mapInfo.Add(mtiUnknownMap4);
-	m_mapInfo.Add(mtiUnknownMap5);
+    //m_mapInfo.Add(mtiUnknownMap1);
+    //m_mapInfo.Add(mtiUnknownMap2);
+	//m_mapInfo.Add(mtiUnknownMap3);
+    //m_mapInfo.Add(mtiUnknownMap4);
+	//m_mapInfo.Add(mtiUnknownMap5);
 	m_mapInfo.Add(mtiTwgDutyCycle);
 	m_mapInfo.Add(mtiTwgIntegralGain);
 	m_mapInfo.Add(mtiTwgPressureMap);

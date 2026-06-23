@@ -16,7 +16,8 @@
 #include "resource.h"
 
 #include "td5mapeditorDoc.h"
-#include "graphDC.h"
+//#include "graphDC.h"
+#include "td5mapGraph.h"
 
 class td5mapeditorCanvas: public wxScrolledWindow
 {
@@ -52,7 +53,8 @@ class td5mapeditorCanvas: public wxScrolledWindow
         int m_horizScrollBase;
         int m_vertScrollBase;
 
-        graphDC *m_graphDC;
+        //graphDC *m_graphDC;
+        td5mapGraph *m_graphDC;
 };
 
 #define CANVAS_MAIN 1

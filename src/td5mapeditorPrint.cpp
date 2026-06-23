@@ -53,10 +53,12 @@ bool td5mapeditorPrint::OnPrintPage (int page) {
     row = (m_printRect.GetHeight() / 2);
     dc->DrawText(_T("Map graph:"), col[0], row); row += 20;
 
-    graphDC *gDC;
+    //graphDC *gDC;
+    td5mapGraph *gDC;
 
     wxRect rect(m_printRect.GetX()+m_printRect.GetWidth() / 8, m_printRect.GetY()+m_printRect.GetHeight() / 2, (m_printRect.GetWidth() / 4) * 3, (m_printRect.GetHeight() / 2)) ;
-    gDC = new graphDC(*dc, NULL, /*m_printRect*/ rect, m_table, GDC_SHOW_BASE_CURRENT);
+    //gDC = new graphDC(*dc, NULL, /*m_printRect*/ rect, m_table, GDC_SHOW_BASE_CURRENT);
+    gDC = new td5mapGraph(*dc, NULL, /*m_printRect*/ rect, m_table, GDC_SHOW_BASE_CURRENT);
     gDC->Draw();
 
     //delete gDC;
