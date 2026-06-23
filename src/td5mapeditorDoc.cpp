@@ -408,7 +408,7 @@ bool td5mapeditorDoc::OnSaveDocument(const wxString& filename)
 		m_mapTable[m].WriteTable(m_mapFileData);
 	}
 
-    WriteFirmwareAndTablesCorrection(m_mapFileData);
+    //WriteFirmwareAndTablesCorrection(m_mapFileData);
 
     WriteNanocomChecksum(m_mapFileData);
 
